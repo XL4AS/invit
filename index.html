@@ -25,15 +25,15 @@
             background: #f4f1ea;
             color: var(--dark-jawa);
             width: 100%;
-            overflow-x: hidden; /* Mencegah geser kanan-kiri */
+            overflow-x: hidden;
         }
 
-        /* Fix Chrome Mobile Flickering */
+        /* Fix: Mengunci scroll HP tanpa efek getar */
         body.no-scroll { 
-            overflow: hidden;
-            position: fixed;
-            width: 100%;
-            height: 100%;
+            overflow: hidden; 
+            height: 100%; 
+            position: fixed; 
+            width: 100%; 
         }
 
         .loader {
@@ -50,7 +50,7 @@
             display: flex; justify-content: center; align-items: center;
             color: white; 
             transition: opacity 0.8s ease, transform 0.8s ease;
-            will-change: transform, opacity;
+            will-change: opacity, transform;
         }
 
         .cover-content { text-align: center; padding: 20px; width: 100%; z-index: 10000; }
@@ -66,7 +66,14 @@
             background: var(--gold); color: white; border: none;
             padding: 16px 40px; border-radius: 50px; font-weight: 600;
             cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-            position: relative; z-index: 10001;
+            position: relative; z-index: 10002;
+        }
+
+        .hero {
+            height: 100vh; display: flex; flex-direction: column;
+            justify-content: center; align-items: center; text-align: center;
+            background: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6));
+            padding: 20px;
         }
 
         .card {
@@ -78,15 +85,12 @@
 
         .section { padding: 40px 0; max-width: 600px; margin: 0 auto; text-align: center; }
         .event-box { background: white; padding: 30px 20px; border-radius: 20px; border: 1px solid var(--soft-gold); margin-bottom: 25px; }
-        .couple-name-display { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.5rem; font-weight: 700; }
         
         .countdown-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
-        .count-item { background: var(--gold); color: white; padding: 10px; border-radius: 10px; min-width: 60px; }
+        .count-item { background: var(--gold); color: white; padding: 10px; border-radius: 10px; min-width: 65px; }
 
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         .gallery-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 15px; }
-
-        #qris-container img { width: 100%; max-width: 250px; border-radius: 10px; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-top: 15px; }
 
         .nav-bottom {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -104,8 +108,8 @@
 
         .floating { animation: float 4s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        
-        /* Fix AOS Mobile Flickering */
+
+        /* Mencegah AOS memicu flickering di mobile */
         [data-aos] { pointer-events: none; }
         .aos-animate { pointer-events: auto; }
     </style>
@@ -126,7 +130,6 @@
     <div id="cover" class="cover-overlay">
         <div class="cover-content">
             <img src="icon/gunungan.png" class="floating" width="70">
-            <h3 style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.7rem;">WEDDING INVITATION</h3>
             <h1 id="cover-couple-name">Mempelai</h1>
             <div class="to-guest">
                 <p style="font-size: 0.8rem; margin:0;">Kepada Yth:</p>
@@ -141,22 +144,22 @@
     </div>
 
     <main id="content" style="display:none">
-        <section class="section" id="home" style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
-            <div data-aos="zoom-in">
+        <section class="hero" id="home">
+            <div data-aos="zoom-out">
                 <img src="icon/gunungan.png" width="80" class="floating">
-                <h1 id="couple-name-hero" style="font-family: 'Great Vibes'; font-size: 3.5rem; color: var(--gold);"></h1>
-                <p id="wedding-date-hero" style="letter-spacing: 2px; font-size: 0.9rem;"></p>
+                <h1 id="couple-name" style="color: var(--gold); font-family: 'Great Vibes';"></h1>
+                <p id="wedding-date-hero"></p>
             </div>
         </section>
 
         <div class="card">
             <section class="section" id="couple" data-aos="fade-up">
-                <div id="quote" style="font-style: italic; margin-bottom: 30px; font-size: 0.9rem; padding: 0 10px;"></div>
+                <div id="quote" style="font-style: italic; margin-bottom: 30px; white-space: pre-line;"></div>
                 <div class="event-box">
-                    <h3 id="groom-name" class="couple-name-display"></h3>
+                    <h3 id="groom-name" style="font-family: 'Cinzel'; color: var(--gold); font-size: 1.5rem;"></h3>
                     <p>Putra dari <b id="groom-parents"></b></p>
-                    <h2 style="font-family: 'Great Vibes'; font-size: 2rem; color: var(--gold);">dan</h2>
-                    <h3 id="bride-name" class="couple-name-display"></h3>
+                    <h2 style="font-family: 'Great Vibes'; color: var(--gold);">dan</h2>
+                    <h3 id="bride-name" style="font-family: 'Cinzel'; color: var(--gold); font-size: 1.5rem;"></h3>
                     <p>Putri dari <b id="bride-parents"></b></p>
                 </div>
             </section>
@@ -168,35 +171,16 @@
                     <p id="akad-date"></p>
                     <p id="akad-time" style="font-weight: 700;"></p>
                 </div>
-                <div class="event-box">
-                    <h3><i class="fas fa-glass-cheers"></i> Resepsi</h3>
-                    <p id="resepsi-date"></p>
-                    <p id="resepsi-time" style="font-weight: 700;"></p>
-                </div>
-            </section>
-
-            <section class="section" id="location" data-aos="fade-up">
-                <h3><i class="fas fa-map-marker-alt"></i> Lokasi</h3>
-                <p id="event-location" style="font-size: 0.9rem; margin-bottom: 15px;"></p>
-                <div id="map-frame-container"></div>
-                <a id="whatsapp-btn" target="_blank" style="background:#25d366; color:white; padding:12px 25px; border-radius:30px; text-decoration:none; display:inline-block; margin-top:15px;">Konfirmasi Kehadiran</a>
             </section>
 
             <section class="section" id="gallery" data-aos="fade-up">
-                <h3 style="margin-bottom: 20px;">Galeri</h3>
+                <h3>Galeri</h3>
                 <div id="gallery-grid" class="gallery-grid"></div>
-            </section>
-
-            <section class="section" id="gifts" style="display:none;" data-aos="fade-up">
-                <div class="event-box">
-                    <h3><i class="fas fa-gift"></i> Digital Gift</h3>
-                    <div id="qris-container"></div>
-                </div>
             </section>
 
             <section class="section" id="wishes" data-aos="fade-up">
                 <div class="event-box">
-                    <h3><i class="fas fa-envelope"></i> Ucapan Doa</h3>
+                    <h3>Ucapan Doa</h3>
                     <form id="wish-form">
                         <input type="text" id="wish-name" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd;" placeholder="Nama" required>
                         <textarea id="wish-message" style="width:100%; padding:10px; height:80px; border-radius:8px; border:1px solid #ddd;" placeholder="Doa Anda" required></textarea>
@@ -204,11 +188,6 @@
                     </form>
                     <div id="wish-display" style="text-align:left; margin-top:20px; max-height:300px; overflow-y:auto;"></div>
                 </div>
-            </section>
-
-            <section class="section">
-                <h2 style="font-family: 'Great Vibes'; font-size: 2.5rem; color: var(--gold);">Terima Kasih</h2>
-                <p id="closing-names" style="font-weight: 700;"></p>
             </section>
         </div>
 
@@ -221,6 +200,6 @@
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js?v=1.7"></script>
+    <script src="script.js"></script>
 </body>
 </html>
