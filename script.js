@@ -1,29 +1,16 @@
-<script>
-/* ==========================
-   DATABASE LINK
-========================== */
 const DB_LINKS = {
   anang: "https://raw.githubusercontent.com/XL4AS/invit/main/data/anang_invitation.json"
 };
 
-/* ==========================
-   AMBIL PARAMETER URL
-========================== */
 const params = new URLSearchParams(window.location.search);
 const id = params.get("id");
 
-/* ==========================
-   VALIDASI ID
-========================== */
 if (!id || !DB_LINKS[id]) {
   showError("ID undangan tidak ditemukan");
 } else {
   loadData(DB_LINKS[id]);
 }
 
-/* ==========================
-   FETCH JSON
-========================== */
 async function loadData(url) {
   try {
     const res = await fetch(url, { cache: "no-store" });
@@ -32,73 +19,71 @@ async function loadData(url) {
     const data = await res.json();
     renderData(data);
 
-    document.getElementById("loader").style.display = "none";
-    document.getElementById("content").style.display = "block";
   } catch (err) {
     console.error(err);
     showError("Gagal memuat data undangan");
   }
 }
 
-/* ==========================
-   RENDER DATA
-========================== */
+/* =============================
+   RENDER DATA (ANTI MACET)
+============================= */
 function renderData(data) {
-  /* Nama Pasangan */
+
   document.getElementById("couple-name").textContent =
     `${data.groom} & ${data.bride}`;
 
-  /* Tanggal */
+  // DATE SAFE
   document.getElementById("event-date").textContent =
-    new Date(data.date).toLocaleDateString("id-ID", {
-      day: "numeric",
+    new Date(data.date + "T00:00:00").toLocaleDateString("id-ID", {
+      weekday: "long",
+      year: "numeric",
       month: "long",
-      year: "numeric"
+      day: "numeric"
     });
 
-  /* Lokasi */
   document.getElementById("event-location").textContent =
-    data.location || "-";
+    data.location || "";
 
-  /* MAP (HARUS EMBED GOOGLE MAPS) */
-  if (data.maps) {
+  /* MAP – WAJIB EMBED */
+  if (data.maps && data.maps.includes("output=embed")) {
     document.getElementById("map-frame-container").innerHTML = `
-      <iframe
+      <iframe 
         src="${data.maps}"
         loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      ></iframe>
-    `;
+        referrerpolicy="no-referrer-when-downgrade">
+      </iframe>`;
+  } else {
+    document.getElementById("map-frame-container").innerHTML =
+      `<p>Peta tidak tersedia</p>`;
   }
 
-  /* GALERI */
+  /* GALLERY */
   const gallery = document.getElementById("gallery-slider");
   gallery.innerHTML = "";
-
-  if (Array.isArray(data.gallery) && data.gallery.length > 0) {
-    data.gallery.forEach(url => {
+  if (Array.isArray(data.gallery)) {
+    data.gallery.forEach(src => {
       const img = document.createElement("img");
-      img.src = url;
+      img.src = src;
       img.loading = "lazy";
-      img.alt = "Galeri";
+      img.onerror = () => img.remove();
       gallery.appendChild(img);
     });
-  } else {
-    gallery.innerHTML = "<p>Galeri belum tersedia</p>";
   }
 
   /* WHATSAPP */
-  if (data.phone) {
-    document.getElementById("whatsapp-btn").href =
-      `https://wa.me/${data.phone}?text=Assalamualaikum,%20saya%20akan%20hadir`;
-  }
+  document.getElementById("whatsapp-btn").href =
+    `https://wa.me/${data.phone}?text=Saya%20akan%20hadir`;
+
+  // ⬇️ WAJIB ADA
+  document.getElementById("loader").style.display = "none";
+  document.getElementById("content").style.display = "block";
 }
 
-/* ==========================
-   ERROR HANDLER
-========================== */
+/* =============================
+   ERROR HANDLER (ANTI LOADING LOOP)
+============================= */
 function showError(msg) {
-  document.getElementById("loader").innerHTML =
-    `<p style="color:red;text-align:center">${msg}</p>`;
+  const loader = document.getElementById("loader");
+  loader.innerHTML = `<p>${msg}</p>`;
 }
-</script>
