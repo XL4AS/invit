@@ -1,23 +1,68 @@
+/* Wedding Invitation Modern Theme
+    Color Palette: Gold, Dark Slate, and Light Grey
+*/
+
 :root {
     --primary: #d4af37; /* Gold */
     --dark: #2c3e50;
     --light: #f9f9f9;
+    --white: #ffffff;
+    --shadow: rgba(0, 0, 0, 0.1);
 }
 
 /* Reset Standar */
+* {
+    box-sizing: border-box;
+}
+
 body {
     margin: 0; 
     font-family: 'Montserrat', 'Segoe UI', sans-serif;
     color: var(--dark); 
     text-align: center; 
     background: var(--light);
-    overflow-x: hidden; /* Mencegah scroll horizontal saat animasi */
+    overflow-x: hidden;
 }
 
 /* Section Dasar */
-.section { padding: 60px 20px; }
+.section { 
+    padding: 80px 20px; 
+    max-width: 1200px;
+    margin: 0 auto;
+}
 
-/* Hero / Cover Section */
+.title-serif {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.5rem;
+    color: var(--primary);
+    margin-bottom: 30px;
+}
+
+/* --- LOADER --- */
+.loader-wrapper {
+    position: fixed; 
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: white; 
+    display: flex; 
+    flex-direction: column;
+    justify-content: center; 
+    align-items: center; 
+    z-index: 9999;
+    transition: opacity 0.5s ease;
+}
+
+.loader {
+    border: 5px solid #f3f3f3; 
+    border-top: 5px solid var(--primary);
+    border-radius: 50%; 
+    width: 50px; height: 50px; 
+    animation: spin 1s linear infinite;
+    margin-bottom: 15px;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* --- HERO / COVER SECTION --- */
 .hero {
     height: 100vh;
     width: 100%;
@@ -29,91 +74,136 @@ body {
     background-size: cover; 
     background-position: center;
     color: white;
-    position: fixed; /* Membuat cover menutupi seluruh layar */
-    top: 0;
-    left: 0;
-    z-index: 1000; /* Pastikan berada paling atas */
+    position: fixed; 
+    top: 0; left: 0;
+    z-index: 1000;
     transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease;
 }
 
-/* Konten Utama (Main Content) */
-#main-content {
-    position: relative;
-    z-index: 1; /* Di bawah cover saat awal */
-    min-height: 100vh;
-}
-
-/* Loader */
-.loader-wrapper {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: white; display: flex; flex-direction: column;
-    justify-content: center; align-items: center; z-index: 9999;
-    transition: opacity 0.5s ease;
-}
-.loader {
-    border: 5px solid #f3f3f3; border-top: 5px solid var(--primary);
-    border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;
-}
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-/* Judul Elegan */
 .names {
     font-family: 'Dancing Script', cursive;
-    font-size: 3rem;
-    margin: 10px 0;
+    font-size: 4rem;
+    margin: 15px 0;
+    line-height: 1.2;
 }
 
-/* Gallery */
+/* --- MAIN CONTENT --- */
+#main-content {
+    position: relative;
+    z-index: 1;
+    min-height: 100vh;
+    opacity: 0; /* Dikontrol via JS saat buka undangan */
+}
+
+/* --- GALLERY SYSTEM --- */
 .gallery-grid {
     display: grid; 
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    /* Desktop: 3-4 kolom, Mobile: 2 kolom */
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 15px; 
     padding: 20px;
 }
-.gallery-grid img { 
+
+.gallery-item { 
     width: 100%; 
     height: 250px;
     border-radius: 12px; 
     object-fit: cover; 
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 15px var(--shadow);
+    transition: transform 0.3s ease, filter 0.3s ease;
+    cursor: pointer;
+    background: #eee;
+    animation: fadeInUp 0.8s ease forwards;
 }
 
-/* Buttons */
+.gallery-item:hover {
+    transform: scale(1.03);
+    filter: brightness(1.1);
+}
+
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- COUNTDOWN --- */
+.countdown-container { 
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    flex-wrap: wrap;
+    margin-top: 20px;
+}
+
+.time-box { 
+    background: var(--white); 
+    padding: 20px; 
+    border-radius: 15px; 
+    box-shadow: 0 8px 25px rgba(0,0,0,0.05); 
+    width: 90px; 
+    transition: transform 0.3s ease;
+}
+
+.time-box:hover { transform: translateY(-5px); }
+
+.time-box span {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: var(--primary);
+}
+
+.time-box small {
+    color: #888;
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    letter-spacing: 1px;
+}
+
+/* --- BUTTONS --- */
 .btn-open, .btn-whatsapp {
     background: var(--primary); 
     color: white; 
     border: none;
-    padding: 15px 35px; 
+    padding: 16px 40px; 
     border-radius: 50px; 
     cursor: pointer;
     text-decoration: none; 
-    font-weight: bold;
+    font-weight: 700;
     display: inline-block;
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-    transition: 0.3s;
-}
-.btn-open:hover, .btn-whatsapp:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.6);
+    transition: all 0.3s ease;
+    font-size: 1rem;
 }
 
-/* Countdown */
-.countdown-container { 
-    display: flex; 
-    justify-content: center; 
-    gap: 10px; 
-    flex-wrap: wrap;
+.btn-open:hover, .btn-whatsapp:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
+    background: #b8952e;
 }
-.time-box { 
-    background: white; 
-    padding: 15px; 
-    border-radius: 15px; 
-    box-shadow: 0 8px 20px rgba(0,0,0,0.05); 
-    width: 80px; 
+
+/* --- RESPONSIVE OPTIMIZATION --- */
+@media (max-width: 768px) {
+    .names { font-size: 3rem; }
+    .section { padding: 50px 15px; }
+    
+    .gallery-grid {
+        grid-template-columns: repeat(2, 1fr); /* HP jadi 2 kolom */
+        gap: 10px;
+        padding: 10px;
+    }
+    
+    .gallery-item { height: 180px; } /* Gambar lebih kecil di HP */
+    
+    .time-box {
+        width: 70px;
+        padding: 12px;
+    }
+    .time-box span { font-size: 1.3rem; }
 }
-.time-box span {
-    display: block;
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--primary);
+
+@media (max-width: 400px) {
+    .gallery-grid {
+        grid-template-columns: 1fr; /* HP layar sangat kecil jadi 1 kolom */
+    }
 }
