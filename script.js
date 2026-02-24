@@ -9,6 +9,7 @@ const cover = document.getElementById("cover");
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
 const to = urlParams.get("to") || "Tamu Undangan";
+const isAdmin = urlParams.get("admin") === "123"; // Kode rahasia Admin
 
 document.getElementById("guest-name").textContent = to;
 
@@ -42,7 +43,7 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(data => {
                 renderData(data);
                 setupCountdown(data.akad.date);
-                loadWishes(); // Memuat ucapan setelah data utama siap
+                loadWishes(); 
             })
             .catch(err => {
                 console.error(err);
@@ -50,7 +51,6 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    // Logika Kirim Ucapan
     const wishForm = document.getElementById('wish-form');
     if(wishForm) {
         wishForm.addEventListener('submit', function(e) {
@@ -71,7 +71,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 btn.disabled = false;
                 btn.innerText = "Kirim Ucapan";
                 wishForm.reset();
-                loadWishes(); // Refresh daftar ucapan
+                loadWishes(); 
             })
             .catch(err => {
                 alert("Gagal mengirim ucapan");
@@ -89,9 +89,14 @@ function renderData(data) {
 
     document.getElementById("groom-name").textContent = data.groom.name;
     document.getElementById("bride-name").textContent = data.bride.name;
-
     document.getElementById("groom-parents").textContent = data.groom.parent;
     document.getElementById("bride-parents").textContent = data.bride.parent;
+    
+    // Nama untuk bagian penutup/terima kasih
+    if(document.getElementById("closing-names")) {
+        document.getElementById("closing-names").textContent = data.title;
+    }
+
     document.getElementById("quote").textContent = data.quote;
     document.getElementById("wedding-date-hero").textContent = formatDate(data.akad.date);
     document.getElementById("akad-date").textContent = formatDate(data.akad.date);
@@ -125,7 +130,6 @@ function renderData(data) {
     AOS.init({ duration: 1000, once: true, offset: 50 });
 }
 
-// Fungsi Memuat Ucapan dari Google Sheet
 function loadWishes() {
     const display = document.getElementById('wish-display');
     fetch(SCRIPT_URL)
@@ -136,16 +140,40 @@ function loadWishes() {
             return;
         }
         display.innerHTML = '';
-        data.reverse().forEach(item => {
+        
+        const reversedData = [...data].reverse();
+        reversedData.forEach((item, index) => {
+            const actualRowIndex = data.length - index; 
             const div = document.createElement('div');
             div.className = 'wish-item';
-            div.innerHTML = `<strong>${item.nama}</strong><p>${item.ucapan}</p>`;
+            
+            const deleteBtn = isAdmin ? `
+                <button onclick="deleteWish(${actualRowIndex})" style="position:absolute; top:10px; right:10px; background:#fff0f0; border:1px solid #ffcccc; color:#ff4d4d; cursor:pointer; font-size:0.6rem; padding:2px 5px; border-radius:4px;">
+                    <i class="fas fa-trash"></i> Hapus
+                </button>` : '';
+
+            div.innerHTML = `
+                <strong>${item.nama}</strong>
+                <p>${item.ucapan}</p>
+                ${deleteBtn}
+            `;
             display.appendChild(div);
         });
     })
     .catch(err => {
         display.innerHTML = '<p style="text-align:center; font-size:0.8rem; color:red;">Gagal memuat ucapan.</p>';
     });
+}
+
+function deleteWish(rowId) {
+    if (confirm("Hapus ucapan ini?")) {
+        fetch(`${SCRIPT_URL}?del=${rowId}`)
+        .then(res => res.text())
+        .then(() => {
+            loadWishes(); 
+        })
+        .catch(err => alert("Gagal menghapus"));
+    }
 }
 
 function setupCountdown(dateStr) {
@@ -183,7 +211,7 @@ function formatDate(dateStr) {
 window.addEventListener('scroll', () => {
     let current = "";
     document.querySelectorAll("section").forEach(s => {
-        if (pageYOffset >= s.offsetTop - 250) current = s.getAttribute("id");
+        if (window.pageYOffset >= s.offsetTop - 250) current = s.getAttribute("id");
     });
     document.querySelectorAll(".nav-item").forEach(item => {
         item.classList.remove("active");
