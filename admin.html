@@ -7,14 +7,15 @@
     <style>
         body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
-        h2 { color: #d4af37; text-align: center; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; }
+        h2 { color: #d4af37; text-align: center; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; margin-top: 0; }
         label { display: block; margin: 15px 0 5px; font-weight: bold; font-size: 14px; }
         input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
         textarea { height: 80px; resize: vertical; }
-        .help { font-size: 11px; color: #666; margin-top: 4px; }
+        .help { font-size: 11px; color: #666; margin-top: 4px; background: #fffde7; padding: 5px; border-radius: 4px; border-left: 3px solid #ffd600; }
         button { width: 100%; background: #d4af37; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; }
         button:hover { background: #b8952e; }
-        #preview { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 6px; margin-top: 20px; font-family: monospace; font-size: 12px; overflow-x: auto; display: none; }
+        #preview { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 6px; margin-top: 20px; font-family: monospace; font-size: 12px; overflow-x: auto; display: none; white-space: pre-wrap; word-break: break-all; }
+        .note { font-size: 12px; color: #e53935; margin-top: 10px; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
@@ -43,21 +44,34 @@
 
         <label>ID Foto Drive (Pisahkan dengan koma)</label>
         <input type="text" id="pics" placeholder="ID1, ID2, ID3">
-        <div class="help">Masukkan ID saja. Contoh: 1n-io8r_8HaG4N1VkUgHgMS4hUYa8Hsvn</div>
+        <div class="help">
+            <strong>PENTING:</strong> Masukkan ID saja. Pastikan file di Drive sudah di-set <b>"Anyone with the link can view"</b>.<br>
+            Contoh ID: 1n-io8r_8HaG4N1VkUgHgMS4hUYa8Hsvn
+        </div>
 
         <button type="button" onclick="generate()">Download File JSON</button>
     </form>
 
+    <div class="note">Setelah download, upload file ini ke Google Drive Anda dan ambil ID-nya untuk dimasukkan ke script.js</div>
+    
     <div id="preview"></div>
 </div>
 
 <script>
     function generate() {
+        // Ambil data dari form
         const picsValue = document.getElementById('pics').value;
-        const galleryLinks = picsValue ? picsValue.split(',').map(id => `https://drive.google.com/uc?id=${id.trim()}`) : [];
+        const groomName = document.getElementById('g').value || "pria";
+        
+        // Konversi ID Drive menjadi Link Direct Download (Sesuai protokol agar tampil di <img>)
+        const galleryLinks = picsValue ? picsValue.split(',').map(id => {
+            const cleanID = id.trim();
+            // Format link uc agar bisa dibaca langsung oleh browser sebagai file gambar
+            return `https://drive.google.com/uc?export=download&id=${cleanID}`;
+        }) : [];
         
         const data = {
-            groom: document.getElementById('g').value,
+            groom: groomName,
             bride: document.getElementById('b').value,
             date: document.getElementById('d').value,
             phone: document.getElementById('p').value || "62812345678",
@@ -66,20 +80,25 @@
             gallery: galleryLinks
         };
 
-        // Tampilkan Preview
+        // Tampilkan Preview JSON di layar
         const previewEl = document.getElementById('preview');
         previewEl.style.display = 'block';
         previewEl.innerText = JSON.stringify(data, null, 2);
 
-        // Proses Download
-        const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${data.groom.toLowerCase()}_invitation.json`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
+        // Proses Download Otomatis
+        try {
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${groomName.toLowerCase().replace(/\s+/g, '_')}_invitation.json`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            alert("Terjadi kesalahan saat mendownload file.");
+        }
     }
 </script>
 
