@@ -1,7 +1,8 @@
 // Konfigurasi Mapping ID Undangan ke Link Direct Download Google Drive
 const DB_LINKS = {
     "andi": "https://drive.google.com/uc?export=download&id=FILE_ID_JSON_ANDI",
-    "budi": "https://drive.google.com/uc?export=download&id=FILE_ID_JSON_BUDI"
+    "budi": "https://drive.google.com/uc?export=download&id=FILE_ID_JSON_BUDI",
+    "anang": "https://drive.google.com/uc?export=download&id=12gCivEb_jZx_sqV8uXl022WEe31J0C0U"
 };
 
 async function init() {
@@ -66,5 +67,6 @@ function startCountdown(dateStr) {
         document.getElementById('mins').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
     }, 1000);
 }
+
 
 window.onload = init;
