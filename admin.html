@@ -1,33 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head><title>Admin JSON Generator</title></head>
-<body>
-    <h2>Wedding JSON Generator</h2>
-    <form id="adminForm">
-        <input type="text" id="g" placeholder="Nama Pria" required><br>
-        <input type="text" id="b" placeholder="Nama Wanita" required><br>
-        <input type="date" id="d" required><br>
-        <input type="text" id="l" placeholder="Nama Lokasi"><br>
-        <input type="text" id="m" placeholder="Link Google Maps"><br>
-        <textarea id="gal" placeholder="Link Foto Drive (pisahkan dengan koma)"></textarea><br>
-        <button type="button" onclick="generateJSON()">Download JSON</button>
+<body style="padding: 20px; font-family: sans-serif;">
+    <h2>Generate JSON Undangan</h2>
+    <form id="genForm">
+        Nama Pria: <input type="text" id="g" required><br><br>
+        Nama Wanita: <input type="text" id="b" required><br><br>
+        Tanggal (YYYY-MM-DD): <input type="date" id="d" required><br><br>
+        Lokasi: <textarea id="l"></textarea><br><br>
+        ID Foto Drive (pisahkan koma): <input type="text" id="pics"><br><br>
+        <button type="button" onclick="generate()">Download JSON</button>
     </form>
 
     <script>
-        function generateJSON() {
+        function generate() {
+            const pics = document.getElementById('pics').value.split(',');
+            const galleryLinks = pics.map(id => `https://drive.google.com/uc?id=${id.trim()}`);
+            
             const data = {
                 groom: document.getElementById('g').value,
                 bride: document.getElementById('b').value,
                 date: document.getElementById('d').value,
                 location: document.getElementById('l').value,
-                maps: document.getElementById('m').value,
-                gallery: document.getElementById('gal').value.split(',')
+                gallery: galleryLinks
             };
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: 'application/json'});
+
+            const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = `undangan-${data.groom.toLowerCase()}.json`;
+            a.download = `${data.groom.toLowerCase()}.json`;
             a.click();
         }
     </script>
