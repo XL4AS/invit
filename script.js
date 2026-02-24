@@ -13,88 +13,86 @@ const isAdmin = urlParams.get("admin") === "123";
 
 document.getElementById("guest-name").textContent = to;
 
+// Fungsi Buka Undangan - Diperbaiki untuk Chrome Mobile
 function openInvitation() {
     if (audio) {
-        audio.play().catch(err => console.log("Audio play blocked"));
+        audio.play().catch(() => console.log("Audio autoplay blocked"));
     }
+    
     cover.style.opacity = "0";
-    cover.style.transform = "translateY(-100%)";
+    cover.style.transform = "scale(1.1)";
+    
+    // Unlock Scroll
     document.body.classList.remove("no-scroll");
     document.documentElement.style.overflow = "auto";
-    document.getElementById("music-control").style.display = "flex";
+    
     content.style.display = "block";
+    document.getElementById("music-control").style.display = "flex";
     
     setTimeout(() => {
         cover.style.display = "none";
         AOS.refresh();
-    }, 1000);
+    }, 800);
 }
 
 document.addEventListener("DOMContentLoaded", function() {
+    // AOS Init Ringan untuk HP
+    AOS.init({ duration: 800, once: true, disable: 'mobile' });
+
     const btnOpen = document.getElementById("btnOpen");
-    if (btnOpen) btnOpen.addEventListener("click", openInvitation);
+    if (btnOpen) btnOpen.onclick = openInvitation;
 
     if(!id){
-        if(loader) loader.innerHTML = "<h3>ID Undangan Tidak Valid</h3>";
+        if(loader) loader.innerHTML = "<h3>ID Tidak Ditemukan</h3>";
     } else {
-        const DATA_URL = `https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`;
-        fetch(DATA_URL, {cache: "no-store"})
+        fetch(`https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`, {cache: "no-store"})
             .then(r => r.json())
             .then(data => {
                 renderData(data);
                 setupCountdown(data.akad.date);
-                loadWishes(); 
+                loadWishes();
             })
-            .catch(err => {
-                console.error(err);
-                if(loader) loader.style.display = "none";
-            });
+            .catch(() => { if(loader) loader.style.display = "none"; });
     }
 
+    // Form Handler
     const wishForm = document.getElementById('wish-form');
     if(wishForm) {
-        wishForm.addEventListener('submit', function(e) {
+        wishForm.onsubmit = function(e) {
             e.preventDefault();
             const btn = document.getElementById('btn-kirim');
-            const name = document.getElementById('wish-name').value;
-            const message = document.getElementById('wish-message').value;
             btn.disabled = true;
             btn.innerText = "Mengirim...";
 
             const formData = new FormData();
-            formData.append('nama', name);
-            formData.append('ucapan', message);
+            formData.append('nama', document.getElementById('wish-name').value);
+            formData.append('ucapan', document.getElementById('wish-message').value);
 
             fetch(SCRIPT_URL, { method: 'POST', body: formData })
             .then(() => {
                 btn.disabled = false;
-                btn.innerText = "Kirim Ucapan";
+                btn.innerText = "Kirim";
                 wishForm.reset();
-                loadWishes(); 
-            })
-            .catch(err => {
-                alert("Gagal mengirim ucapan");
+                loadWishes();
+            }).catch(() => {
+                alert("Gagal terkirim");
                 btn.disabled = false;
-                btn.innerText = "Kirim Ucapan";
             });
-        });
+        };
     }
 });
 
 function renderData(data) {
+    document.title = data.title;
     document.getElementById("cover-couple-name").textContent = data.title;
     document.getElementById("couple-name-hero").textContent = data.title;
-    document.title = data.title;
+    document.getElementById("closing-names").textContent = data.title;
 
     document.getElementById("groom-name").textContent = data.groom.name;
-    document.getElementById("bride-name").textContent = data.bride.name;
     document.getElementById("groom-parents").textContent = data.groom.parent;
+    document.getElementById("bride-name").textContent = data.bride.name;
     document.getElementById("bride-parents").textContent = data.bride.parent;
     
-    if(document.getElementById("closing-names")) {
-        document.getElementById("closing-names").textContent = data.title;
-    }
-
     document.getElementById("quote").textContent = data.quote;
     document.getElementById("wedding-date-hero").textContent = formatDate(data.akad.date);
     document.getElementById("akad-date").textContent = formatDate(data.akad.date);
@@ -104,88 +102,63 @@ function renderData(data) {
     document.getElementById("event-location").textContent = data.location;
 
     if(data.maps) {
-        document.getElementById("map-frame-container").innerHTML = 
-        `<iframe src="${data.maps}" loading="lazy" allowfullscreen></iframe>`;
+        document.getElementById("map-frame-container").innerHTML = `<iframe src="${data.maps}" width="100%" height="250" style="border-radius:15px; border:none;" allowfullscreen></iframe>`;
     }
 
-    // GALLERY
+    // Gallery
     const gallery = document.getElementById("gallery-grid");
-    if(gallery) {
+    if(gallery && data.gallery) {
         gallery.innerHTML = "";
-        data.gallery.forEach((imgName, index) => {
-            const img = document.createElement("img");
-            img.src = IMAGE_BASE + imgName;
-            img.setAttribute('data-aos', 'zoom-in');
-            img.setAttribute('data-aos-delay', (index * 100).toString());
-            gallery.appendChild(img);
+        data.gallery.forEach(img => {
+            const el = document.createElement("img");
+            el.src = IMAGE_BASE + img;
+            gallery.appendChild(el);
         });
     }
 
-    // QRIS LOGIC
+    // QRIS
     if(data.qris) {
         document.getElementById("gifts").style.display = "block";
-        document.getElementById("qris-container").innerHTML = `<img src="${IMAGE_BASE}${data.qris}" alt="QRIS Gift">`;
+        document.getElementById("qris-container").innerHTML = `<img src="${IMAGE_BASE}${data.qris}">`;
     }
 
-    const waText = encodeURIComponent(`Halo, saya ingin konfirmasi kehadiran di pernikahan ${data.groom.name} & ${data.bride.name}.`);
-    document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=${waText}`;
+    document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=Halo, saya akan hadir!`;
 
-    if(loader) loader.style.opacity = "0";
-    setTimeout(() => { if(loader) loader.style.display = "none"; }, 500);
-    AOS.init({ duration: 1000, once: true, offset: 50 });
+    if(loader) {
+        loader.style.opacity = "0";
+        setTimeout(() => loader.style.display = "none", 500);
+    }
 }
 
 function loadWishes() {
     const display = document.getElementById('wish-display');
-    fetch(SCRIPT_URL)
-    .then(res => res.json())
-    .then(data => {
-        if(data.length === 0) {
-            display.innerHTML = '<p style="text-align:center; font-size:0.8rem; color:#888;">Belum ada ucapan.</p>';
-            return;
-        }
-        display.innerHTML = '';
-        const reversedData = [...data].reverse();
-        reversedData.forEach((item, index) => {
-            const actualRowIndex = data.length - index; 
+    fetch(SCRIPT_URL).then(r => r.json()).then(data => {
+        display.innerHTML = "";
+        data.reverse().forEach((item, index) => {
+            const rowIdx = data.length - index;
+            const del = isAdmin ? `<button onclick="deleteWish(${rowIdx})" style="color:red; float:right; border:none; background:none; font-size:0.7rem;">Hapus</button>` : '';
             const div = document.createElement('div');
-            div.className = 'wish-item';
-            const deleteBtn = isAdmin ? `
-                <button onclick="deleteWish(${actualRowIndex})" style="position:absolute; top:10px; right:10px; background:#fff0f0; border:1px solid #ffcccc; color:#ff4d4d; cursor:pointer; font-size:0.6rem; padding:2px 5px; border-radius:4px;">
-                    <i class="fas fa-trash"></i> Hapus
-                </button>` : '';
-            div.innerHTML = `<strong>${item.nama}</strong><p>${item.ucapan}</p>${deleteBtn}`;
+            div.style = "background:white; padding:10px; border-radius:8px; margin-bottom:10px; border-left:4px solid var(--gold); font-size:0.85rem;";
+            div.innerHTML = `${del}<strong>${item.nama}</strong><p style="margin:5px 0 0;">${item.ucapan}</p>`;
             display.appendChild(div);
         });
-    })
-    .catch(err => {
-        display.innerHTML = '<p style="text-align:center; font-size:0.8rem; color:red;">Gagal memuat ucapan.</p>';
     });
 }
 
-function deleteWish(rowId) {
-    if (confirm("Hapus ucapan ini?")) {
-        fetch(`${SCRIPT_URL}?del=${rowId}`).then(() => { loadWishes(); }).catch(err => alert("Gagal menghapus"));
-    }
+function deleteWish(id) {
+    if(confirm("Hapus?")) fetch(`${SCRIPT_URL}?del=${id}`).then(() => loadWishes());
 }
 
-function setupCountdown(dateStr) {
-    const target = new Date(dateStr).getTime();
-    const timerElement = document.getElementById("timer");
+function setupCountdown(date) {
+    const target = new Date(date).getTime();
     setInterval(() => {
-        const now = new Date().getTime();
-        const diff = target - now;
-        if (diff > 0) {
-            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
-            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-            const s = Math.floor((diff % (1000 * 60)) / 1000);
-            timerElement.innerHTML = `
-                <div class="count-item"><span>${d}</span><br><small>Hari</small></div>
-                <div class="count-item"><span>${h}</span><br><small>Jam</small></div>
-                <div class="count-item"><span>${m}</span><br><small>Menit</small></div>
-                <div class="count-item"><span>${s}</span><br><small>Detik</small></div>
-            `;
+        const diff = target - new Date().getTime();
+        if(diff > 0) {
+            const d = Math.floor(diff / 86400000);
+            const h = Math.floor((diff % 86400000) / 3600000);
+            const m = Math.floor((diff % 3600000) / 60000);
+            const s = Math.floor((diff % 60000) / 1000);
+            document.getElementById("timer").innerHTML = `<div class="count-item"><b>${d}</b><br><small>Hari</small></div><div class="count-item"><b>${h}</b><br><small>Jam</small></div><div class="count-item"><b>${m}</b><br><small>Menit</small></div><div class="count-item"><b>${s}</b><br><small>Detik</small></div>`;
         }
     }, 1000);
 }
@@ -196,18 +169,7 @@ function toggleMusic() {
     else { audio.pause(); icon.classList.remove("fa-spin"); }
 }
 
-function formatDate(dateStr) {
-    if(!dateStr) return "";
-    return new Date(dateStr).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+function formatDate(s) {
+    if(!s) return "";
+    return new Date(s).toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
 }
-
-window.addEventListener('scroll', () => {
-    let current = "";
-    document.querySelectorAll("section").forEach(s => {
-        if (window.pageYOffset >= s.offsetTop - 250) current = s.getAttribute("id");
-    });
-    document.querySelectorAll(".nav-item").forEach(item => {
-        item.classList.remove("active");
-        if (item.getAttribute("href").includes(current)) item.classList.add("active");
-    });
-});
