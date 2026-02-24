@@ -2,8 +2,9 @@
    DATABASE JSON UNDANGAN
 ========================= */
 const DB_LINKS = {
-  anang: "https://raw.githubusercontent.com/XL4AS/invit/main/data/anang_invitation.json",
-  iklas: "https://raw.githubusercontent.com/XL4AS/invit/main/data/iklas_invitation.json"
+   anang: "https://raw.githubusercontent.com/XL4AS/invit/main/data/anang_invitation.json",
+   indri: "https://raw.githubusercontent.com/XL4AS/invit/main/data/indri_invitation.json",
+   iklas: "https://raw.githubusercontent.com/XL4AS/invit/main/data/iklas_invitation.json"
 };
 
 /* =========================
@@ -96,3 +97,4 @@ function renderData(data) {
   loader.style.display  = "none";
   content.style.display = "block";
 }
+
