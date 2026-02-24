@@ -1,5 +1,6 @@
 const DB_LINKS = {
-  anang: "https://raw.githubusercontent.com/XL4AS/invit/main/data/anang_invitation.json"
+  anang: "https://raw.githubusercontent.com/XL4AS/invit/main/data/anang_invitation.json",
+  iklas: "https://raw.githubusercontent.com/XL4AS/invit/main/data/iklas_invitation.json"
 };
 
 const id = new URLSearchParams(location.search).get("id");
@@ -42,3 +43,4 @@ function renderData(data){
   document.getElementById("loader").style.display="none";
   document.getElementById("content").style.display="block";
 }
+
