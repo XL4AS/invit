@@ -1,101 +1,73 @@
-/* =============================
-   KONFIGURASI
-============================= */
-const IMAGE_BASE =
-  "https://xl4as.github.io/invit/images/";
-
-/* =============================
-   AMBIL ID URL
-============================= */
-const loader  = document.getElementById("loader");
+const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
+const loader = document.getElementById("loader");
 const content = document.getElementById("content");
 
 const id = new URLSearchParams(location.search).get("id");
 
 if(!id){
-  loader.innerHTML = "ID undangan tidak ada di URL";
-  throw new Error("Missing ID");
+    loader.innerHTML = "ID undangan tidak ditemukan";
+} else {
+    const DATA_URL = `https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`;
+    
+    fetch(DATA_URL, {cache: "no-store"})
+        .then(r => r.json())
+        .then(renderData)
+        .catch(err => {
+            loader.innerHTML = `Data <b>${id}</b> tidak ditemukan`;
+        });
 }
 
-/* =============================
-   LOAD JSON
-============================= */
-const DATA_URL =
-  `https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`;
+function renderData(data) {
+    // Hero & Names
+    document.getElementById("couple-name").textContent = `${data.groom.name} & ${data.bride.name}`;
+    document.getElementById("groom-name").textContent = data.groom.name;
+    document.getElementById("bride-name").textContent = data.bride.name;
+    document.getElementById("groom-parents").textContent = data.groom.parent;
+    document.getElementById("bride-parents").textContent = data.bride.parent;
+    
+    // Quote & Date
+    document.getElementById("quote").textContent = data.quote;
+    document.getElementById("wedding-date-hero").textContent = formatDate(data.akad.date);
+    
+    // Schedule
+    document.getElementById("akad-date").textContent = formatDate(data.akad.date);
+    document.getElementById("akad-time").textContent = data.akad.time;
+    document.getElementById("resepsi-date").textContent = formatDate(data.resepsi.date);
+    document.getElementById("resepsi-time").textContent = data.resepsi.time;
+    
+    document.getElementById("event-location").textContent = data.location;
 
-fetch(DATA_URL,{cache:"no-store"})
-  .then(r=>{
-    if(!r.ok) throw new Error("JSON tidak ditemukan");
-    return r.json();
-  })
-  .then(renderData)
-  .catch(err=>{
-    console.error(err);
-    loader.innerHTML = `Data undangan <b>${id}</b> tidak ditemukan`;
-  });
+    // Maps
+    if(data.maps && data.maps.includes("http")) {
+        document.getElementById("map-frame-container").innerHTML = 
+        `<iframe src="${data.maps}" loading="lazy"></iframe>`;
+    }
 
-/* =============================
-   RENDER DATA SESUAI JSON BARU
-============================= */
-function renderData(data){
+    // Gallery
+    const gallery = document.getElementById("gallery-grid");
+    gallery.innerHTML = "";
+    (data.gallery || []).forEach(name => {
+        const img = document.createElement("img");
+        img.src = IMAGE_BASE + name;
+        img.setAttribute('data-aos', 'zoom-in'); // Tambah animasi tiap foto
+        gallery.appendChild(img);
+    });
 
-  document.getElementById("title").textContent = data.title || "";
+    // WA Button
+    document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=Halo, saya ingin konfirmasi kehadiran di pernikahan ${data.groom.name} & ${data.bride.name}`;
 
-  document.getElementById("couple-name").textContent =
-    `${data.groom.name} & ${data.bride.name}`;
-
-  document.getElementById("quote").textContent =
-    data.quote || "";
-
-  document.getElementById("akad-date").textContent =
-    formatDate(data.akad.date);
-
-  document.getElementById("akad-time").textContent =
-    data.akad.time;
-
-  document.getElementById("resepsi-date").textContent =
-    formatDate(data.resepsi.date);
-
-  document.getElementById("resepsi-time").textContent =
-    data.resepsi.time;
-
-  document.getElementById("event-location").textContent =
-    data.location || "";
-
-  /* MAP */
-  document.getElementById("map-frame-container").innerHTML =
-    data.maps && data.maps.includes("embed")
-    ? `<iframe src="${data.maps}" loading="lazy"></iframe>`
-    : "<p>Peta tidak tersedia</p>";
-
-  /* GALERI (NAMA FILE SAJA) */
-  const gallery = document.getElementById("gallery-slider");
-  gallery.innerHTML = "";
-
-  (data.gallery || []).forEach(name=>{
-    const img = new Image();
-    img.src = IMAGE_BASE + name;
-    img.loading = "lazy";
-    img.onerror = ()=>img.remove();
-    gallery.appendChild(img);
-  });
-
-  /* WHATSAPP */
-  document.getElementById("whatsapp-btn").href =
-    `https://wa.me/${data.phone}?text=Saya%20akan%20hadir`;
-
-  loader.style.display="none";
-  content.style.display="block";
+    // Show Content & Start Animation
+    loader.style.display = "none";
+    content.style.display = "block";
+    
+    // Inisialisasi AOS (Animation on Scroll)
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
 }
 
-/* =============================
-   FORMAT TANGGAL
-============================= */
-function formatDate(date){
-  return new Date(date+"T00:00:00").toLocaleDateString("id-ID",{
-    weekday:"long",
-    day:"numeric",
-    month:"long",
-    year:"numeric"
-  });
+function formatDate(dateStr) {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateStr).toLocaleDateString('id-ID', options);
 }
