@@ -1,5 +1,5 @@
 const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQE4D1I7djJSg-CL2BFJvK5R_ppxI0s9gQ1hZXjRgL21I8gXGwjgHgjgDhXTfiE7GH/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzONCZooTk_FKi-wKdmx7fqjfyXTj__sb2fFop77GKsqff3TIHQmlOdK_UiTcNz-00z/exec";
 
 const loader = document.getElementById("loader");
 const content = document.getElementById("content");
@@ -220,3 +220,4 @@ window.addEventListener('scroll', () => {
         if (item.getAttribute("href").includes(current)) item.classList.add("active");
     });
 });
+
