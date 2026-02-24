@@ -1,37 +1,87 @@
 <!DOCTYPE html>
-<html>
-<head><title>Admin JSON Generator</title></head>
-<body style="padding: 20px; font-family: sans-serif;">
-    <h2>Generate JSON Undangan</h2>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Generator JSON Undangan</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f4f7f6; color: #333; line-height: 1.6; padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { color: #d4af37; text-align: center; border-bottom: 2px solid #f4f7f6; padding-bottom: 10px; }
+        label { display: block; margin: 15px 0 5px; font-weight: bold; font-size: 14px; }
+        input, textarea { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        textarea { height: 80px; resize: vertical; }
+        .help { font-size: 11px; color: #666; margin-top: 4px; }
+        button { width: 100%; background: #d4af37; color: white; border: none; padding: 12px; border-radius: 6px; font-size: 16px; font-weight: bold; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+        button:hover { background: #b8952e; }
+        #preview { background: #272822; color: #f8f8f2; padding: 15px; border-radius: 6px; margin-top: 20px; font-family: monospace; font-size: 12px; overflow-x: auto; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>JSON Generator</h2>
     <form id="genForm">
-        Nama Pria: <input type="text" id="g" required><br><br>
-        Nama Wanita: <input type="text" id="b" required><br><br>
-        Tanggal (YYYY-MM-DD): <input type="date" id="d" required><br><br>
-        Lokasi: <textarea id="l"></textarea><br><br>
-        ID Foto Drive (pisahkan koma): <input type="text" id="pics"><br><br>
-        <button type="button" onclick="generate()">Download JSON</button>
+        <label>Nama Pria</label>
+        <input type="text" id="g" placeholder="Contoh: Anang" required>
+
+        <label>Nama Wanita</label>
+        <input type="text" id="b" placeholder="Contoh: Indri" required>
+
+        <label>Tanggal Acara</label>
+        <input type="date" id="d" required>
+
+        <label>Nomor WhatsApp RSVP</label>
+        <input type="text" id="p" placeholder="Contoh: 628123456789">
+        <div class="help">Gunakan kode negara (62), tanpa tanda + atau spasi.</div>
+
+        <label>Alamat Lokasi (Teks)</label>
+        <textarea id="l" placeholder="Gedung Serbaguna, Jl. Melati No. 123..."></textarea>
+
+        <label>Link Google Maps</label>
+        <input type="url" id="m" placeholder="https://goo.gl/maps/...">
+
+        <label>ID Foto Drive (Pisahkan dengan koma)</label>
+        <input type="text" id="pics" placeholder="ID1, ID2, ID3">
+        <div class="help">Masukkan ID saja. Contoh: 1n-io8r_8HaG4N1VkUgHgMS4hUYa8Hsvn</div>
+
+        <button type="button" onclick="generate()">Download File JSON</button>
     </form>
 
-    <script>
-        function generate() {
-            const pics = document.getElementById('pics').value.split(',');
-            const galleryLinks = pics.map(id => `https://drive.google.com/uc?id=${id.trim()}`);
-            
-            const data = {
-                groom: document.getElementById('g').value,
-                bride: document.getElementById('b').value,
-                date: document.getElementById('d').value,
-                location: document.getElementById('l').value,
-                gallery: galleryLinks
-            };
+    <div id="preview"></div>
+</div>
 
-            const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `${data.groom.toLowerCase()}.json`;
-            a.click();
-        }
-    </script>
+<script>
+    function generate() {
+        const picsValue = document.getElementById('pics').value;
+        const galleryLinks = picsValue ? picsValue.split(',').map(id => `https://drive.google.com/uc?id=${id.trim()}`) : [];
+        
+        const data = {
+            groom: document.getElementById('g').value,
+            bride: document.getElementById('b').value,
+            date: document.getElementById('d').value,
+            phone: document.getElementById('p').value || "62812345678",
+            location: document.getElementById('l').value,
+            maps: document.getElementById('m').value,
+            gallery: galleryLinks
+        };
+
+        // Tampilkan Preview
+        const previewEl = document.getElementById('preview');
+        previewEl.style.display = 'block';
+        previewEl.innerText = JSON.stringify(data, null, 2);
+
+        // Proses Download
+        const blob = new Blob([JSON.stringify(data, null, 2)], {type: "application/json"});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${data.groom.toLowerCase()}_invitation.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+</script>
+
 </body>
 </html>
