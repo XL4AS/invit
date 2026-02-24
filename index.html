@@ -14,7 +14,6 @@
             --gold: #b2945e;
             --dark-jawa: #2c241e;
             --bg-paper: #f9f7f2;
-            --white: #ffffff;
             --soft-gold: #e8dcc4;
         }
 
@@ -25,10 +24,17 @@
             font-family: 'Poppins', sans-serif;
             background: #f4f1ea;
             color: var(--dark-jawa);
-            overflow-x: hidden;
+            width: 100%;
+            overflow-x: hidden; /* Mencegah geser kanan-kiri */
         }
 
-        body.no-scroll { overflow: hidden; height: 100vh; }
+        /* Fix Chrome Mobile Flickering */
+        body.no-scroll { 
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
 
         .loader {
             position: fixed; inset: 0;
@@ -42,12 +48,13 @@
             background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('background/main-bg.jpg.jpg');
             background-size: cover; background-position: center;
             display: flex; justify-content: center; align-items: center;
-            color: white; transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s;
+            color: white; 
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            will-change: transform, opacity;
         }
 
-        .cover-content { text-align: center; padding: 20px; width: 100%; }
+        .cover-content { text-align: center; padding: 20px; width: 100%; z-index: 10000; }
         .cover-content h1 { font-family: 'Great Vibes', cursive; font-size: clamp(3rem, 10vw, 4.5rem); margin: 15px 0; }
-        .cover-content h3 { font-family: 'Cinzel', serif; letter-spacing: 5px; font-size: 0.8rem; }
         
         .to-guest {
             background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px);
@@ -59,15 +66,8 @@
             background: var(--gold); color: white; border: none;
             padding: 16px 40px; border-radius: 50px; font-weight: 600;
             cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            position: relative; z-index: 10001;
         }
-
-        .hero {
-            height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            background: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('background/hero-pattern.png');
-            padding: 20px;
-        }
-        .hero h1 { font-family: 'Great Vibes', cursive; font-size: clamp(3rem, 10vw, 4.5rem); color: var(--gold); }
 
         .card {
             background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
@@ -77,41 +77,23 @@
         }
 
         .section { padding: 40px 0; max-width: 600px; margin: 0 auto; text-align: center; }
-
-        .event-box {
-            background: white; padding: 30px 20px; border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.03); border: 1px solid var(--soft-gold); margin-bottom: 25px;
-        }
-
-        .couple-name-display {
-            font-family: 'Cinzel', serif; color: var(--gold);
-            font-size: 1.5rem; margin-bottom: 5px; font-weight: 700;
-        }
-
+        .event-box { background: white; padding: 30px 20px; border-radius: 20px; border: 1px solid var(--soft-gold); margin-bottom: 25px; }
+        .couple-name-display { font-family: 'Cinzel', serif; color: var(--gold); font-size: 1.5rem; font-weight: 700; }
+        
         .countdown-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
         .count-item { background: var(--gold); color: white; padding: 10px; border-radius: 10px; min-width: 60px; }
-        .count-item span { font-weight: bold; font-size: 1.2rem; }
 
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .gallery-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 15px; border: 3px solid white; }
+        .gallery-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 15px; }
 
-        .wish-container { text-align: left; max-height: 400px; overflow-y: auto; padding: 10px; margin-top: 20px; background: #fdfcf9; border-radius: 15px; border: 1px solid #eee; }
-        .wish-item { background: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--gold); position: relative; }
-        .wish-item strong { color: var(--dark-jawa); font-size: 0.9rem; display: block; }
-        .wish-item p { margin: 5px 0 0; font-size: 0.85rem; color: #555; line-height: 1.4; }
-        
-        .form-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--soft-gold); font-family: 'Poppins', sans-serif; outline: none; }
-        .btn-send { background: var(--gold); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
-
-        .thank-you-section { padding: 60px 20px; background: #fffaf0; border-radius: 30px; margin: 40px 10px; }
-        .thank-you-text { font-family: 'Great Vibes', cursive; font-size: 2.5rem; color: var(--gold); margin-bottom: 10px; }
+        #qris-container img { width: 100%; max-width: 250px; border-radius: 10px; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-top: 15px; }
 
         .nav-bottom {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
             background: rgba(44, 36, 30, 0.95); padding: 12px 25px;
             border-radius: 40px; display: flex; gap: 25px; z-index: 1000;
         }
-        .nav-item { color: #888; font-size: 1.2rem; text-decoration: none; }
+        .nav-item { color: #888; font-size: 1.2rem; }
         .nav-item.active { color: var(--gold); }
 
         .music-control {
@@ -122,11 +104,10 @@
 
         .floating { animation: float 4s ease-in-out infinite; }
         @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        .btn-wa { background: #25d366; color: white; padding: 14px 25px; border-radius: 30px; text-decoration: none; display: inline-block; font-weight: 600; margin-top: 10px; }
-        iframe { width: 100%; height: 250px; border-radius: 20px; border: none; }
         
-        /* Gaya QRIS */
-        #qris-container img { width: 100%; max-width: 250px; border-radius: 10px; border: 5px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin: 15px auto; }
+        /* Fix AOS Mobile Flickering */
+        [data-aos] { pointer-events: none; }
+        .aos-animate { pointer-events: auto; }
     </style>
 </head>
 <body class="no-scroll">
@@ -138,22 +119,20 @@
     <div id="loader" class="loader">
         <div style="text-align: center;">
             <img src="icon/gunungan.png" width="60" class="floating">
-            <h2 style="font-family: 'Great Vibes'; color: var(--gold); font-size: 1.5rem;">Memuat Undangan...</h2>
+            <h2 style="font-family: 'Great Vibes'; color: var(--gold);">Memuat...</h2>
         </div>
     </div>
 
     <div id="cover" class="cover-overlay">
-        <div class="cover-content" data-aos="fade-up">
-            <img src="icon/gunungan.png" class="gunungan-hero floating" width="70">
-            <h3>WEDDING INVITATION</h3>
+        <div class="cover-content">
+            <img src="icon/gunungan.png" class="floating" width="70">
+            <h3 style="font-family: 'Cinzel'; letter-spacing: 3px; font-size: 0.7rem;">WEDDING INVITATION</h3>
             <h1 id="cover-couple-name">Mempelai</h1>
             <div class="to-guest">
-                <p style="margin: 0; font-size: 0.8rem;">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
+                <p style="font-size: 0.8rem; margin:0;">Kepada Yth:</p>
                 <h2 id="guest-name" style="margin: 5px 0 0; font-size: 1.2rem;">Tamu Undangan</h2>
             </div>
-            <button class="btn-open" id="btnOpen">
-                <i class="fas fa-envelope-open-text"></i> Buka Undangan
-            </button>
+            <button class="btn-open" id="btnOpen">Buka Undangan</button>
         </div>
     </div>
 
@@ -162,88 +141,74 @@
     </div>
 
     <main id="content" style="display:none">
-        <section class="hero" id="home">
-            <div data-aos="zoom-out" data-aos-duration="1500">
-                <img src="icon/gunungan.png" class="gunungan-hero floating" width="80">
-                <h2 style="font-size: 0.8rem; letter-spacing: 3px;">THE WEDDING OF</h2>
-                <h1 id="couple-name-hero"></h1>
-                <p id="wedding-date-hero" style="font-weight: 600; letter-spacing: 2px; font-size: 0.9rem;"></p>
+        <section class="section" id="home" style="min-height: 80vh; display: flex; align-items: center; justify-content: center;">
+            <div data-aos="zoom-in">
+                <img src="icon/gunungan.png" width="80" class="floating">
+                <h1 id="couple-name-hero" style="font-family: 'Great Vibes'; font-size: 3.5rem; color: var(--gold);"></h1>
+                <p id="wedding-date-hero" style="letter-spacing: 2px; font-size: 0.9rem;"></p>
             </div>
         </section>
 
         <div class="card">
-            <section class="section" data-aos="fade-up">
-                <div id="quote" style="font-style: italic; font-size: 0.9rem; color: #666; line-height: 1.6;"></div>
-            </section>
-
             <section class="section" id="couple" data-aos="fade-up">
+                <div id="quote" style="font-style: italic; margin-bottom: 30px; font-size: 0.9rem; padding: 0 10px;"></div>
                 <div class="event-box">
                     <h3 id="groom-name" class="couple-name-display"></h3>
-                    <p style="font-size: 0.9rem;">Putra dari <br><b id="groom-parents"></b></p>
-                    <h2 style="font-family: 'Great Vibes'; font-size: 2rem; color: var(--gold); margin: 15px 0;">dan</h2>
+                    <p>Putra dari <b id="groom-parents"></b></p>
+                    <h2 style="font-family: 'Great Vibes'; font-size: 2rem; color: var(--gold);">dan</h2>
                     <h3 id="bride-name" class="couple-name-display"></h3>
-                    <p style="font-size: 0.9rem;">Putri dari <br><b id="bride-parents"></b></p>
+                    <p>Putri dari <b id="bride-parents"></b></p>
                 </div>
             </section>
 
             <section class="section" id="event" data-aos="fade-up">
                 <div id="timer" class="countdown-container"></div>
                 <div class="event-box">
-                    <h3 style="font-size: 1.1rem;"><i class="fas fa-ring"></i> Akad Nikah</h3>
-                    <p id="akad-date" style="font-size: 0.9rem;"></p>
-                    <p id="akad-time" style="font-weight: 600;"></p>
+                    <h3><i class="fas fa-ring"></i> Akad Nikah</h3>
+                    <p id="akad-date"></p>
+                    <p id="akad-time" style="font-weight: 700;"></p>
                 </div>
                 <div class="event-box">
-                    <h3 style="font-size: 1.1rem;"><i class="fas fa-glass-cheers"></i> Resepsi</h3>
-                    <p id="resepsi-date" style="font-size: 0.9rem;"></p>
-                    <p id="resepsi-time" style="font-weight: 600;"></p>
+                    <h3><i class="fas fa-glass-cheers"></i> Resepsi</h3>
+                    <p id="resepsi-date"></p>
+                    <p id="resepsi-time" style="font-weight: 700;"></p>
                 </div>
             </section>
 
             <section class="section" id="location" data-aos="fade-up">
-                <h3 style="font-size: 1.1rem;"><i class="fas fa-map-marker-alt"></i> Lokasi Acara</h3>
-                <p id="event-location" style="margin-bottom: 15px; font-size: 0.9rem;"></p>
+                <h3><i class="fas fa-map-marker-alt"></i> Lokasi</h3>
+                <p id="event-location" style="font-size: 0.9rem; margin-bottom: 15px;"></p>
                 <div id="map-frame-container"></div>
-                <br>
-                <a id="whatsapp-btn" target="_blank" class="btn-wa">Konfirmasi Kehadiran</a>
+                <a id="whatsapp-btn" target="_blank" style="background:#25d366; color:white; padding:12px 25px; border-radius:30px; text-decoration:none; display:inline-block; margin-top:15px;">Konfirmasi Kehadiran</a>
             </section>
 
             <section class="section" id="gallery" data-aos="fade-up">
-                <h3 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-images"></i> Galeri Momen</h3>
+                <h3 style="margin-bottom: 20px;">Galeri</h3>
                 <div id="gallery-grid" class="gallery-grid"></div>
             </section>
 
-            <section class="section" id="gifts" data-aos="fade-up" style="display:none;">
+            <section class="section" id="gifts" style="display:none;" data-aos="fade-up">
                 <div class="event-box">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 10px;"><i class="fas fa-gift"></i> Digital Gift</h3>
-                    <p style="font-size: 0.8rem; color: #666; margin-bottom: 20px;">Tanpa mengurangi rasa hormat, bagi Anda yang ingin memberikan tanda kasih untuk kami dapat melalui QRIS di bawah ini:</p>
+                    <h3><i class="fas fa-gift"></i> Digital Gift</h3>
                     <div id="qris-container"></div>
                 </div>
             </section>
 
             <section class="section" id="wishes" data-aos="fade-up">
                 <div class="event-box">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-envelope"></i> Kartu Ucapan</h3>
+                    <h3><i class="fas fa-envelope"></i> Ucapan Doa</h3>
                     <form id="wish-form">
-                        <input type="text" id="wish-name" class="form-input" placeholder="Nama Anda" required>
-                        <textarea id="wish-message" class="form-input" style="height: 100px;" placeholder="Tulis doa & harapan..." required></textarea>
-                        <button type="submit" id="btn-kirim" class="btn-send">Kirim Ucapan</button>
+                        <input type="text" id="wish-name" style="width:100%; padding:10px; margin-bottom:10px; border-radius:8px; border:1px solid #ddd;" placeholder="Nama" required>
+                        <textarea id="wish-message" style="width:100%; padding:10px; height:80px; border-radius:8px; border:1px solid #ddd;" placeholder="Doa Anda" required></textarea>
+                        <button type="submit" id="btn-kirim" style="width:100%; background:var(--gold); color:white; border:none; padding:12px; border-radius:8px; margin-top:10px; font-weight:700;">Kirim</button>
                     </form>
-                    <div id="wish-display" class="wish-container"></div>
+                    <div id="wish-display" style="text-align:left; margin-top:20px; max-height:300px; overflow-y:auto;"></div>
                 </div>
             </section>
 
-            <section class="section" data-aos="fade-up">
-                <div class="thank-you-section">
-                    <h2 class="thank-you-text">Terima Kasih</h2>
-                    <p style="font-size: 0.9rem; color: #666; line-height: 1.6; padding: 0 20px;">
-                        Merupakan suatu kebahagiaan dan kehormatan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kami.
-                    </p>
-                    <div style="margin-top: 30px;">
-                        <p style="margin-bottom: 5px; font-size: 0.8rem;">Kami yang berbahagia,</p>
-                        <h1 id="closing-names" style="font-family: 'Great Vibes', cursive; color: var(--gold);"></h1>
-                    </div>
-                </div>
+            <section class="section">
+                <h2 style="font-family: 'Great Vibes'; font-size: 2.5rem; color: var(--gold);">Terima Kasih</h2>
+                <p id="closing-names" style="font-weight: 700;"></p>
             </section>
         </div>
 
@@ -256,6 +221,6 @@
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js?v=1.6"></script>
+    <script src="script.js?v=1.7"></script>
 </body>
 </html>
