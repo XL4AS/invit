@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JSON Generator + QRIS</title>
+    <title>JSON Generator Fix</title>
     <style>
         body { font-family: sans-serif; background: #f4f4f4; padding: 20px; }
         .container { max-width: 600px; margin: auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
         h2 { text-align: center; color: #b2945e; }
         label { display: block; margin-top: 15px; font-weight: bold; font-size: 13px; }
         input, textarea { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
-        .qris-box { background: #fff9f0; padding: 10px; border: 1px dashed #b2945e; border-radius: 8px; margin-top: 10px; }
         button { width: 100%; padding: 15px; background: #b2945e; color: white; border: none; border-radius: 8px; margin-top: 20px; cursor: pointer; font-weight: bold; font-size: 16px; }
         button:hover { background: #967d4f; }
         pre { background: #222; color: #0f0; padding: 15px; border-radius: 5px; margin-top: 20px; overflow-x: auto; font-size: 12px; display: none; }
@@ -59,12 +58,6 @@
     <label>Nama Foto (Pisahkan dengan koma)</label>
     <input type="text" id="in_pics" placeholder="foto1.jpg, foto2.jpg">
 
-    <div class="qris-box">
-        <label>Nama File QRIS (jpg/png)</label>
-        <input type="text" id="in_qris" placeholder="qris.jpg" value="qris.jpg">
-        <small style="color: #888; font-size: 11px;">*Upload file ini ke folder /images/ di GitHub Anda</small>
-    </div>
-
     <button type="button" onclick="prosesDownload()">DOWNLOAD JSON</button>
 
     <pre id="hasilPreview"></pre>
@@ -73,6 +66,7 @@
 <script>
 function prosesDownload() {
     try {
+        // Ambil Nilai dari Input
         const galleryRaw = document.getElementById("in_pics").value;
         const galleryArray = galleryRaw ? galleryRaw.split(",").map(item => item.trim()) : ["foto1.jpg"];
 
@@ -99,26 +93,29 @@ function prosesDownload() {
             "maps": document.getElementById("in_maps").value,
             "phone": document.getElementById("in_phone").value,
             "quote": document.getElementById("in_quote").value,
-            "gallery": galleryArray,
-            "qris": document.getElementById("in_qris").value // DATA QRIS DISINI
+            "gallery": galleryArray
         };
 
         const stringData = JSON.stringify(dataUndangan, null, 2);
 
+        // Tampilkan Preview
         const previewEl = document.getElementById("hasilPreview");
         previewEl.innerText = stringData;
         previewEl.style.display = "block";
 
+        // LOGIKA DOWNLOAD (Cara Paling Aman)
         const blob = new Blob([stringData], { type: "application/json" });
         const url = window.URL.createObjectURL(blob);
         const linkDownload = document.createElement("a");
         
         linkDownload.href = url;
-        linkDownload.setAttribute("download", `${dataUndangan.groom.name.toLowerCase().replace(/\s/g, '_')}_invitation.json`);
+        linkDownload.setAttribute("download", `${dataUndangan.groom.name.toLowerCase()}_invitation.json`);
         
+        // Wajib masuk ke dokumen agar bisa diklik di beberapa browser
         document.body.appendChild(linkDownload);
         linkDownload.click();
         
+        // Bersihkan
         document.body.removeChild(linkDownload);
         window.URL.revokeObjectURL(url);
 

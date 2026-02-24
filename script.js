@@ -1,193 +1,192 @@
 const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQE4D1I7djJSg-CL2BFJvK5R_ppxI0s9gQ1hZXjRgL21I8gXGwjgHgjgDhXTfiE7GH/exec";
 
-// Ambil parameter ID dari URL (?id=...)
+const loader = document.getElementById("loader");
+const content = document.getElementById("content");
+const audio = document.getElementById("weddingAudio");
+const cover = document.getElementById("cover");
+
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
-const toGuest = urlParams.get("to") || "Tamu Undangan";
+const to = urlParams.get("to") || "Tamu Undangan";
 
-document.getElementById("guest-name").textContent = toGuest;
+document.getElementById("guest-name").textContent = to;
 
-// Fungsi Buka Undangan
 function openInvitation() {
-    const audio = document.getElementById("weddingAudio");
-    audio.play().catch(() => console.log("Audio diblokir browser"));
-    
-    document.getElementById("cover").style.transform = "translateY(-100%)";
+    if (audio) {
+        audio.play().catch(err => console.log("Audio play blocked"));
+    }
+    cover.style.opacity = "0";
+    cover.style.transform = "translateY(-100%)";
     document.body.classList.remove("no-scroll");
+    document.documentElement.style.overflow = "auto";
     document.getElementById("music-control").style.display = "flex";
-    document.getElementById("content").style.display = "block";
+    content.style.display = "block";
     
-    setTimeout(() => { 
-        document.getElementById("cover").style.display = "none";
-        AOS.init({ duration: 1000, once: true });
+    setTimeout(() => {
+        cover.style.display = "none";
+        AOS.refresh();
     }, 1000);
 }
 
-// Inisialisasi saat halaman dimuat
 document.addEventListener("DOMContentLoaded", function() {
-    if(!id) {
-        document.getElementById("loader").innerHTML = "<h2>ID Tidak Ditemukan</h2>";
-        return;
+    const btnOpen = document.getElementById("btnOpen");
+    if (btnOpen) btnOpen.addEventListener("click", openInvitation);
+
+    if(!id){
+        if(loader) loader.innerHTML = "<h3>ID Undangan Tidak Valid</h3>";
+    } else {
+        const DATA_URL = `https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`;
+        fetch(DATA_URL, {cache: "no-store"})
+            .then(r => r.json())
+            .then(data => {
+                renderData(data);
+                setupCountdown(data.akad.date);
+                loadWishes(); // Memuat ucapan setelah data utama siap
+            })
+            .catch(err => {
+                console.error(err);
+                if(loader) loader.style.display = "none";
+            });
     }
 
-    // Mengambil data dari JSDelivr (Proxy GitHub yang lebih stabil)
-    const DATA_URL = `https://cdn.jsdelivr.net/gh/XL4AS/invit@main/data/${id}_invitation.json`;
+    // Logika Kirim Ucapan
+    const wishForm = document.getElementById('wish-form');
+    if(wishForm) {
+        wishForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-kirim');
+            const name = document.getElementById('wish-name').value;
+            const message = document.getElementById('wish-message').value;
 
-    fetch(DATA_URL)
-        .then(res => {
-            if(!res.ok) throw new Error("File JSON tidak ditemukan");
-            return res.json();
-        })
-        .then(data => {
-            renderPage(data);
-            setupCountdown(data.akad.date);
-            loadWishes();
-        })
-        .catch(err => {
-            console.error(err);
-            document.getElementById("loader").innerHTML = `<h2>Data Gagal Dimuat</h2><p>Cek file data/${id}_invitation.json di GitHub.</p>`;
+            btn.disabled = true;
+            btn.innerText = "Mengirim...";
+
+            const formData = new FormData();
+            formData.append('nama', name);
+            formData.append('ucapan', message);
+
+            fetch(SCRIPT_URL, { method: 'POST', body: formData })
+            .then(() => {
+                btn.disabled = false;
+                btn.innerText = "Kirim Ucapan";
+                wishForm.reset();
+                loadWishes(); // Refresh daftar ucapan
+            })
+            .catch(err => {
+                alert("Gagal mengirim ucapan");
+                btn.disabled = false;
+                btn.innerText = "Kirim Ucapan";
+            });
         });
+    }
 });
 
-// Fungsi Menampilkan Data ke HTML
-function renderPage(data) {
+function renderData(data) {
     document.getElementById("cover-couple-name").textContent = data.title;
-    document.getElementById("main-title").textContent = data.title;
-    document.getElementById("hero-date").textContent = formatDate(data.akad.date);
+    document.getElementById("couple-name").textContent = data.title;
+    document.title = data.title;
+
     document.getElementById("groom-name").textContent = data.groom.name;
-    document.getElementById("groom-parents").textContent = data.groom.parent;
     document.getElementById("bride-name").textContent = data.bride.name;
+
+    document.getElementById("groom-parents").textContent = data.groom.parent;
     document.getElementById("bride-parents").textContent = data.bride.parent;
-    document.getElementById("quote-text").textContent = data.quote;
+    document.getElementById("quote").textContent = data.quote;
+    document.getElementById("wedding-date-hero").textContent = formatDate(data.akad.date);
     document.getElementById("akad-date").textContent = formatDate(data.akad.date);
     document.getElementById("akad-time").textContent = data.akad.time;
     document.getElementById("resepsi-date").textContent = formatDate(data.resepsi.date);
     document.getElementById("resepsi-time").textContent = data.resepsi.time;
-    document.getElementById("address-text").textContent = data.location;
+    document.getElementById("event-location").textContent = data.location;
 
-    // Google Maps
     if(data.maps) {
-        document.getElementById("map-container").innerHTML = `<iframe src="${data.maps}"></iframe>`;
+        document.getElementById("map-frame-container").innerHTML = 
+        `<iframe src="${data.maps}" loading="lazy" allowfullscreen></iframe>`;
     }
 
-    // QRIS
-    if(data.qris) {
-        document.getElementById("qris-img").src = IMAGE_BASE + data.qris;
-        document.getElementById("qris-box").style.display = "block";
-    }
-
-    // Gallery
-    const gal = document.getElementById("gallery-grid");
-    if(data.gallery) {
-        gal.innerHTML = "";
-        data.gallery.forEach(img => {
-            const el = document.createElement("img");
-            el.src = IMAGE_BASE + img;
-            gal.appendChild(el);
+    const gallery = document.getElementById("gallery-grid");
+    if(gallery) {
+        gallery.innerHTML = "";
+        data.gallery.forEach((imgName, index) => {
+            const img = document.createElement("img");
+            img.src = IMAGE_BASE + imgName;
+            img.setAttribute('data-aos', 'zoom-in');
+            img.setAttribute('data-aos-delay', (index * 100).toString());
+            gallery.appendChild(img);
         });
     }
 
-    // WA Link
-    const waText = encodeURIComponent(`Halo, saya ingin konfirmasi kehadiran di pernikahan ${data.title}.`);
-    document.getElementById("wa-link").href = `https://wa.me/${data.phone}?text=${waText}`;
-    
-    // Hilangkan Loader
-    document.getElementById("loader").style.display = "none";
+    const waText = encodeURIComponent(`Halo, saya ingin konfirmasi kehadiran di pernikahan ${data.groom.name} & ${data.bride.name}.`);
+    document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=${waText}`;
+
+    if(loader) loader.style.opacity = "0";
+    setTimeout(() => { if(loader) loader.style.display = "none"; }, 500);
+    AOS.init({ duration: 1000, once: true, offset: 50 });
 }
 
-// Fungsi Load Ucapan
+// Fungsi Memuat Ucapan dari Google Sheet
 function loadWishes() {
-    const container = document.getElementById("wish-display");
-    container.innerHTML = "<p style='text-align:center'>Memuat ucapan...</p>";
-    
+    const display = document.getElementById('wish-display');
     fetch(SCRIPT_URL)
-        .then(r => r.json())
-        .then(data => {
-            container.innerHTML = "";
-            if(data.length === 0) container.innerHTML = "<p style='text-align:center'>Belum ada ucapan.</p>";
-            data.reverse().forEach(item => {
-                const div = document.createElement("div");
-                div.className = "wish-item";
-                div.innerHTML = `<strong>${item.nama}</strong><p>${item.ucapan}</p>`;
-                container.appendChild(div);
-            });
-        })
-        .catch(() => {
-            container.innerHTML = "<p style='text-align:center; color:red'>Gagal memuat ucapan.</p>";
+    .then(res => res.json())
+    .then(data => {
+        if(data.length === 0) {
+            display.innerHTML = '<p style="text-align:center; font-size:0.8rem; color:#888;">Belum ada ucapan.</p>';
+            return;
+        }
+        display.innerHTML = '';
+        data.reverse().forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'wish-item';
+            div.innerHTML = `<strong>${item.nama}</strong><p>${item.ucapan}</p>`;
+            display.appendChild(div);
         });
+    })
+    .catch(err => {
+        display.innerHTML = '<p style="text-align:center; font-size:0.8rem; color:red;">Gagal memuat ucapan.</p>';
+    });
 }
 
-// Form Kirim Ucapan
-document.getElementById("wish-form").onsubmit = function(e) {
-    e.preventDefault();
-    const btn = document.getElementById("btn-send");
-    const name = document.getElementById("w-name").value;
-    const msg = document.getElementById("w-msg").value;
-
-    btn.disabled = true; 
-    btn.textContent = "Mengirim...";
-
-    const formData = new FormData();
-    formData.append("nama", name);
-    formData.append("ucapan", msg);
-
-    fetch(SCRIPT_URL, { method: "POST", body: formData })
-        .then(() => {
-            btn.disabled = false; 
-            btn.textContent = "Kirim Ucapan";
-            document.getElementById("wish-form").reset();
-            loadWishes();
-        })
-        .catch(() => {
-            alert("Gagal mengirim ucapan.");
-            btn.disabled = false;
-            btn.textContent = "Kirim Ucapan";
-        });
-};
-
-// Hitung Mundur
 function setupCountdown(dateStr) {
     const target = new Date(dateStr).getTime();
     const timerElement = document.getElementById("timer");
-
-    const x = setInterval(() => {
+    setInterval(() => {
         const now = new Date().getTime();
         const diff = target - now;
-        
-        if(diff > 0) {
+        if (diff > 0) {
             const d = Math.floor(diff / (1000 * 60 * 60 * 24));
             const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((diff % (1000 * 60)) / 1000);
-            
             timerElement.innerHTML = `
                 <div class="count-item"><span>${d}</span><br><small>Hari</small></div>
                 <div class="count-item"><span>${h}</span><br><small>Jam</small></div>
                 <div class="count-item"><span>${m}</span><br><small>Menit</small></div>
-                <div class="count-item"><span>${s}</span><br><small>Detik</small></div>`;
-        } else {
-            clearInterval(x);
-            timerElement.innerHTML = "<h3>Acara Sedang Berlangsung</h3>";
+                <div class="count-item"><span>${s}</span><br><small>Detik</small></div>
+            `;
         }
     }, 1000);
 }
 
-// Format Tanggal Indonesia
-function formatDate(s) {
-    if(!s) return "";
-    return new Date(s).toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' });
+function toggleMusic() {
+    const icon = document.getElementById("music-icon");
+    if (audio.paused) { audio.play(); icon.classList.add("fa-spin"); } 
+    else { audio.pause(); icon.classList.remove("fa-spin"); }
 }
 
-// Kontrol Musik
-function toggleMusic() {
-    const audio = document.getElementById("weddingAudio");
-    const icon = document.getElementById("music-icon");
-    if(audio.paused) { 
-        audio.play(); 
-        icon.classList.add("fa-spin"); 
-    } else { 
-        audio.pause(); 
-        icon.classList.remove("fa-spin"); 
-    }
+function formatDate(dateStr) {
+    if(!dateStr) return "";
+    return new Date(dateStr).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
+
+window.addEventListener('scroll', () => {
+    let current = "";
+    document.querySelectorAll("section").forEach(s => {
+        if (pageYOffset >= s.offsetTop - 250) current = s.getAttribute("id");
+    });
+    document.querySelectorAll(".nav-item").forEach(item => {
+        item.classList.remove("active");
+        if (item.getAttribute("href").includes(current)) item.classList.add("active");
+    });
+});
