@@ -4,42 +4,24 @@
   <meta charset="UTF-8">
   <title>Undangan Pernikahan</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- LOADER -->
 <div id="loader" class="loader">
   <p>Memuat undangan...</p>
 </div>
 
-<!-- MAIN CONTENT -->
 <main id="content" style="display:none">
+  <h1 id="couple-name"></h1>
+  <p id="event-date"></p>
 
-  <section class="hero">
-    <h1 id="couple-name"></h1>
-    <p id="event-date"></p>
-  </section>
+  <p id="event-location"></p>
+  <div id="map-frame-container"></div>
 
-  <section class="countdown">
-    <div id="countdown"></div>
-  </section>
+  <div id="gallery-slider"></div>
 
-  <section class="location">
-    <p id="event-location"></p>
-    <div id="map-frame-container"></div>
-  </section>
-
-  <section class="gallery">
-    <h2>Galeri</h2>
-    <div id="gallery-slider" class="gallery-slider"></div>
-  </section>
-
-  <section class="contact">
-    <a id="whatsapp-btn" target="_blank">Konfirmasi Kehadiran</a>
-  </section>
-
+  <a id="whatsapp-btn" target="_blank">Konfirmasi Kehadiran</a>
 </main>
 
 <script src="script.js"></script>
