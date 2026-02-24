@@ -70,3 +70,4 @@ function startCountdown(dateStr) {
 
 
 window.onload = init;
+
