@@ -1,5 +1,5 @@
 const DB_LINKS = {
-  anang: "https://raw.githubusercontent.com/XL4AS/invit/main/anang_invitation.json"
+  anang: "https://raw.githubusercontent.com/XL4AS/invit/main/data/anang_invitation.json"
 };
 
 // =============================
@@ -73,3 +73,4 @@ function showError(msg) {
   document.getElementById("loader").innerHTML = `<p>${msg}</p>`;
 
 }
+
