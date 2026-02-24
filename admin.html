@@ -78,15 +78,17 @@ button{
 <input id="p" placeholder="628xxxxxxxxxx">
 
 <label>Alamat Lokasi</label>
-<textarea id="l"></textarea>
+<textarea id="l" placeholder="Gesikan"></textarea>
 
-<label>Link Google Maps</label>
-<input id="m" placeholder="https://maps.google.com/...">
+<label>Link Google Maps (EMBED)</label>
+<input id="m" placeholder="https://www.google.com/maps/embed?...">
 
 <label>Nama File Foto (pisahkan koma)</label>
-<input id="pics" placeholder="foto1.jpg, foto2.jpg">
+<input id="pics" placeholder="foto1.jpg, foto2.jpg, foto3.jpg">
+
 <div class="note">
-Upload foto ke folder <b>/images</b> di GitHub
+⚠ Upload foto ke folder <b>/images</b> di GitHub<br>
+JSON hanya menyimpan <b>nama file</b>
 </div>
 
 <button onclick="generate()">Download JSON</button>
@@ -94,14 +96,13 @@ Upload foto ke folder <b>/images</b> di GitHub
 </div>
 
 <script>
-const BASE_IMG =
-  "https://xl4as.github.io/invit/images/";
-
 function generate(){
+
   const gallery = pics.value
-    ? pics.value.split(",").map(f =>
-        BASE_IMG + f.trim()
-      )
+    ? pics.value
+        .split(",")
+        .map(f => f.trim())
+        .filter(f => f.length)
     : [];
 
   const data = {
@@ -111,21 +112,21 @@ function generate(){
     phone: p.value.trim(),
     location: l.value.trim(),
     maps: m.value.trim(),
-    gallery
+    gallery: gallery
   };
 
-  preview.style.display="block";
-  preview.textContent = JSON.stringify(data,null,2);
+  preview.style.display = "block";
+  preview.textContent = JSON.stringify(data, null, 2);
 
   const blob = new Blob(
-    [JSON.stringify(data,null,2)],
-    {type:"application/json"}
+    [JSON.stringify(data, null, 2)],
+    { type: "application/json" }
   );
 
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
   a.download =
-    `${data.groom.toLowerCase()}_invitation.json`;
+    `${data.groom.toLowerCase() || "undangan"}_invitation.json`;
   a.click();
 }
 </script>
