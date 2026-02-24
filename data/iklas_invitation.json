@@ -1,11 +1,9 @@
 {
-  "groom": "iklas",
+  "groom": "anang",
   "bride": "indri",
-  "date": "2027-02-24",
+  "date": "2026-03-07",
   "phone": "6283851284221",
-  "location": "gesikan",
-  "maps": "https://www.google.com/maps?q=https%3A%2F%2Fmaps.app.goo.gl%2FmCXxHXnSu2VMVJg47&output=embed",
-  "gallery": [
-    "https://drive.google.com/uc?export=view&id=1n-io8r_8HaG4N1VkUgHgMS4hUYa8Hsvn"
-  ]
+  "location": "Gesikan",
+  "maps": "https://www.google.com/maps?q=gesikan&output=embed",
+  "gallery": ["foto1.jpg", "foto2.jpg", "foto3.jpg"]
 }
