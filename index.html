@@ -24,6 +24,7 @@
             width: 100%; height: 100%;
             font-family: 'Poppins', sans-serif;
             background-color: var(--jawa-dark);
+            color: var(--jawa-dark);
             overflow: hidden;
         }
 
@@ -47,8 +48,10 @@
             padding: 20px;
             background-color: var(--white-cream);
             text-align: center;
+            overflow: hidden;
         }
 
+        /* Latar Belakang Batik Universal */
         section::before {
             content: "";
             position: absolute;
@@ -72,18 +75,21 @@
         .hero h1 { font-family: 'Great Vibes', cursive; font-size: 3.5rem; margin: 10px 0; }
         .hero h2 { font-family: 'Cinzel', serif; font-size: 1rem; letter-spacing: 4px; }
 
+        /* Icon Gunungan */
         .gunungan {
             width: 100px;
             margin-bottom: 15px;
             z-index: 2;
             position: relative;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.2));
         }
 
+        /* Card Information */
         .info-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(5px);
             border: 1.5px solid var(--jawa-gold);
-            padding: 25px 20px;
+            padding: 30px 20px;
             border-radius: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.1);
             width: 100%;
@@ -92,68 +98,72 @@
             position: relative;
         }
 
-        .name-big { font-family: 'Great Vibes', cursive; font-size: 2.5rem; color: var(--jawa-gold); margin: 5px 0; }
-        h3 { font-family: 'Cinzel', serif; color: var(--jawa-red); font-size: 1.1rem; }
-        .parent-text { font-size: 0.8rem; color: #555; }
+        .name-big { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: var(--jawa-gold); margin: 5px 0; }
+        h3 { font-family: 'Cinzel', serif; color: var(--jawa-red); font-size: 1.2rem; margin-top: 0; }
+        .parent-text { font-size: 0.85rem; color: #555; line-height: 1.4; }
 
-        /* Gallery */
+        /* Gallery Grid */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
+            gap: 12px;
             width: 100%;
-            max-width: 350px;
+            max-width: 380px;
             z-index: 2;
         }
         .gallery-grid img {
             width: 100%;
-            height: 120px;
+            height: 140px;
             object-fit: cover;
-            border-radius: 10px;
+            border-radius: 12px;
             border: 2px solid var(--jawa-gold);
         }
 
+        /* Map styling */
+        #map-frame-container { width: 100%; margin-top: 10px; }
         #map-frame-container iframe {
-            width: 100%; height: 180px;
+            width: 100%; height: 200px;
             border-radius: 15px; border: 1px solid var(--jawa-gold);
         }
 
         /* Navigasi Bawah */
         .nav-bottom {
             position: fixed;
-            bottom: 20px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--jawa-dark);
-            padding: 10px 20px;
-            border-radius: 30px;
+            padding: 12px 25px;
+            border-radius: 40px;
             display: flex;
-            gap: 20px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
+            gap: 25px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
             z-index: 1000;
             border: 1px solid var(--jawa-gold);
         }
         .nav-item { color: var(--jawa-gold); text-decoration: none; font-size: 1.2rem; opacity: 0.5; transition: 0.3s; }
         .nav-item.active { opacity: 1; transform: scale(1.2); }
 
+        /* Animations */
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+        .float { animation: floating 4s ease-in-out infinite; }
+
+        /* Loader */
         .loader {
             position: fixed; inset: 0;
             background: var(--jawa-dark);
             z-index: 9999;
             display: flex; justify-content: center; align-items: center;
-            color: var(--jawa-gold); font-family: 'Great Vibes'; font-size: 2rem;
+            color: var(--jawa-gold); font-family: 'Great Vibes'; font-size: 2.5rem;
         }
 
-        @keyframes floating {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-        .float { animation: floating 3s ease-in-out infinite; }
-
-        @media (max-width: 400px) {
-            .hero h1 { font-size: 2.8rem; }
-            .name-big { font-size: 2rem; }
-            .info-card { padding: 20px 15px; }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 3rem; }
+            .name-big { font-size: 2.4rem; }
+            .info-card { padding: 25px 15px; max-width: 90%; }
         }
     </style>
 </head>
@@ -164,12 +174,12 @@
     <main id="content" class="snap-container" style="display:none">
         
         <section class="hero" id="home">
-            <div data-aos="fade-up">
+            <div data-aos="fade-up" data-aos-duration="1500">
                 <h2 id="title">THE WEDDING OF</h2>
                 <h1 id="couple-name-hero" class="float"></h1>
-                <p id="hero-date"></p>
-                <div style="margin-top: 30px; font-size: 0.7rem; letter-spacing: 2px;">
-                    SWIPE UP <br> <i class="fas fa-chevron-up"></i>
+                <p id="hero-date" style="letter-spacing: 3px; font-weight: 300;"></p>
+                <div style="margin-top: 40px; font-size: 0.7rem; opacity: 0.8; letter-spacing: 2px;">
+                    USAP KE ATAS <br> <i class="fas fa-chevron-up"></i>
                 </div>
             </div>
         </section>
@@ -177,7 +187,7 @@
         <section id="quote-sec">
             <img src="icon/gunungan.png" class="gunungan" alt="Gunungan">
             <div class="info-card" data-aos="zoom-in">
-                <p id="quote" style="font-style: italic; font-size: 0.85rem; line-height: 1.7;"></p>
+                <p id="quote" style="font-style: italic; font-size: 0.9rem; line-height: 1.8; color: #444;"></p>
             </div>
         </section>
 
@@ -185,45 +195,46 @@
             <div class="info-card" data-aos="fade-up">
                 <h3>Mempelai Pria</h3>
                 <h2 class="name-big" id="groom-name"></h2>
-                <p class="parent-text">Putra dari <b id="groom-parents"></b></p>
+                <p class="parent-text">Putra dari <br><b id="groom-parents"></b></p>
                 
-                <div style="margin: 10px 0; color: var(--jawa-gold); font-family: 'Great Vibes'; font-size: 1.5rem;">&</div>
+                <div style="margin: 15px 0; color: var(--jawa-gold); font-family: 'Great Vibes'; font-size: 2rem;">&</div>
                 
                 <h3>Mempelai Wanita</h3>
                 <h2 class="name-big" id="bride-name"></h2>
-                <p class="parent-text">Putri dari <b id="bride-parents"></b></p>
+                <p class="parent-text">Putri dari <br><b id="bride-parents"></b></p>
             </div>
         </section>
 
         <section id="acara">
-            <div class="info-card" data-aos="flip-left">
-                <div style="margin-bottom: 20px;">
-                    <h3><i class="fas fa-ring"></i> Akad Nikah</h3>
-                    <p id="akad-date" style="font-weight: 600; margin: 5px 0 0;"></p>
-                    <p id="akad-time" style="font-size: 0.9rem;"></p>
+            <div class="info-card" data-aos="fade-left">
+                <div style="margin-bottom: 25px;">
+                    <h3><i class="fas fa-ring" style="margin-right: 8px;"></i> Akad Nikah</h3>
+                    <p id="akad-date" style="font-weight: 600; margin: 5px 0;"></p>
+                    <p id="akad-time" style="font-size: 0.9rem; color: #666;"></p>
                 </div>
-                <hr style="border: 0; border-top: 1px solid var(--jawa-gold); opacity: 0.3; margin: 15px 0;">
+                <hr style="border: 0; border-top: 1px solid var(--jawa-gold); opacity: 0.3; margin: 20px 0;">
                 <div>
-                    <h3><i class="fas fa-calendar-check"></i> Resepsi</h3>
-                    <p id="resepsi-date" style="font-weight: 600; margin: 5px 0 0;"></p>
-                    <p id="resepsi-time" style="font-size: 0.9rem;"></p>
+                    <h3><i class="fas fa-calendar-check" style="margin-right: 8px;"></i> Resepsi</h3>
+                    <p id="resepsi-date" style="font-weight: 600; margin: 5px 0;"></p>
+                    <p id="resepsi-time" style="font-size: 0.9rem; color: #666;"></p>
                 </div>
             </div>
         </section>
 
         <section id="lokasi">
-            <div class="info-card" data-aos="fade-up">
+            <div class="info-card" data-aos="fade-right">
                 <h3><i class="fas fa-map-marker-alt"></i> Lokasi Acara</h3>
-                <p id="event-location" style="font-size: 0.85rem; margin-bottom: 15px;"></p>
+                <p id="event-location" style="font-size: 0.9rem; margin-bottom: 15px; color: #444;"></p>
                 <div id="map-frame-container"></div>
-                <a id="whatsapp-btn" target="_blank" style="display:inline-block; margin-top: 20px; background: #25d366; color: white; padding: 10px 25px; border-radius: 30px; text-decoration: none; font-size: 0.8rem; font-weight: 600;">
+                <br>
+                <a id="whatsapp-btn" target="_blank" style="background: #25d366; color: white; padding: 12px 25px; border-radius: 30px; text-decoration: none; font-size: 0.85rem; font-weight: 600; display: inline-block; box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);">
                     <i class="fab fa-whatsapp"></i> KONFIRMASI KEHADIRAN
                 </a>
             </div>
         </section>
 
         <section id="gallery">
-            <h3 style="margin-bottom: 20px; color: var(--jawa-gold);">Galeri Bahagia</h3>
+            <h3 style="margin-bottom: 25px; color: var(--jawa-gold); letter-spacing: 2px;">GALERI MOMEN</h3>
             <div id="gallery-grid" class="gallery-grid"></div>
         </section>
 
@@ -238,87 +249,6 @@
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
-        const loader = document.getElementById("loader");
-        const content = document.getElementById("content");
-        const id = new URLSearchParams(window.location.search).get("id");
-
-        if(!id) {
-            loader.innerHTML = "ID Undangan Tidak Ditemukan";
-        } else {
-            fetch(`https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`, {cache: "no-store"})
-            .then(r => {
-                if(!r.ok) throw new Error();
-                return r.json();
-            })
-            .then(data => {
-                // Mapping Data ke HTML
-                document.getElementById("couple-name-hero").textContent = `${data.groom.name} & ${data.bride.name}`;
-                document.getElementById("hero-date").textContent = formatDate(data.akad.date);
-                
-                document.getElementById("groom-name").textContent = data.groom.name;
-                document.getElementById("groom-parents").textContent = data.groom.parent;
-                document.getElementById("bride-name").textContent = data.bride.name;
-                document.getElementById("bride-parents").textContent = data.bride.parent;
-                
-                document.getElementById("quote").textContent = data.quote;
-                document.getElementById("akad-date").textContent = formatDate(data.akad.date);
-                document.getElementById("akad-time").textContent = data.akad.time;
-                document.getElementById("resepsi-date").textContent = formatDate(data.resepsi.date);
-                document.getElementById("resepsi-time").textContent = data.resepsi.time;
-                document.getElementById("event-location").textContent = data.location;
-                
-                if(data.maps) {
-                    document.getElementById("map-frame-container").innerHTML = `<iframe src="${data.maps}" loading="lazy"></iframe>`;
-                }
-
-                // Gallery
-                const gallery = document.getElementById("gallery-grid");
-                gallery.innerHTML = "";
-                (data.gallery || []).forEach(name => {
-                    const img = document.createElement("img");
-                    img.src = IMAGE_BASE + name;
-                    img.setAttribute('data-aos', 'zoom-in');
-                    gallery.appendChild(img);
-                });
-
-                // WA Link
-                const waMsg = encodeURIComponent(`Halo ${data.groom.name} & ${data.bride.name}, saya ingin konfirmasi kehadiran di acara pernikahan kalian.`);
-                document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=${waMsg}`;
-
-                // Reveal Content
-                loader.style.display = "none";
-                content.style.display = "block";
-                
-                // Inisialisasi AOS dengan delay agar elemen terbaca
-                setTimeout(() => {
-                    AOS.init({ duration: 1000, once: false, mirror: true });
-                }, 300);
-            })
-            .catch(() => loader.innerHTML = "Data Undangan Tidak Ditemukan");
-        }
-
-        function formatDate(dateStr) {
-            if(!dateStr) return "";
-            return new Date(dateStr + "T00:00:00").toLocaleDateString("id-ID", {
-                weekday: "long", day: "numeric", month: "long", year: "numeric"
-            });
-        }
-
-        // Navigasi Otomatis Aktif saat Scroll
-        content.addEventListener("scroll", () => {
-            const sections = document.querySelectorAll("section");
-            const navItems = document.querySelectorAll(".nav-item");
-            let current = "";
-            sections.forEach(s => {
-                if (content.scrollTop >= s.offsetTop - 150) current = s.getAttribute("id");
-            });
-            navItems.forEach(item => {
-                item.classList.remove("active");
-                if (item.getAttribute("href").includes(current)) item.classList.add("active");
-            });
-        });
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
