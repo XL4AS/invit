@@ -1,220 +1,73 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan Jawa Modern</title>
+const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
+const loader = document.getElementById("loader");
+const content = document.getElementById("content");
+
+const id = new URLSearchParams(location.search).get("id");
+
+if(!id){
+    loader.innerHTML = "ID undangan tidak ditemukan";
+} else {
+    const DATA_URL = `https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`;
     
-    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    fetch(DATA_URL, {cache: "no-store"})
+        .then(r => r.json())
+        .then(renderData)
+        .catch(err => {
+            loader.innerHTML = `Data <b>${id}</b> tidak ditemukan`;
+        });
+}
+
+function renderData(data) {
+    // Hero & Names
+    document.getElementById("couple-name").textContent = `${data.groom.name} & ${data.bride.name}`;
+    document.getElementById("groom-name").textContent = data.groom.name;
+    document.getElementById("bride-name").textContent = data.bride.name;
+    document.getElementById("groom-parents").textContent = data.groom.parent;
+    document.getElementById("bride-parents").textContent = data.bride.parent;
     
-    <style>
-        :root {
-            --gold: #b2945e;
-            --dark-brown: #3d2b1f; /* Warna Sogan Jawa */
-            --cream: #f4eee0;
-            --white: #ffffff;
-        }
+    // Quote & Date
+    document.getElementById("quote").textContent = data.quote;
+    document.getElementById("wedding-date-hero").textContent = formatDate(data.akad.date);
+    
+    // Schedule
+    document.getElementById("akad-date").textContent = formatDate(data.akad.date);
+    document.getElementById("akad-time").textContent = data.akad.time;
+    document.getElementById("resepsi-date").textContent = formatDate(data.resepsi.date);
+    document.getElementById("resepsi-time").textContent = data.resepsi.time;
+    
+    document.getElementById("event-location").textContent = data.location;
 
-        * { box-sizing: border-box; scroll-behavior: smooth; }
+    // Maps
+    if(data.maps && data.maps.includes("http")) {
+        document.getElementById("map-frame-container").innerHTML = 
+        `<iframe src="${data.maps}" loading="lazy"></iframe>`;
+    }
 
-        body, html {
-            margin: 0;
-            padding: 0;
-            font-family: 'Poppins', sans-serif;
-            background-color: var(--cream);
-            color: var(--dark-brown);
-            /* Scroll Snap Setup */
-            scroll-snap-type: y mandatory;
-            overflow-y: scroll;
-            height: 100vh;
-        }
+    // Gallery
+    const gallery = document.getElementById("gallery-grid");
+    gallery.innerHTML = "";
+    (data.gallery || []).forEach(name => {
+        const img = document.createElement("img");
+        img.src = IMAGE_BASE + name;
+        img.setAttribute('data-aos', 'zoom-in'); // Tambah animasi tiap foto
+        gallery.appendChild(img);
+    });
 
-        /* Latar Belakang Batik Overlay */
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('https://www.transparenttextures.com/patterns/batik-fractal.png');
-            opacity: 0.1;
-            pointer-events: none;
-            z-index: -1;
-        }
+    // WA Button
+    document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=Halo, saya ingin konfirmasi kehadiran di pernikahan ${data.groom.name} & ${data.bride.name}`;
 
-        section {
-            height: 100vh;
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 40px 20px;
-            scroll-snap-align: start; /* Mengunci scroll tepat di satu layar */
-            position: relative;
-            overflow: hidden;
-        }
+    // Show Content & Start Animation
+    loader.style.display = "none";
+    content.style.display = "block";
+    
+    // Inisialisasi AOS (Animation on Scroll)
+    AOS.init({
+        duration: 1000,
+        once: true
+    });
+}
 
-        /* Gunungan Wayang Dekorasi */
-        .gunungan {
-            width: 80px;
-            margin-bottom: 20px;
-            filter: sepia(1) saturate(2);
-        }
-
-        h1 { font-family: 'Great Vibes', cursive; font-size: 3.5rem; color: var(--dark-brown); margin: 10px 0; }
-        h2 { font-family: 'Cinzel', serif; letter-spacing: 3px; font-size: 1.2rem; color: var(--gold); }
-        h3 { font-family: 'Cinzel', serif; font-size: 1.5rem; margin-top: 0; }
-
-        /* Card Container untuk Konten */
-        .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            backdrop-filter: blur(5px);
-            padding: 30px;
-            border-radius: 20px;
-            border: 2px solid var(--gold);
-            max-width: 450px;
-            width: 100%;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-        }
-
-        /* Galeri Responsif */
-        .gallery-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-            width: 100%;
-            max-width: 400px;
-        }
-        .gallery-container img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 10px;
-            border: 1px solid var(--gold);
-        }
-
-        /* Navigasi Bawah Modern */
-        .nav-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--dark-brown);
-            display: flex;
-            gap: 15px;
-            padding: 10px 20px;
-            border-radius: 50px;
-            z-index: 1000;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-        }
-        .nav-bar a { color: var(--cream); font-size: 1.2rem; transition: 0.3s; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-        .nav-bar a:hover { color: var(--gold); }
-
-        /* Loader */
-        .loader {
-            position: fixed;
-            inset: 0;
-            background: var(--cream);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-        }
-
-        iframe { width: 100%; height: 200px; border-radius: 15px; margin-top: 10px; border: 1px solid var(--gold); }
-
-        @media (max-width: 480px) {
-            h1 { font-size: 2.8rem; }
-            .glass-card { padding: 20px; }
-        }
-    </style>
-</head>
-<body>
-
-    <div id="loader" class="loader">
-        <h2 style="font-family: 'Great Vibes'; font-size: 2rem;">Memulai Doa Restu...</h2>
-    </div>
-
-    <div style="display:none">
-        <audio id="bgm" loop>
-            <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
-        </audio>
-    </div>
-
-    <main id="content" style="display:none">
-        
-        <section id="home">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Gunungan_Wayang.svg/1200px-Gunungan_Wayang.svg.png" class="gunungan" alt="Gunungan">
-            <div data-aos="zoom-in">
-                <h2>UNDANGAN MANTEN</h2>
-                <h1 id="couple-name-hero"></h1>
-                <p id="hero-date" style="font-weight: 600; letter-spacing: 2px;"></p>
-                <p style="font-size: 0.8rem; margin-top: 20px;">Scroll Kebawah <br> <i class="fas fa-chevron-down"></i></p>
-            </div>
-        </section>
-
-        <section id="quote-page">
-            <div class="glass-card" data-aos="fade-up">
-                <i class="fas fa-quote-left" style="color: var(--gold); font-size: 2rem;"></i>
-                <p id="quote-text" style="font-style: italic; font-size: 0.9rem; line-height: 1.6;"></p>
-            </div>
-        </section>
-
-        <section id="mempelai">
-            <div class="glass-card" data-aos="fade-right">
-                <h3 id="groom-name"></h3>
-                <p>Putra dari <br><b id="groom-parents"></b></p>
-                <h1 style="font-size: 2rem;">&</h1>
-                <h3 id="bride-name"></h3>
-                <p>Putri dari <br><b id="bride-parents"></b></p>
-            </div>
-        </section>
-
-        <section id="acara">
-            <div class="glass-card" data-aos="flip-left">
-                <div style="margin-bottom: 20px; border-bottom: 1px solid var(--gold); padding-bottom: 10px;">
-                    <h3><i class="fas fa-ring"></i> Akad Nikah</h3>
-                    <p id="akad-date"></p>
-                    <p id="akad-time"></p>
-                </div>
-                <div>
-                    <h3><i class="fas fa-glass-cheers"></i> Resepsi</h3>
-                    <p id="resepsi-date"></p>
-                    <p id="resepsi-time"></p>
-                </div>
-            </div>
-        </section>
-
-        <section id="lokasi">
-            <div class="glass-card" data-aos="zoom-in-up">
-                <h3><i class="fas fa-map-marker-alt"></i> Lokasi</h3>
-                <p id="event-location" style="font-size: 0.9rem;"></p>
-                <div id="map-frame-container"></div>
-                <br>
-                <a id="wa-btn" target="_blank" style="background: var(--dark-brown); color: white; padding: 10px 20px; border-radius: 20px; text-decoration: none; font-size: 0.8rem;">
-                    KONFIRMASI KEHADIRAN
-                </a>
-            </div>
-        </section>
-
-        <section id="galeri">
-            <h2 style="margin-bottom: 20px;">Galeri Bahagia</h2>
-            <div id="gallery-container" class="gallery-container" data-aos="fade-up"></div>
-        </section>
-
-        <nav class="nav-bar">
-            <a href="#home"><i class="fas fa-home"></i></a>
-            <a href="#mempelai"><i class="fas fa-users"></i></a>
-            <a href="#acara"><i class="fas fa-calendar-day"></i></a>
-            <a href="#lokasi"><i class="fas fa-map-marked-alt"></i></a>
-            <a href="#galeri"><i class="fas fa-images"></i></a>
-        </nav>
-
-    </main>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js"></script>
-</body>
-</html>
+function formatDate(dateStr) {
+    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateStr).toLocaleDateString('id-ID', options);
+}
