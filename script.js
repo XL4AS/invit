@@ -1,105 +1,99 @@
 const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
 const loader = document.getElementById("loader");
 const content = document.getElementById("content");
-const urlParams = new URLSearchParams(window.location.search);
-const id = urlParams.get("id");
+
+// Mengambil ID dari URL (?id=nama)
+const id = new URLSearchParams(window.location.search).get("id");
 
 if (!id) {
     loader.innerHTML = "ID Undangan Tidak Ditemukan";
 } else {
-    // Fetch data dengan cache: "no-store" agar data selalu terbaru
-    fetch(`https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`, { cache: "no-store" })
+    const DATA_URL = `https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`;
+    
+    // Fetch data dengan cache no-store agar data selalu fresh
+    fetch(DATA_URL, { cache: "no-store" })
         .then(response => {
-            if (!response.ok) throw new Error("Data tidak ditemukan");
+            if (!response.ok) throw new Error("File tidak ditemukan");
             return response.json();
         })
         .then(data => {
-            renderInvitation(data);
+            renderData(data);
         })
-        .catch(error => {
-            console.error(error);
-            loader.innerHTML = "Undangan Tidak Ditemukan";
+        .catch(err => {
+            console.error(err);
+            loader.innerHTML = `Undangan untuk <b>${id}</b> tidak ditemukan`;
         });
 }
 
-function renderInvitation(data) {
-    // Header & Hero
-    document.getElementById("title").textContent = data.title || "The Wedding Of";
-    document.getElementById("couple-name-hero").textContent = `${data.groom.name} & ${data.bride.name}`;
-    document.getElementById("hero-date").textContent = formatDate(data.akad.date);
-
-    // Mempelai
+function renderData(data) {
+    // 1. Mapping Data ke Elemen HTML (Gunakan ID yang sesuai dengan HTML Mewah)
+    
+    // Hero & Names
+    const coupleName = `${data.groom.name} & ${data.bride.name}`;
+    if(document.getElementById("couple-name-hero")) document.getElementById("couple-name-hero").textContent = coupleName;
+    if(document.getElementById("couple-name")) document.getElementById("couple-name").textContent = coupleName;
+    
     document.getElementById("groom-name").textContent = data.groom.name;
-    document.getElementById("groom-parents").textContent = data.groom.parent;
     document.getElementById("bride-name").textContent = data.bride.name;
+    document.getElementById("groom-parents").textContent = data.groom.parent;
     document.getElementById("bride-parents").textContent = data.bride.parent;
-
-    // Quote & Waktu
+    
+    // Quote & Tanggal Hero
     document.getElementById("quote").textContent = data.quote;
-    document.getElementById("akad-date").textContent = formatDate(data.akad.date);
+    const tglResmi = formatDate(data.akad.date);
+    if(document.getElementById("hero-date")) document.getElementById("hero-date").textContent = tglResmi;
+    if(document.getElementById("wedding-date-hero")) document.getElementById("wedding-date-hero").textContent = tglResmi;
+    
+    // Jadwal Acara
+    document.getElementById("akad-date").textContent = tglResmi;
     document.getElementById("akad-time").textContent = data.akad.time;
     document.getElementById("resepsi-date").textContent = formatDate(data.resepsi.date);
     document.getElementById("resepsi-time").textContent = data.resepsi.time;
-
+    
     // Lokasi & Maps
     document.getElementById("event-location").textContent = data.location;
-    if (data.maps) {
+    if (data.maps && data.maps.includes("http")) {
         document.getElementById("map-frame-container").innerHTML = 
-            `<iframe src="${data.maps}" frameborder="0" loading="lazy"></iframe>`;
+            `<iframe src="${data.maps}" frameborder="0" loading="lazy" allowfullscreen></iframe>`;
     }
 
-    // Gallery
-    const galleryGrid = document.getElementById("gallery-grid");
-    galleryGrid.innerHTML = "";
-    if (data.gallery && Array.isArray(data.gallery)) {
-        data.gallery.forEach(name => {
-            const img = document.createElement("img");
-            img.src = IMAGE_BASE + name;
-            img.setAttribute('data-aos', 'zoom-in');
-            galleryGrid.appendChild(img);
-        });
-    }
+    // Galeri
+    const gallery = document.getElementById("gallery-grid");
+    gallery.innerHTML = "";
+    (data.gallery || []).forEach(name => {
+        const img = document.createElement("img");
+        img.src = IMAGE_BASE + name;
+        img.setAttribute('data-aos', 'zoom-in');
+        gallery.appendChild(img);
+    });
 
-    // WA Button
-    document.getElementById("whatsapp-btn").href = 
-        `https://wa.me/${data.phone}?text=Halo ${data.groom.name} %26 ${data.bride.name}, saya konfirmasi akan hadir.`;
+    // WhatsApp Button
+    const waText = encodeURIComponent(`Halo ${data.groom.name} & ${data.bride.name}, saya ingin konfirmasi kehadiran.`);
+    document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=${waText}`;
 
-    // Sembunyikan Loader & Tampilkan Konten
+    // 2. Tampilkan Konten
     loader.style.display = "none";
     content.style.display = "block";
-
-    // Jalankan Animasi AOS
+    
+    // 3. Inisialisasi Ulang AOS 
+    // Karena kita menggunakan display:none sebelumnya, AOS perlu dipicu ulang
     setTimeout(() => {
-        AOS.init({ duration: 1000, once: false });
-    }, 100);
-
-    // Aktifkan Fitur Scroll Monitoring
-    initScrollSpy();
+        AOS.init({
+            duration: 1000,
+            once: false,
+            // baris ini penting untuk desain snap-container
+            mirror: true 
+        });
+    }, 200);
 }
 
 function formatDate(dateStr) {
-    if (!dateStr) return "";
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(dateStr + "T00:00:00").toLocaleDateString('id-ID', options);
-}
-
-function initScrollSpy() {
-    content.addEventListener("scroll", () => {
-        const sections = document.querySelectorAll("section");
-        const navItems = document.querySelectorAll(".nav-item");
-        let current = "";
-
-        sections.forEach(s => {
-            if (content.scrollTop >= s.offsetTop - 150) {
-                current = s.getAttribute("id");
-            }
-        });
-
-        navItems.forEach(item => {
-            item.classList.remove("active");
-            if (item.getAttribute("href") === `#${current}`) {
-                item.classList.add("active");
-            }
-        });
-    });
+    if(!dateStr) return "";
+    try {
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        // Menambahkan jam 00 agar tidak terjadi pergeseran tanggal akibat timezone
+        return new Date(dateStr + "T00:00:00").toLocaleDateString('id-ID', options);
+    } catch (e) {
+        return dateStr;
+    }
 }
