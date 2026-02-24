@@ -3,7 +3,7 @@
  * Mapping ID di URL ke Link Google Drive via Proxy (Anti-CORS)
  */
 const DB_LINKS = {
-    "anang": "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://drive.google.com/uc?export=download&id=1aWpayXn806wwOy69hMb1J9N7ybbNCWYa"),
+    "anang": "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://drive.google.com/uc?export=download&id=1oxPrq9UWukSjDr2FQPgv4NBsh7kZs08G"),
     "andi": "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://drive.google.com/uc?export=download&id=FILE_ID_JSON_ANDI"),
     "budi": "https://api.allorigins.win/raw?url=" + encodeURIComponent("https://drive.google.com/uc?export=download&id=FILE_ID_JSON_BUDI")
     
@@ -151,4 +151,5 @@ function startCountdown(dateStr) {
 }
 
 window.onload = init;
+
 
