@@ -1,182 +1,219 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin Generator JSON Undangan</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Generator JSON Undangan</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #f7f3e8, #fff);
+            padding: 20px;
+            color: #333;
+        }
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.08);
+        }
+        h2 { text-align: center; color: #d4af37; margin-bottom: 30px; }
+        label { font-weight: 600; margin-top: 15px; display: block; font-size: 14px; }
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            margin-top: 6px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            box-sizing: border-box;
+            font-size: 14px;
+        }
+        textarea { min-height: 80px; resize: vertical; }
+        hr { margin: 30px 0; border: 0; border-top: 1px solid #eee; }
+        
+        button {
+            margin-top: 25px;
+            width: 100%;
+            background: #d4af37;
+            border: none;
+            padding: 16px;
+            color: #fff;
+            font-size: 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover { background: #b8952d; }
 
-<style>
-body{
-  font-family:'Segoe UI',sans-serif;
-  background:linear-gradient(135deg,#f7f3e8,#fff);
-  padding:20px;
-}
-.container{
-  max-width:700px;
-  margin:auto;
-  background:#fff;
-  padding:30px;
-  border-radius:16px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
-h2{text-align:center;color:#d4af37}
-label{font-weight:600;margin-top:15px;display:block}
-input,textarea{
-  width:100%;
-  padding:10px;
-  margin-top:6px;
-  border-radius:6px;
-  border:1px solid #ddd;
-}
-textarea{min-height:70px}
-button{
-  margin-top:25px;
-  width:100%;
-  background:#d4af37;
-  border:none;
-  padding:14px;
-  color:#fff;
-  font-size:16px;
-  border-radius:8px;
-  font-weight:bold;
-  cursor:pointer;
-}
-#preview{
-  display:none;
-  margin-top:20px;
-  background:#272822;
-  color:#f8f8f2;
-  padding:15px;
-  border-radius:6px;
-  font-family:monospace;
-  font-size:12px;
-  white-space:pre-wrap;
-}
-.note{
-  margin-top:10px;
-  font-size:12px;
-  color:#e53935;
-  font-weight:bold;
-  text-align:center;
-}
-hr{margin:25px 0}
-</style>
+        #preview-container {
+            display: none;
+            margin-top: 30px;
+        }
+        #preview {
+            background: #272822;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            white-space: pre-wrap;
+            overflow-x: auto;
+        }
+        .note {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #e53935;
+            line-height: 1.5;
+            background: #fff8f8;
+            padding: 10px;
+            border-radius: 6px;
+        }
+    </style>
 </head>
-
 <body>
+
 <div class="container">
-<h2>JSON Generator Undangan</h2>
+    <h2>JSON Generator Undangan</h2>
 
-<label>Judul Undangan</label>
-<input id="title" placeholder="The Wedding of Anang & Indri">
+    <label>Judul Undangan</label>
+    <input id="title" placeholder="The Wedding of Anang & Indri">
 
-<hr>
+    <hr>
 
-<label>Nama Mempelai Pria</label>
-<input id="g">
+    <label>Nama Mempelai Pria</label>
+    <input id="g_name" placeholder="Contoh: Anang">
 
-<label>Putra Dari</label>
-<input id="g_parent" placeholder="Bapak & Ibu">
+    <label>Putra Dari (Ayah & Ibu Pria)</label>
+    <input id="g_parent" placeholder="Contoh: Bapak A & Ibu A">
 
-<label>Nama Mempelai Wanita</label>
-<input id="b">
+    <label>Nama Mempelai Wanita</label>
+    <input id="b_name" placeholder="Contoh: Indri">
 
-<label>Putri Dari</label>
-<input id="b_parent" placeholder="Bapak & Ibu">
+    <label>Putri Dari (Ayah & Ibu Wanita)</label>
+    <input id="b_parent" placeholder="Contoh: Bapak B & Ibu B">
 
-<hr>
+    <hr>
 
-<label>Tanggal Akad</label>
-<input id="akad_date" type="date">
+    <label>Tanggal Akad</label>
+    <input id="akad_date" type="date">
 
-<label>Jam Akad</label>
-<input id="akad_time" placeholder="08.00 WIB">
+    <label>Jam Akad</label>
+    <input id="akad_time" placeholder="Contoh: 08.00 WIB">
 
-<label>Tanggal Resepsi</label>
-<input id="res_date" type="date">
+    <label>Tanggal Resepsi</label>
+    <input id="res_date" type="date">
 
-<label>Jam Resepsi</label>
-<input id="res_time" placeholder="10.00 - Selesai">
+    <label>Jam Resepsi</label>
+    <input id="res_time" placeholder="Contoh: 10.00 - Selesai">
 
-<hr>
+    <hr>
 
-<label>Alamat Acara</label>
-<textarea id="location"></textarea>
+    <label>Alamat Acara (Teks Singkat)</label>
+    <textarea id="location_text" placeholder="Contoh: Gesikan"></textarea>
 
-<label>Google Maps (EMBED)</label>
-<input id="maps">
+    <label>Google Maps Link (Link Embed/Iframe Src)</label>
+    <input id="maps_link" placeholder="http://maps.google.com/...">
 
-<label>No WhatsApp</label>
-<input id="phone" placeholder="628xxxxxxxxxx">
+    <label>No WhatsApp Konfirmasi (Gunakan 62)</label>
+    <input id="phone_num" placeholder="Contoh: 6283851284221">
 
-<hr>
+    <hr>
 
-<label>Quotes / Doa</label>
-<textarea id="quote" placeholder="Dan di antara tanda-tanda kekuasaan-Nya..."></textarea>
+    <label>Quotes / Doa Pernikahan</label>
+    <textarea id="quote_text" placeholder="Dan di antara tanda-tanda kekuasaan-Nya..."></textarea>
 
-<label>Nama File Foto (pisahkan koma)</label>
-<input id="pics" placeholder="foto1.jpg, foto2.jpg">
-<div class="note">
-Upload foto ke folder <b>/images</b> di GitHub<br>
-JSON hanya berisi <b>nama file</b>
-</div>
+    <label>Nama File Foto Galeri (Pisahkan dengan koma)</label>
+    <input id="pics_list" placeholder="foto1.jpg, foto2.jpg, foto3.png">
+    
+    <div class="note">
+        <strong>PENTING:</strong> Masukkan nama file saja yang dipisahkan koma. <br>
+        Contoh: <strong>img1.jpg, img2.jpg</strong>. Pastikan file ini sudah diunggah ke GitHub folder <strong>/images</strong>.
+    </div>
 
-<button onclick="generate()">Download JSON</button>
-<pre id="preview"></pre>
+    <button onclick="generateJSON()">Download & Lihat JSON</button>
+
+    <div id="preview-container">
+        <label>Preview Hasil JSON:</label>
+        <pre id="preview"></pre>
+    </div>
 </div>
 
 <script>
-function generate(){
+function generateJSON() {
+    // Ambil data dari input
+    const titleVal = document.getElementById("title").value || "The Wedding of Anang & Indri";
+    const gName = document.getElementById("g_name").value || "Anang";
+    const gParent = document.getElementById("g_parent").value || "Bapak & Ibu";
+    const bName = document.getElementById("b_name").value || "Indri";
+    const bParent = document.getElementById("b_parent").value || "Bapak & Ibu";
+    
+    const akadD = document.getElementById("akad_date").value || "";
+    const akadT = document.getElementById("akad_time").value || "08.00 WIB";
+    const resD = document.getElementById("res_date").value || "";
+    const resT = document.getElementById("res_time").value || "10.00 - Selesai";
+    
+    const locText = document.getElementById("location_text").value || "";
+    const mapsLink = document.getElementById("maps_link").value || "";
+    const phone = document.getElementById("phone_num").value || "628";
+    const quote = document.getElementById("quote_text").value || "";
+    
+    // Proses Foto menjadi Array
+    const picsInput = document.getElementById("pics_list").value;
+    const galleryArray = picsInput 
+        ? picsInput.split(",").map(f => f.trim()).filter(Boolean) 
+        : ["foto1.jpg", "foto2.jpg"];
 
-  const gallery = pics.value
-    ? pics.value.split(",").map(f=>f.trim()).filter(Boolean)
-    : [];
+    // Susun Objek JSON sesuai format permintaan
+    const data = {
+        "title": titleVal,
+        "groom": {
+            "name": gName,
+            "parent": gParent
+        },
+        "bride": {
+            "name": bName,
+            "parent": bParent
+        },
+        "akad": {
+            "date": akadD,
+            "time": akadT
+        },
+        "resepsi": {
+            "date": resD,
+            "time": resT
+        },
+        "location": locText,
+        "maps": mapsLink,
+        "phone": phone,
+        "quote": quote,
+        "gallery": galleryArray
+    };
 
-  const data = {
-    title: title.value.trim(),
+    // Tampilkan Preview
+    const previewContainer = document.getElementById("preview-container");
+    const previewBox = document.getElementById("preview");
+    const jsonString = JSON.stringify(data, null, 2);
+    
+    previewContainer.style.display = "block";
+    previewBox.textContent = jsonString;
 
-    groom: {
-      name: g.value.trim(),
-      parent: g_parent.value.trim()
-    },
-
-    bride: {
-      name: b.value.trim(),
-      parent: b_parent.value.trim()
-    },
-
-    akad: {
-      date: akad_date.value,
-      time: akad_time.value.trim()
-    },
-
-    resepsi: {
-      date: res_date.value,
-      time: res_time.value.trim()
-    },
-
-    location: location.value.trim(),
-    maps: maps.value.trim(),
-    phone: phone.value.trim(),
-    quote: quote.value.trim(),
-
-    gallery: gallery
-  };
-
-  preview.style.display="block";
-  preview.textContent = JSON.stringify(data,null,2);
-
-  const blob = new Blob(
-    [JSON.stringify(data,null,2)],
-    {type:"application/json"}
-  );
-
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download =
-    `${(g.value||"undangan").toLowerCase()}_invitation.json`;
-  a.click();
+    // Proses Download
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    
+    link.href = url;
+    // Nama file otomatis mengikuti nama pengantin pria
+    link.download = `${gName.toLowerCase()}_invitation.json`;
+    link.click();
+    
+    // Cleanup
+    URL.revokeObjectURL(url);
 }
 </script>
+
 </body>
 </html>
