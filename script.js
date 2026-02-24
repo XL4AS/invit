@@ -1,4 +1,6 @@
 const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQE4D1I7djJSg-CL2BFJvK5R_ppxI0s9gQ1hZXjRgL21I8gXGwjgHgjgDhXTfiE7GH/exec";
+
 const loader = document.getElementById("loader");
 const content = document.getElementById("content");
 const audio = document.getElementById("weddingAudio");
@@ -40,21 +42,51 @@ document.addEventListener("DOMContentLoaded", function() {
             .then(data => {
                 renderData(data);
                 setupCountdown(data.akad.date);
+                loadWishes(); // Memuat ucapan setelah data utama siap
             })
             .catch(err => {
                 console.error(err);
                 if(loader) loader.style.display = "none";
             });
     }
+
+    // Logika Kirim Ucapan
+    const wishForm = document.getElementById('wish-form');
+    if(wishForm) {
+        wishForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = document.getElementById('btn-kirim');
+            const name = document.getElementById('wish-name').value;
+            const message = document.getElementById('wish-message').value;
+
+            btn.disabled = true;
+            btn.innerText = "Mengirim...";
+
+            const formData = new FormData();
+            formData.append('nama', name);
+            formData.append('ucapan', message);
+
+            fetch(SCRIPT_URL, { method: 'POST', body: formData })
+            .then(() => {
+                btn.disabled = false;
+                btn.innerText = "Kirim Ucapan";
+                wishForm.reset();
+                loadWishes(); // Refresh daftar ucapan
+            })
+            .catch(err => {
+                alert("Gagal mengirim ucapan");
+                btn.disabled = false;
+                btn.innerText = "Kirim Ucapan";
+            });
+        });
+    }
 });
 
 function renderData(data) {
-    // COVER & HERO: Gunakan Nama Panggilan (title)
     document.getElementById("cover-couple-name").textContent = data.title;
     document.getElementById("couple-name").textContent = data.title;
     document.title = data.title;
 
-    // ISI: Nama panjang dalam 1 baris (normal)
     document.getElementById("groom-name").textContent = data.groom.name;
     document.getElementById("bride-name").textContent = data.bride.name;
 
@@ -93,6 +125,29 @@ function renderData(data) {
     AOS.init({ duration: 1000, once: true, offset: 50 });
 }
 
+// Fungsi Memuat Ucapan dari Google Sheet
+function loadWishes() {
+    const display = document.getElementById('wish-display');
+    fetch(SCRIPT_URL)
+    .then(res => res.json())
+    .then(data => {
+        if(data.length === 0) {
+            display.innerHTML = '<p style="text-align:center; font-size:0.8rem; color:#888;">Belum ada ucapan.</p>';
+            return;
+        }
+        display.innerHTML = '';
+        data.reverse().forEach(item => {
+            const div = document.createElement('div');
+            div.className = 'wish-item';
+            div.innerHTML = `<strong>${item.nama}</strong><p>${item.ucapan}</p>`;
+            display.appendChild(div);
+        });
+    })
+    .catch(err => {
+        display.innerHTML = '<p style="text-align:center; font-size:0.8rem; color:red;">Gagal memuat ucapan.</p>';
+    });
+}
+
 function setupCountdown(dateStr) {
     const target = new Date(dateStr).getTime();
     const timerElement = document.getElementById("timer");
@@ -121,6 +176,7 @@ function toggleMusic() {
 }
 
 function formatDate(dateStr) {
+    if(!dateStr) return "";
     return new Date(dateStr).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
 
