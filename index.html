@@ -7,93 +7,123 @@
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
-    <style>
-        :root {
-            --gold: #b2945e;
-            --dark-jawa: #4a3728;
-            --bg-paper: #f9f7f2;
-        }
+<style>
+    :root {
+        --gold: #b2945e;
+        --dark-jawa: #4a3728;
+        --bg-paper: #f9f7f2;
+    }
 
-        * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        
-        body {
-            margin: 0;
-            font-family: 'Poppins', sans-serif;
-            background: url('background/main-bg.jpg') repeat fixed;
-            color: var(--dark-jawa);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    
+    body {
+        margin: 0;
+        font-family: 'Poppins', sans-serif;
+        background: url('background/main-bg.jpg') repeat fixed;
+        background-size: cover; /* Background menyesuaikan layar */
+        color: var(--dark-jawa);
+        min-height: 100vh;
+    }
 
-        /* Loader */
-        .loader {
-            position: fixed; inset: 0; background: var(--bg-paper);
-            display: flex; justify-content: center; align-items: center; z-index: 9999;
-        }
+    /* Header Responsif */
+    header {
+        padding: clamp(20px, 5vh, 40px) 20px;
+        text-align: center;
+        background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('background/hero-pattern.png');
+        border-bottom: 2px solid var(--gold);
+    }
+    .gunungan-mini { width: clamp(40px, 10vw, 60px); }
+    header h1 { 
+        font-family: 'Great Vibes', cursive; 
+        color: var(--gold); 
+        margin: 0; 
+        font-size: clamp(1.8rem, 8vw, 2.5rem); /* Font mengecil di layar kecil */
+    }
 
-        /* Hero Tetap Muncul di awal atau sebagai Header */
-        header {
-            padding: 40px 20px;
-            text-align: center;
-            background: linear-gradient(rgba(255,255,255,0.7), rgba(255,255,255,0.7)), url('background/hero-pattern.png');
-            border-bottom: 2px solid var(--gold);
-        }
-        .gunungan-mini { width: 60px; margin-bottom: 10px; }
-        header h1 { font-family: 'Great Vibes', cursive; color: var(--gold); margin: 0; font-size: 2.5rem; }
+    /* Container Utama Fleksibel */
+    .main-container {
+        padding: 15px;
+        max-width: 600px; /* Batas lebar maksimal untuk kenyamanan baca */
+        margin: 0 auto 100px auto;
+        width: 100%;
+    }
 
-        /* Container Konten */
-        .main-container {
-            flex: 1;
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto 100px auto;
-            width: 100%;
-        }
+    .content-section {
+        display: none;
+        background: rgba(255, 255, 255, 0.95);
+        padding: clamp(20px, 5vw, 40px);
+        border-radius: 25px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        animation: fadeIn 0.5s ease;
+        text-align: center;
+    }
 
-        /* Sembunyikan semua section secara default */
-        .content-section {
-            display: none;
-            background: rgba(255, 255, 255, 0.9);
-            padding: 30px 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
-            animation: fadeIn 0.5s ease;
-            text-align: center;
-        }
+    .content-section.active { display: block; }
 
-        /* Section Aktif */
-        .content-section.active { display: block; }
+    /* Galeri Responsif (Grid adaptif) */
+    .gallery-grid { 
+        display: grid; 
+        grid-template-columns: repeat(2, 1fr); /* Default 2 kolom */
+        gap: 10px; 
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    /* Penyesuaian khusus layar SANGAT KECIL (HP Jadul/Kecil) */
+    @media (max-width: 350px) {
+        .gallery-grid { grid-template-columns: 1fr; } /* Jadi 1 kolom */
+        .nav-bottom { gap: 10px; padding: 10px 15px; }
+    }
 
-        .doa-box { font-style: italic; font-size: 0.9rem; line-height: 1.8; color: #555; margin-bottom: 20px; }
-        .event-box { border: 1px solid var(--gold); padding: 20px; border-radius: 15px; margin-bottom: 15px; background: white; }
-        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .gallery-grid img { width: 100%; height: 150px; object-fit: cover; border-radius: 10px; }
+    /* Penyesuaian khusus layar TABLET/DESKTOP */
+    @media (min-width: 768px) {
+        .main-container { max-width: 700px; }
+        .gallery-grid { grid-template-columns: repeat(3, 1fr); } /* Jadi 3 kolom */
+    }
 
-        /* Bottom Nav */
-        .nav-bottom {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            padding: 10px 20px; border-radius: 40px;
-            display: flex; gap: 20px; box-shadow: 0 5px 20px rgba(0,0,0,0.2); z-index: 1000;
-        }
-        .nav-item { 
-            color: #aaa; font-size: 1.2rem; cursor: pointer; padding: 10px;
-            transition: 0.3s; border-radius: 50%;
-        }
-        .nav-item.active { color: var(--gold); background: rgba(178, 148, 94, 0.1); }
+    .event-box { 
+        border: 1px solid var(--gold); 
+        padding: 20px; 
+        border-radius: 15px; 
+        margin-bottom: 15px; 
+        background: white; 
+    }
 
-        iframe { width: 100%; height: 200px; border-radius: 10px; border: none; margin-top: 10px; }
-        .btn-wa {
-            background: #25d366; color: white; padding: 12px 20px;
-            border-radius: 25px; text-decoration: none; display: inline-block; margin-top: 15px;
-        }
-    </style>
+    /* Navigasi Bawah Responsif */
+    .nav-bottom {
+        position: fixed; 
+        bottom: 20px; 
+        left: 50%; 
+        transform: translateX(-50%);
+        background: rgba(255, 255, 255, 0.95); 
+        backdrop-filter: blur(10px);
+        padding: 10px 20px; 
+        border-radius: 40px;
+        display: flex; 
+        gap: clamp(10px, 5vw, 25px); 
+        box-shadow: 0 5px 20px rgba(0,0,0,0.2); 
+        z-index: 1000;
+        width: auto;
+        max-width: 90%; /* Agar tidak luber di layar HP sangat kecil */
+    }
+
+    .nav-item { 
+        color: #aaa; 
+        font-size: clamp(1rem, 5vw, 1.3rem); 
+        cursor: pointer; 
+        padding: 8px;
+        transition: 0.3s; 
+        border-radius: 50%;
+    }
+
+    /* Gambar galeri tetap proporsional */
+    .gallery-grid img { 
+        width: 100%; 
+        aspect-ratio: 1/1; /* Kotak sempurna */
+        object-fit: cover; 
+        border-radius: 12px; 
+    }
+
+    iframe { width: 100%; height: clamp(200px, 40vh, 300px); border-radius: 15px; }
+</style>
 </head>
 <body>
 
@@ -162,3 +192,4 @@
     <script src="script.js"></script>
 </body>
 </html>
+
