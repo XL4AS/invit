@@ -1,73 +1,47 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Undangan Pernikahan Digital</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Undangan Pernikahan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-    <div id="loader" class="loader-wrapper">
-        <div class="loader"></div>
-        <p>Sedang Memuat Undangan...</p>
-    </div>
+<!-- LOADER -->
+<div id="loader" class="loader">
+  <p>Memuat undangan...</p>
+</div>
 
-    <section id="cover" class="hero">
-        <div class="content">
-            <h3 id="guest-label">Kepada Yth. Bapak/Ibu/Saudara/i</h3>
-            <h1 class="names"><span id="groom-name">...</span> & <span id="bride-name">...</span></h1>
-            <p class="invite-text">Kami mengundang Anda untuk merayakan hari bahagia kami</p>
-            <button class="btn-open" onclick="openInvitation()">
-                <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;">
-                    <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
-                </svg>
-                Buka Undangan
-            </button>
-        </div>
-    </section>
+<!-- MAIN CONTENT -->
+<main id="content" style="display:none">
 
-    <main id="main-content" style="display:none; opacity: 0;">
-        
-        <section class="section">
-            <h2 class="title-serif">Menuju Hari Bahagia</h2>
-            <div id="countdown" class="countdown-container">
-                <div class="time-box"><span id="days">0</span><small>Hari</small></div>
-                <div class="time-box"><span id="hours">0</span><small>Jam</small></div>
-                <div class="time-box"><span id="mins">0</span><small>Menit</small></div>
-            </div>
-        </section>
+  <section class="hero">
+    <h1 id="couple-name"></h1>
+    <p id="event-date"></p>
+  </section>
 
-        <section class="section">
-            <h2 class="title-serif">Momen Bahagia</h2>
-            <div id="gallery-slider" class="gallery-slider">
-                </div>
-            <p class="help-text">« Geser untuk melihat foto »</p>
-        </section>
+  <section class="countdown">
+    <div id="countdown"></div>
+  </section>
 
-        <section class="section">
-            <h2 class="title-serif">Lokasi Acara</h2>
-            <p id="location-text" class="location-desc">...</p>
-            
-            <div id="map-frame-container" class="map-wrapper">
-                </div>
+  <section class="location">
+    <p id="event-location"></p>
+    <div id="map-frame-container"></div>
+  </section>
 
-            <br>
-            <a id="rsvp-btn" href="#" target="_blank" class="btn-whatsapp">
-                Konfirmasi Kehadiran (WhatsApp)
-            </a>
-        </section>
+  <section class="gallery">
+    <h2>Galeri</h2>
+    <div id="gallery-slider" class="gallery-slider"></div>
+  </section>
 
-        <footer style="padding: 40px 0; font-size: 12px; color: #888; background: #fff;">
-            <p>&copy; 2026 Wedding Invitation - Created with Love</p>
-        </footer>
-    </main>
+  <section class="contact">
+    <a id="whatsapp-btn" target="_blank">Konfirmasi Kehadiran</a>
+  </section>
 
-    <audio id="bg-music" loop>
-        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
-    </audio>
+</main>
 
-    <script src="script.js"></script>
+<script src="script.js"></script>
 </body>
 </html>

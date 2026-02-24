@@ -1,220 +1,42 @@
-/* Wedding Invitation Modern Theme
-    Color Palette: Gold, Dark Slate, and Light Grey
-*/
-
-:root {
-    --primary: #d4af37; /* Gold */
-    --dark: #2c3e50;
-    --light: #f9f9f9;
-    --white: #ffffff;
-    --shadow: rgba(0, 0, 0, 0.1);
-}
-
-/* Reset Standar */
-* {
-    box-sizing: border-box;
-}
-
 body {
-    margin: 0; 
-    font-family: 'Montserrat', 'Segoe UI', sans-serif;
-    color: var(--dark); 
-    text-align: center; 
-    background: var(--light);
-    overflow-x: hidden;
-}
-
-/* Section Dasar */
-.section { 
-    padding: 80px 20px; 
-    max-width: 1200px;
-    margin: 0 auto;
-}
-
-.title-serif {
-    font-family: 'Dancing Script', cursive;
-    font-size: 2.8rem;
-    color: var(--primary);
-    margin-bottom: 30px;
-}
-
-/* --- LOADER --- */
-.loader-wrapper {
-    position: fixed; 
-    top: 0; left: 0; width: 100%; height: 100%;
-    background: white; 
-    display: flex; 
-    flex-direction: column;
-    justify-content: center; 
-    align-items: center; 
-    z-index: 9999;
-    transition: opacity 0.5s ease;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fafafa;
+  text-align: center;
 }
 
 .loader {
-    border: 5px solid #f3f3f3; 
-    border-top: 5px solid var(--primary);
-    border-radius: 50%; 
-    width: 50px; height: 50px; 
-    animation: spin 1s linear infinite;
-    margin-bottom: 15px;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
 }
 
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-/* --- HERO / COVER SECTION --- */
 .hero {
-    height: 100vh;
-    width: 100%;
-    display: flex; 
-    align-items: center; 
-    justify-content: center;
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                url('https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80');
-    background-size: cover; 
-    background-position: center;
-    color: white;
-    position: fixed; 
-    top: 0; left: 0;
-    z-index: 1000;
-    transition: transform 1s cubic-bezier(0.77, 0, 0.175, 1), opacity 1s ease;
+  padding: 40px 20px;
 }
 
-.names {
-    font-family: 'Dancing Script', cursive;
-    font-size: 4rem;
-    margin: 15px 0;
-    line-height: 1.2;
+.gallery-slider img {
+  width: 100%;
+  max-width: 300px;
+  margin: 10px;
+  border-radius: 10px;
 }
 
-/* --- MAIN CONTENT --- */
-#main-content {
-    position: relative;
-    z-index: 1;
-    min-height: 100vh;
+#map-frame-container iframe {
+  width: 100%;
+  height: 300px;
+  border: none;
+  border-radius: 10px;
 }
 
-/* --- GALLERY SLIDER (Momen Bahagia) --- */
-.gallery-slider {
-    display: flex;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    gap: 15px;
-    padding: 20px;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE/Edge */
-}
-
-.gallery-slider::-webkit-scrollbar {
-    display: none; /* Chrome/Safari */
-}
-
-.slider-item {
-    flex: 0 0 80%; /* Lebar gambar di mobile */
-    scroll-snap-align: center;
-    height: 350px;
-    border-radius: 20px;
-    object-fit: cover;
-    box-shadow: 0 10px 20px var(--shadow);
-    transition: transform 0.3s ease;
-}
-
-.help-text {
-    font-size: 0.8rem;
-    color: #888;
-    margin-top: -10px;
-}
-
-/* --- LOKASI & MAP --- */
-.location-desc {
-    font-weight: bold;
-    padding: 0 20px;
-    line-height: 1.6;
-    margin-bottom: 20px;
-}
-
-.map-wrapper {
-    max-width: 900px;
-    margin: 0 auto;
-    border-radius: 20px;
-    overflow: hidden;
-    box-shadow: 0 8px 25px var(--shadow);
-    background: #eee;
-}
-
-/* --- COUNTDOWN --- */
-.countdown-container { 
-    display: flex; 
-    justify-content: center; 
-    gap: 15px; 
-    flex-wrap: wrap;
-    margin-top: 20px;
-}
-
-.time-box { 
-    background: var(--white); 
-    padding: 20px; 
-    border-radius: 15px; 
-    box-shadow: 0 8px 25px rgba(0,0,0,0.05); 
-    width: 90px; 
-    transition: transform 0.3s ease;
-}
-
-.time-box span {
-    display: block;
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: var(--primary);
-}
-
-.time-box small {
-    color: #888;
-    text-transform: uppercase;
-    font-size: 0.7rem;
-    letter-spacing: 1px;
-}
-
-/* --- BUTTONS --- */
-.btn-open, .btn-whatsapp {
-    background: var(--primary); 
-    color: white; 
-    border: none;
-    padding: 16px 40px; 
-    border-radius: 50px; 
-    cursor: pointer;
-    text-decoration: none; 
-    font-weight: 700;
-    display: inline-block;
-    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-    transition: all 0.3s ease;
-    font-size: 1rem;
-}
-
-.btn-open:hover, .btn-whatsapp:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
-    filter: brightness(1.1);
-}
-
-/* --- RESPONSIVE OPTIMIZATION --- */
-@media (max-width: 768px) {
-    .names { font-size: 3rem; }
-    .section { padding: 50px 15px; }
-    
-    .slider-item {
-        flex: 0 0 85%;
-        height: 300px;
-    }
-    
-    .time-box {
-        width: 75px;
-        padding: 15px;
-    }
-    .time-box span { font-size: 1.4rem; }
-}
-
-@media (min-width: 769px) {
-    .slider-item {
-        flex: 0 0 30%; /* Tampilkan 3 gambar sekaligus di desktop */
-    }
+#whatsapp-btn {
+  display: inline-block;
+  margin: 30px 0;
+  padding: 12px 20px;
+  background: #25d366;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 8px;
 }
