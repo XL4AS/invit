@@ -1,108 +1,112 @@
+/**
+ * Konfigurasi Utama
+ */
 const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
 const loader = document.getElementById("loader");
 const content = document.getElementById("content");
 const audio = document.getElementById("weddingAudio");
 const cover = document.getElementById("cover");
 
-// 1. Ambil parameter dari URL
-const urlParams = new URLSearchParams(location.search);
+// Ambil parameter dari URL (ID Undangan & Nama Tamu)
+const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
 const to = urlParams.get("to") || "Tamu Undangan";
 
-// Set nama tamu di cover segera tanpa menunggu JSON
+// Set nama tamu di cover segera
 document.getElementById("guest-name").textContent = to;
 
-// 2. Fungsi Buka Undangan (Dioptimalkan untuk Chrome HP)
+/**
+ * Fungsi Utama: Membuka Undangan
+ */
 function openInvitation() {
-    // Jalankan musik (Syarat browser HP: harus di dalam fungsi klik)
+    // Putar musik (dibutuhkan interaksi user di mobile)
     if (audio) {
-        audio.play().then(() => {
-            console.log("Musik diputar");
-        }).catch(err => {
-            console.log("Musik tertunda: Menunggu interaksi user");
-        });
+        audio.play().catch(err => console.log("Autoplay dicegah oleh browser."));
     }
 
-    // Geser cover ke atas & Animasi Fade
+    // Animasi transisi cover
     cover.style.opacity = "0";
     cover.style.transform = "translateY(-100%)";
     
-    // Aktifkan scroll (Body & HTML untuk kompatibilitas HP)
+    // Aktifkan scroll
     document.body.classList.remove("no-scroll");
     document.documentElement.style.overflow = "auto";
     
-    // Munculkan icon musik & Konten
+    // Tampilkan kontrol musik dan konten utama
     document.getElementById("music-control").style.display = "flex";
     content.style.display = "block";
     
-    // Hapus cover dari tampilan setelah 1 detik
     setTimeout(() => {
         cover.style.display = "none";
-        // Refresh animasi AOS saat konten mulai terlihat
-        AOS.refresh();
+        AOS.refresh(); // Refresh animasi AOS setelah konten muncul
     }, 1000);
 }
 
-// 3. Pasang Event Listener Manual (Paling Ampuh di HP)
+/**
+ * Memuat Data dari JSON
+ */
 document.addEventListener("DOMContentLoaded", function() {
-    const btnOpen = document.getElementById("btnOpen") || document.querySelector(".btn-open");
-    if (btnOpen) {
-        // Mendukung klik biasa dan touch (jari)
-        btnOpen.addEventListener("click", openInvitation);
+    const btnOpen = document.getElementById("btnOpen");
+    if (btnOpen) btnOpen.addEventListener("click", openInvitation);
+
+    if(!id){
+        if(loader) loader.innerHTML = "<h3>ID Undangan Tidak Valid</h3>";
+    } else {
+        // Alamat file JSON berdasarkan ID di URL
+        const DATA_URL = `https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`;
+        
+        fetch(DATA_URL, {cache: "no-store"})
+            .then(response => {
+                if (!response.ok) throw new Error("Data tidak ditemukan");
+                return response.json();
+            })
+            .then(data => {
+                renderData(data);
+                setupCountdown(data.akad.date);
+            })
+            .catch(err => {
+                console.error(err);
+                if(loader) loader.style.display = "none";
+                alert("Gagal memuat data undangan.");
+            });
     }
 });
 
-// 4. Ambil Data JSON
-if(!id){
-    if(loader) loader.innerHTML = "<div style='text-align:center;'><h3>ID Undangan Tidak Valid</h3></div>";
-} else {
-    const DATA_URL = `https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`;
-    
-    fetch(DATA_URL, {cache: "no-store"})
-        .then(r => {
-            if (!r.ok) throw new Error("Data tidak ditemukan");
-            return r.json();
-        })
-        .then(data => {
-            renderData(data);
-            setupCountdown(data.akad.date);
-        })
-        .catch(err => {
-            console.error(err);
-            // Tetap hilangkan loader meski error agar user bisa klik tombol buka
-            if(loader) loader.style.display = "none";
-            document.getElementById("cover-couple-name").textContent = "Anang & Indri"; 
-        });
-}
-
+/**
+ * Render data JSON ke Elemen HTML
+ */
 function renderData(data) {
-    // Isi data ke elemen-elemen
-    document.getElementById("cover-couple-name").textContent = `${data.groom.name} & ${data.bride.name}`;
-    document.getElementById("couple-name").textContent = `${data.groom.name} & ${data.bride.name}`;
-    document.title = data.title || "Undangan Pernikahan";
+    // Nama Panggilan (title) untuk Cover & Hero
+    document.getElementById("cover-couple-name").textContent = data.title;
+    document.getElementById("couple-name").textContent = data.title;
+    document.title = "Undangan " + data.title;
 
-    document.getElementById("groom-name").textContent = data.groom.name;
-    document.getElementById("bride-name").textContent = data.bride.name;
+    // Nama Panjang dipisah per kata (Atas-Bawah)
+    document.getElementById("groom-name").innerHTML = data.groom.name.split(' ').join('<br>');
+    document.getElementById("bride-name").innerHTML = data.bride.name.split(' ').join('<br>');
+
+    // Data Orang Tua
     document.getElementById("groom-parents").textContent = data.groom.parent;
     document.getElementById("bride-parents").textContent = data.bride.parent;
     
+    // Quote & Tanggal
     document.getElementById("quote").textContent = data.quote;
     document.getElementById("wedding-date-hero").textContent = formatDate(data.akad.date);
     
+    // Waktu Acara
     document.getElementById("akad-date").textContent = formatDate(data.akad.date);
     document.getElementById("akad-time").textContent = data.akad.time;
     document.getElementById("resepsi-date").textContent = formatDate(data.resepsi.date);
     document.getElementById("resepsi-time").textContent = data.resepsi.time;
     
+    // Lokasi & Maps
     document.getElementById("event-location").textContent = data.location;
-
-    // Google Maps
-    if(data.maps && document.getElementById("map-frame-container")) {
+    if(data.maps) {
         document.getElementById("map-frame-container").innerHTML = 
         `<iframe src="${data.maps}" loading="lazy" allowfullscreen></iframe>`;
     }
 
-    // Galeri
+    // Gallery Gambar
     const gallery = document.getElementById("gallery-grid");
     if(gallery) {
         gallery.innerHTML = "";
@@ -115,12 +119,11 @@ function renderData(data) {
         });
     }
 
-    // WhatsApp
+    // Link WhatsApp
     const waText = encodeURIComponent(`Halo, saya ingin konfirmasi kehadiran di pernikahan ${data.groom.name} & ${data.bride.name}.`);
-    const waBtn = document.getElementById("whatsapp-btn");
-    if(waBtn) waBtn.href = `https://wa.me/${data.phone}?text=${waText}`;
+    document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=${waText}`;
 
-    // Sembunyikan Loader & Siapkan Konten
+    // Hilangkan Loader
     if(loader) loader.style.opacity = "0";
     setTimeout(() => { if(loader) loader.style.display = "none"; }, 500);
     
@@ -128,12 +131,14 @@ function renderData(data) {
     AOS.init({ duration: 1000, once: true, offset: 50 });
 }
 
+/**
+ * Setup Countdown Timer
+ */
 function setupCountdown(dateStr) {
     const target = new Date(dateStr).getTime();
     const timerElement = document.getElementById("timer");
-    if(!timerElement) return;
-
-    const x = setInterval(() => {
+    
+    const interval = setInterval(() => {
         const now = new Date().getTime();
         const diff = target - now;
         
@@ -142,6 +147,7 @@ function setupCountdown(dateStr) {
             const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
             const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
             const s = Math.floor((diff % (1000 * 60)) / 1000);
+            
             timerElement.innerHTML = `
                 <div class="count-item"><span>${d}</span><br><small>Hari</small></div>
                 <div class="count-item"><span>${h}</span><br><small>Jam</small></div>
@@ -149,12 +155,15 @@ function setupCountdown(dateStr) {
                 <div class="count-item"><span>${s}</span><br><small>Detik</small></div>
             `;
         } else {
-            clearInterval(x);
+            clearInterval(interval);
             timerElement.innerHTML = "<h3>Acara Berlangsung</h3>";
         }
     }, 1000);
 }
 
+/**
+ * Kontrol Musik (Play/Pause)
+ */
 function toggleMusic() {
     const icon = document.getElementById("music-icon");
     if (audio.paused) {
@@ -166,18 +175,26 @@ function toggleMusic() {
     }
 }
 
+/**
+ * Format Tanggal ke Bahasa Indonesia
+ */
 function formatDate(dateStr) {
     if(!dateStr) return "";
-    return new Date(dateStr).toLocaleDateString('id-ID', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+    return new Date(dateStr).toLocaleDateString('id-ID', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
 }
 
-// Navigasi Aktif saat Scroll
+/**
+ * Navigasi Aktif saat Scroll
+ */
 window.addEventListener('scroll', () => {
     let current = "";
-    const sections = document.querySelectorAll("section");
-    sections.forEach(s => {
-        const sectionTop = s.offsetTop;
-        if (pageYOffset >= sectionTop - 250) {
+    document.querySelectorAll("section").forEach(s => {
+        if (pageYOffset >= s.offsetTop - 250) {
             current = s.getAttribute("id");
         }
     });
