@@ -1,5 +1,5 @@
 const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzONCZooTk_FKi-wKdmx7fqjfyXTj__sb2fFop77GKsqff3TIHQmlOdK_UiTcNz-00z/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQE4D1I7djJSg-CL2BFJvK5R_ppxI0s9gQ1hZXjRgL21I8gXGwjgHgjgDhXTfiE7GH/exec";
 
 const loader = document.getElementById("loader");
 const content = document.getElementById("content");
@@ -9,7 +9,7 @@ const cover = document.getElementById("cover");
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
 const to = urlParams.get("to") || "Tamu Undangan";
-const isAdmin = urlParams.get("admin") === "123"; // Kode rahasia untuk tombol hapus
+const isAdmin = urlParams.get("admin") === "123"; // Kode rahasia Admin
 
 document.getElementById("guest-name").textContent = to;
 
@@ -51,7 +51,6 @@ document.addEventListener("DOMContentLoaded", function() {
             });
     }
 
-    // Form Handle Kirim Ucapan
     const wishForm = document.getElementById('wish-form');
     if(wishForm) {
         wishForm.addEventListener('submit', function(e) {
@@ -84,17 +83,20 @@ document.addEventListener("DOMContentLoaded", function() {
 });
 
 function renderData(data) {
-    // Nama Panggilan untuk Cover & Hero
     document.getElementById("cover-couple-name").textContent = data.title;
     document.getElementById("couple-name").textContent = data.title;
     document.title = data.title;
 
-    // Nama Panjang 1 Baris untuk Isi
     document.getElementById("groom-name").textContent = data.groom.name;
     document.getElementById("bride-name").textContent = data.bride.name;
-
     document.getElementById("groom-parents").textContent = data.groom.parent;
     document.getElementById("bride-parents").textContent = data.bride.parent;
+    
+    // Nama untuk bagian penutup/terima kasih
+    if(document.getElementById("closing-names")) {
+        document.getElementById("closing-names").textContent = data.title;
+    }
+
     document.getElementById("quote").textContent = data.quote;
     document.getElementById("wedding-date-hero").textContent = formatDate(data.akad.date);
     document.getElementById("akad-date").textContent = formatDate(data.akad.date);
@@ -128,7 +130,6 @@ function renderData(data) {
     AOS.init({ duration: 1000, once: true, offset: 50 });
 }
 
-// Fitur Load Ucapan & Tombol Hapus Rahasia
 function loadWishes() {
     const display = document.getElementById('wish-display');
     fetch(SCRIPT_URL)
@@ -140,15 +141,12 @@ function loadWishes() {
         }
         display.innerHTML = '';
         
-        // Data dibalik agar ucapan terbaru muncul paling atas
         const reversedData = [...data].reverse();
-
         reversedData.forEach((item, index) => {
             const actualRowIndex = data.length - index; 
             const div = document.createElement('div');
             div.className = 'wish-item';
             
-            // Tombol hapus hanya muncul jika ada &admin=123 di URL
             const deleteBtn = isAdmin ? `
                 <button onclick="deleteWish(${actualRowIndex})" style="position:absolute; top:10px; right:10px; background:#fff0f0; border:1px solid #ffcccc; color:#ff4d4d; cursor:pointer; font-size:0.6rem; padding:2px 5px; border-radius:4px;">
                     <i class="fas fa-trash"></i> Hapus
@@ -167,10 +165,10 @@ function loadWishes() {
     });
 }
 
-// Fungsi Hapus Ucapan (Admin Only)
 function deleteWish(rowId) {
     if (confirm("Hapus ucapan ini?")) {
         fetch(`${SCRIPT_URL}?del=${rowId}`)
+        .then(res => res.text())
         .then(() => {
             loadWishes(); 
         })
@@ -220,4 +218,3 @@ window.addEventListener('scroll', () => {
         if (item.getAttribute("href").includes(current)) item.classList.add("active");
     });
 });
-
