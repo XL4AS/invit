@@ -21,8 +21,8 @@ body{
   font-size:18px;
   color:var(--gold);
 }
-main{max-width:720px;margin:auto;padding:20px}
-.hero h1{color:var(--gold);font-size:36px;margin-bottom:5px}
+main{max-width:760px;margin:auto;padding:20px}
+.hero h1{color:var(--gold);font-size:34px;margin-bottom:6px}
 .section{
   background:#fff;
   margin:20px 0;
@@ -30,6 +30,7 @@ main{max-width:720px;margin:auto;padding:20px}
   border-radius:16px;
   box-shadow:0 10px 25px rgba(0,0,0,.08);
 }
+small{color:#777}
 #map-frame-container iframe{
   width:100%;
   height:280px;
@@ -47,6 +48,10 @@ main{max-width:720px;margin:auto;padding:20px}
   width:100%;
   border-radius:12px;
   object-fit:cover;
+}
+.quote{
+  font-style:italic;
+  color:#555;
 }
 #whatsapp-btn{
   display:inline-block;
@@ -66,9 +71,27 @@ main{max-width:720px;margin:auto;padding:20px}
 <div id="loader" class="loader">Memuat undangan...</div>
 
 <main id="content" style="display:none">
+
   <section class="hero">
-    <h1 id="couple-name"></h1>
+    <h1 id="title"></h1>
+    <h2 id="couple-name"></h2>
     <p id="event-date"></p>
+  </section>
+
+  <section class="section">
+    <h3>Mempelai</h3>
+    <p><b id="groom-name"></b></p>
+    <small id="groom-parent"></small>
+    <hr>
+    <p><b id="bride-name"></b></p>
+    <small id="bride-parent"></small>
+  </section>
+
+  <section class="section">
+    <h3>Akad Nikah</h3>
+    <p id="akad-info"></p>
+    <h3>Resepsi</h3>
+    <p id="resepsi-info"></p>
   </section>
 
   <section class="section">
@@ -78,11 +101,16 @@ main{max-width:720px;margin:auto;padding:20px}
   </section>
 
   <section class="section">
+    <p class="quote" id="quote"></p>
+  </section>
+
+  <section class="section">
     <h3>Galeri</h3>
     <div id="gallery-slider" class="gallery-slider"></div>
   </section>
 
   <a id="whatsapp-btn" target="_blank">Konfirmasi Kehadiran</a>
+
 </main>
 
 <script>
@@ -122,48 +150,65 @@ fetch(DATA_URL,{cache:"no-store"})
 /* =============================
    RENDER DATA
 ============================= */
-function renderData(data){
+function renderData(d){
 
+  document.title = d.title || "Undangan Pernikahan";
+  document.getElementById("title").textContent = d.title || "";
   document.getElementById("couple-name").textContent =
-    `${data.groom} & ${data.bride}`;
+    `${d.groom.name} & ${d.bride.name}`;
+
+  document.getElementById("groom-name").textContent = d.groom.name;
+  document.getElementById("groom-parent").textContent =
+    `Putra dari ${d.groom.parent}`;
+
+  document.getElementById("bride-name").textContent = d.bride.name;
+  document.getElementById("bride-parent").textContent =
+    `Putri dari ${d.bride.parent}`;
+
+  document.getElementById("akad-info").textContent =
+    `${formatDate(d.akad.date)} • ${d.akad.time}`;
+
+  document.getElementById("resepsi-info").textContent =
+    `${formatDate(d.resepsi.date)} • ${d.resepsi.time}`;
 
   document.getElementById("event-date").textContent =
-    new Date(data.date+"T00:00:00").toLocaleDateString("id-ID",{
+    formatDate(d.resepsi.date);
+
+  document.getElementById("event-location").textContent =
+    d.location || "";
+
+  document.getElementById("quote").textContent = d.quote || "";
+
+  document.getElementById("map-frame-container").innerHTML =
+    d.maps && d.maps.includes("embed")
+      ? `<iframe src="${d.maps}" loading="lazy"></iframe>`
+      : "<p>Peta tidak tersedia</p>";
+
+  const gallery = document.getElementById("gallery-slider");
+  gallery.innerHTML = "";
+  (d.gallery||[]).forEach(name=>{
+    const img = new Image();
+    img.src = IMAGE_BASE + name;
+    img.loading = "lazy";
+    img.onerror = ()=>img.remove();
+    gallery.appendChild(img);
+  });
+
+  document.getElementById("whatsapp-btn").href =
+    `https://wa.me/${d.phone}?text=Saya%20akan%20hadir`;
+
+  loader.style.display="none";
+  content.style.display="block";
+}
+
+function formatDate(date){
+  return new Date(date+"T00:00:00")
+    .toLocaleDateString("id-ID",{
       weekday:"long",
       day:"numeric",
       month:"long",
       year:"numeric"
     });
-
-  document.getElementById("event-location").textContent =
-    data.location || "";
-
-  /* MAP */
-  document.getElementById("map-frame-container").innerHTML =
-    data.maps && data.maps.includes("embed")
-    ? `<iframe src="${data.maps}" loading="lazy"></iframe>`
-    : "<p>Peta tidak tersedia</p>";
-
-  /* GALERI (NAMA FILE SAJA) */
-  const gallery = document.getElementById("gallery-slider");
-  gallery.innerHTML = "";
-
-  if(Array.isArray(data.gallery)){
-    data.gallery.forEach(name=>{
-      const img = new Image();
-      img.src = IMAGE_BASE + name;
-      img.loading = "lazy";
-      img.onerror = ()=>img.remove();
-      gallery.appendChild(img);
-    });
-  }
-
-  /* WHATSAPP */
-  document.getElementById("whatsapp-btn").href =
-    `https://wa.me/${data.phone}?text=Saya%20akan%20hadir`;
-
-  loader.style.display="none";
-  content.style.display="block";
 }
 </script>
 
