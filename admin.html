@@ -1,170 +1,162 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Generator JSON Undangan</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin - Generator JSON Undangan</title>
 
-  <style>
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(135deg,#f7f3e8,#fdfdfd);
-      color: #333;
-      padding: 20px;
-    }
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      border-radius: 14px;
-      box-shadow: 0 10px 25px rgba(0,0,0,.08);
-    }
-    h2 {
-      text-align: center;
-      color: #d4af37;
-      margin-top: 0;
-      border-bottom: 2px solid #f3f3f3;
-      padding-bottom: 10px;
-    }
-    label {
-      margin-top: 15px;
-      display: block;
-      font-weight: bold;
-      font-size: 14px;
-    }
-    input, textarea {
-      width: 100%;
-      padding: 10px;
-      margin-top: 6px;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-      font-size: 14px;
-    }
-    textarea { resize: vertical; height: 80px; }
-    .help {
-      font-size: 11px;
-      margin-top: 5px;
-      background: #fffde7;
-      padding: 6px;
-      border-left: 4px solid #ffd600;
-      border-radius: 4px;
-    }
-    button {
-      margin-top: 25px;
-      width: 100%;
-      background: #d4af37;
-      border: none;
-      padding: 14px;
-      color: white;
-      font-size: 16px;
-      border-radius: 8px;
-      font-weight: bold;
-      cursor: pointer;
-      transition: .3s;
-    }
-    button:hover { background:#b8952e; }
-    #preview {
-      display: none;
-      margin-top: 20px;
-      background: #272822;
-      color: #f8f8f2;
-      padding: 15px;
-      border-radius: 6px;
-      font-family: monospace;
-      font-size: 12px;
-      white-space: pre-wrap;
-      word-break: break-word;
-    }
-    .note {
-      margin-top: 15px;
-      text-align: center;
-      font-size: 12px;
-      font-weight: bold;
-      color: #e53935;
-    }
-  </style>
+<style>
+body{
+  font-family:Segoe UI,Tahoma,sans-serif;
+  background:linear-gradient(135deg,#f7f3e8,#fff);
+  padding:20px
+}
+.container{
+  max-width:620px;
+  margin:auto;
+  background:#fff;
+  padding:30px;
+  border-radius:14px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08)
+}
+h2{
+  text-align:center;
+  color:#d4af37;
+  border-bottom:2px solid #f3f3f3;
+  padding-bottom:10px
+}
+label{display:block;margin-top:15px;font-weight:bold;font-size:14px}
+input,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:6px;
+  border-radius:6px;
+  border:1px solid #ddd;
+  font-size:14px
+}
+textarea{resize:vertical;height:80px}
+.help{
+  font-size:11px;
+  margin-top:5px;
+  background:#fffde7;
+  padding:6px;
+  border-left:4px solid #ffd600
+}
+button{
+  margin-top:25px;
+  width:100%;
+  background:#d4af37;
+  border:none;
+  padding:14px;
+  color:#fff;
+  font-size:16px;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer
+}
+button:hover{background:#b8952e}
+#preview{
+  display:none;
+  margin-top:20px;
+  background:#272822;
+  color:#f8f8f2;
+  padding:15px;
+  border-radius:6px;
+  font-family:monospace;
+  font-size:12px;
+  white-space:pre-wrap
+}
+.note{
+  margin-top:15px;
+  text-align:center;
+  font-size:12px;
+  font-weight:bold;
+  color:#e53935
+}
+</style>
 </head>
 <body>
 
 <div class="container">
-  <h2>JSON Generator Undangan</h2>
+<h2>JSON Generator Undangan</h2>
 
-  <form onsubmit="return false">
-    <label>Nama Pria</label>
-    <input id="g" required placeholder="Contoh: Anang">
+<label>Nama Pria</label>
+<input id="g" placeholder="Anang">
 
-    <label>Nama Wanita</label>
-    <input id="b" required placeholder="Contoh: Indri">
+<label>Nama Wanita</label>
+<input id="b" placeholder="Indri">
 
-    <label>Tanggal Acara</label>
-    <input id="d" type="date" required>
+<label>Tanggal Acara</label>
+<input id="d" type="date">
 
-    <label>Nomor WhatsApp RSVP</label>
-    <input id="p" placeholder="628123456789">
-    <div class="help">Gunakan kode <b>62</b>, tanpa + dan spasi</div>
+<label>Nomor WhatsApp RSVP</label>
+<input id="p" placeholder="628123456789">
+<div class="help">Gunakan 62 tanpa + dan spasi</div>
 
-    <label>Alamat Lokasi (Teks)</label>
-    <textarea id="l"></textarea>
+<label>Alamat Lokasi (teks)</label>
+<textarea id="l"></textarea>
 
-    <label>Link Google Maps (Share / App / Embed)</label>
-    <input id="m" placeholder="https://maps.app.goo.gl/...">
+<label>Link Google Maps</label>
+<input id="m" placeholder="https://maps.app.goo.gl/...">
 
-    <label>ID Foto Google Drive (pisahkan dengan koma)</label>
-    <input id="pics" placeholder="ID1, ID2">
-    <div class="help">
-      • Masukkan <b>ID FILE saja</b><br>
-      • Share → Anyone with link → Viewer
-    </div>
+<label>ID Foto Google Drive (pisahkan koma)</label>
+<input id="pics" placeholder="1Abc..., 2Def...">
+<div class="help">
+• SHARE → Anyone with link → Viewer<br>
+• Hanya ID FILE, bukan URL
+</div>
 
-    <button onclick="generate()">Download File JSON</button>
-  </form>
+<button onclick="generate()">Download JSON</button>
 
-  <div class="note">Upload file JSON ini ke <b>GitHub RAW</b></div>
-  <div id="preview"></div>
+<div class="note">Upload JSON ini ke GitHub → gunakan link RAW</div>
+<pre id="preview"></pre>
 </div>
 
 <script>
-function toEmbedMap(url){
+function mapEmbed(url){
   if(!url) return "";
-  if(url.includes("output=embed")) return url;
-  return "https://www.google.com/maps?q=" + encodeURIComponent(url) + "&output=embed";
+  if(url.includes("embed")) return url;
+  return "https://www.google.com/maps?q="+encodeURIComponent(url)+"&output=embed";
 }
 
-function generate() {
-  const groom = g.value.trim();
-  const bride = b.value.trim();
-  const date = d.value;
-  if(!groom || !bride || !date){
+function driveURL(id){
+  return "https://drive.google.com/uc?export=view&id="+id;
+}
+
+function generate(){
+  const groom=g.value.trim();
+  const bride=b.value.trim();
+  const date=d.value;
+
+  if(!groom||!bride||!date){
     alert("Nama & tanggal wajib diisi");
     return;
   }
 
-  const gallery = pics.value
-    ? pics.value.split(",").map(id =>
-        `https://drive.google.com/uc?export=view&id=${id.trim()}`
-      )
-    : [];
+  const gallery=pics.value
+    .split(",")
+    .map(x=>x.trim())
+    .filter(x=>x.length>5)
+    .map(id=>driveURL(id));
 
-  const data = {
+  const data={
     groom,
     bride,
     date,
-    phone: p.value.trim(),
-    location: l.value.trim(),
-    maps: toEmbedMap(m.value.trim()),
+    phone:p.value.trim(),
+    location:l.value.trim(),
+    maps:mapEmbed(m.value.trim()),
     gallery
   };
 
-  preview.style.display = "block";
-  preview.textContent = JSON.stringify(data, null, 2);
+  preview.style.display="block";
+  preview.textContent=JSON.stringify(data,null,2);
 
-  const blob = new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = `${groom.toLowerCase().replace(/\s+/g,"_")}_invitation.json`;
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=groom.toLowerCase().replace(/\s+/g,"_")+"_invitation.json";
   a.click();
-  URL.revokeObjectURL(a.href);
 }
 </script>
 
