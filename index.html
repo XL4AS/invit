@@ -24,10 +24,9 @@
             width: 100%; height: 100%;
             font-family: 'Poppins', sans-serif;
             background-color: var(--jawa-dark);
-            overflow: hidden; /* Dikendalikan oleh snap-container */
+            overflow: hidden;
         }
 
-        /* Container Full Page Snap */
         .snap-container {
             height: 100vh;
             overflow-y: scroll;
@@ -49,7 +48,6 @@
             text-align: center;
         }
 
-        /* Latar Belakang Batik dari Folder background/ */
         section::before {
             content: "";
             position: absolute;
@@ -60,7 +58,6 @@
             z-index: 1;
         }
 
-        /* Hero Section */
         .hero { 
             background: linear-gradient(rgba(44, 24, 16, 0.7), rgba(44, 24, 16, 0.7)), 
                         url('background/bg-hero.jpg');
@@ -73,7 +70,6 @@
         .hero h1 { font-family: 'Great Vibes', cursive; font-size: 3.5rem; margin: 10px 0; }
         .hero h2 { font-family: 'Cinzel', serif; font-size: 1rem; letter-spacing: 4px; }
 
-        /* Icon Gunungan dari Folder icon/ */
         .gunungan {
             width: 100px;
             margin-bottom: 15px;
@@ -81,7 +77,6 @@
             position: relative;
         }
 
-        /* Card Information */
         .info-card {
             background: rgba(255, 255, 255, 0.85);
             backdrop-filter: blur(5px);
@@ -99,7 +94,6 @@
         h3 { font-family: 'Cinzel', serif; color: var(--jawa-red); font-size: 1.1rem; }
         .parent-text { font-size: 0.8rem; color: #555; }
 
-        /* Gallery */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -116,13 +110,11 @@
             border: 2px solid var(--jawa-gold);
         }
 
-        /* Map */
         #map-frame-container iframe {
             width: 100%; height: 180px;
             border-radius: 15px; border: 1px solid var(--jawa-gold);
         }
 
-        /* Navigasi Bawah */
         .nav-bottom {
             position: fixed;
             bottom: 20px;
@@ -140,7 +132,6 @@
         .nav-item { color: var(--jawa-gold); text-decoration: none; font-size: 1.2rem; opacity: 0.5; transition: 0.3s; }
         .nav-item.active { opacity: 1; transform: scale(1.2); }
 
-        /* Loader */
         .loader {
             position: fixed; inset: 0;
             background: var(--jawa-dark);
@@ -149,7 +140,6 @@
             color: var(--jawa-gold); font-family: 'Great Vibes'; font-size: 2rem;
         }
 
-        /* Animations */
         @keyframes floating {
             0%, 100% { transform: translateY(0); }
             50% { transform: translateY(-10px); }
@@ -192,9 +182,7 @@
                 <h3>Mempelai Pria</h3>
                 <h2 class="name-big" id="groom-name"></h2>
                 <p class="parent-text">Putra dari <b id="groom-parents"></b></p>
-                
                 <div style="margin: 10px 0; color: var(--jawa-gold); font-family: 'Great Vibes'; font-size: 1.5rem;">&</div>
-                
                 <h3>Mempelai Wanita</h3>
                 <h2 class="name-big" id="bride-name"></h2>
                 <p class="parent-text">Putri dari <b id="bride-parents"></b></p>
@@ -244,75 +232,5 @@
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
-        const loader = document.getElementById("loader");
-        const content = document.getElementById("content");
-        const id = new URLSearchParams(location.search).get("id");
-
-        if(!id) {
-            loader.innerHTML = "ID Undangan Tidak Ada";
-        } else {
-            fetch(`https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`, {cache: "no-store"})
-            .then(r => r.json())
-            .then(data => {
-                // Mapping Data
-                document.getElementById("title").textContent = data.title;
-                document.getElementById("couple-name-hero").textContent = `${data.groom.name} & ${data.bride.name}`;
-                document.getElementById("hero-date").textContent = formatDate(data.akad.date);
-                document.getElementById("groom-name").textContent = data.groom.name;
-                document.getElementById("groom-parents").textContent = data.groom.parent;
-                document.getElementById("bride-name").textContent = data.bride.name;
-                document.getElementById("bride-parents").textContent = data.bride.parent;
-                document.getElementById("quote").textContent = data.quote;
-                document.getElementById("akad-date").textContent = formatDate(data.akad.date);
-                document.getElementById("akad-time").textContent = data.akad.time;
-                document.getElementById("resepsi-date").textContent = formatDate(data.resepsi.date);
-                document.getElementById("resepsi-time").textContent = data.resepsi.time;
-                document.getElementById("event-location").textContent = data.location;
-                
-                if(data.maps) {
-                    document.getElementById("map-frame-container").innerHTML = `<iframe src="${data.maps}" loading="lazy"></iframe>`;
-                }
-
-                const gallery = document.getElementById("gallery-grid");
-                (data.gallery || []).forEach(name => {
-                    const img = document.createElement("img");
-                    img.src = IMAGE_BASE + name;
-                    img.setAttribute('data-aos', 'zoom-in');
-                    gallery.appendChild(img);
-                });
-
-                document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=Saya konfirmasi kehadiran untuk ${data.groom.name} %26 ${data.bride.name}`;
-
-                // Reveal Content
-                loader.style.display = "none";
-                content.style.display = "block";
-                AOS.init({ duration: 1000, once: false });
-            })
-            .catch(() => loader.innerHTML = "Undangan Tidak Ditemukan");
-        }
-
-        function formatDate(dateStr) {
-            if(!dateStr) return "";
-            return new Date(dateStr + "T00:00:00").toLocaleDateString("id-ID", {
-                weekday: "long", day: "numeric", month: "long", year: "numeric"
-            });
-        }
-
-        // Auto Active Nav on Scroll
-        content.addEventListener("scroll", () => {
-            const sections = document.querySelectorAll("section");
-            const navItems = document.querySelectorAll(".nav-item");
-            let current = "";
-            sections.forEach(s => {
-                if (content.scrollTop >= s.offsetTop - 100) current = s.getAttribute("id");
-            });
-            navItems.forEach(item => {
-                item.classList.remove("active");
-                if (item.getAttribute("href").includes(current)) item.classList.add("active");
-            });
-        });
-    </script>
-</body>
+    <script src="script.js"></script> </body>
 </html>
