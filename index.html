@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Undangan Pernikahan</title>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Great+Vibes&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -11,29 +12,27 @@
     <style>
         :root {
             --jawa-gold: #c5a059;
-            --jawa-dark: #2c1810; /* Cokelat Kayu/Batik */
-            --jawa-red: #741113;  /* Marun Klasik */
-            --white: #fffdf5;
+            --jawa-dark: #2c1810; 
+            --jawa-red: #741113;  
+            --white-cream: #fffdf5;
         }
 
         * { box-sizing: border-box; scroll-behavior: smooth; }
 
         body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
+            margin: 0; padding: 0;
+            width: 100%; height: 100%;
             font-family: 'Poppins', sans-serif;
             background-color: var(--jawa-dark);
-            color: var(--jawa-dark);
-            overflow-x: hidden;
+            overflow: hidden; /* Dikendalikan oleh snap-container */
         }
 
-        /* Container utama untuk efek Snap Scroll */
+        /* Container Full Page Snap */
         .snap-container {
             height: 100vh;
             overflow-y: scroll;
             scroll-snap-type: y mandatory;
+            -webkit-overflow-scrolling: touch;
         }
 
         section {
@@ -45,115 +44,122 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            padding: 40px 20px;
-            background: var(--white);
-            border-bottom: 2px solid var(--jawa-gold);
-            overflow: hidden;
-        }
-
-        /* Dekorasi Gunungan / Batik Background */
-        section::before {
-            content: "";
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-image: url('https://www.transparenttextures.com/patterns/batik-fractal.png');
-            opacity: 0.05;
-            pointer-events: none;
-        }
-
-        /* Aksen Budaya (Gunungan) */
-        .gunungan {
-            width: 80px;
-            margin-bottom: 20px;
-            filter: sepia(1) saturate(2) hue-rotate(10deg);
-            opacity: 0.8;
-        }
-
-        /* Hero / Opening */
-        .hero { 
-            background: linear-gradient(rgba(44, 24, 16, 0.8), rgba(44, 24, 16, 0.8)), 
-                        url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?q=80&w=1000&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            color: var(--jawa-gold);
-        }
-
-        .hero h1 { font-family: 'Great Vibes', cursive; font-size: 3.5rem; margin: 10px 0; }
-        .hero h2 { font-family: 'Cinzel', serif; font-size: 1rem; letter-spacing: 4px; }
-
-        /* Typography */
-        h3 { font-family: 'Cinzel', serif; color: var(--jawa-red); margin-bottom: 5px; }
-        .name-big { font-family: 'Great Vibes', cursive; font-size: 2.8rem; color: var(--jawa-gold); margin: 5px 0; }
-        .parent-text { font-size: 0.85rem; color: #555; font-style: italic; }
-
-        /* Card Style for Information */
-        .info-card {
-            background: rgba(255, 255, 255, 0.9);
-            border: 1px solid var(--jawa-gold);
-            padding: 30px 20px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
+            padding: 20px;
+            background-color: var(--white-cream);
             text-align: center;
         }
 
-        /* Gallery Grid */
+        /* Latar Belakang Batik dari Folder background/ */
+        section::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background-image: url('background/batik-texture.png');
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Hero Section */
+        .hero { 
+            background: linear-gradient(rgba(44, 24, 16, 0.7), rgba(44, 24, 16, 0.7)), 
+                        url('background/bg-hero.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--jawa-gold);
+            z-index: 2;
+        }
+        .hero::before { display: none; }
+        .hero h1 { font-family: 'Great Vibes', cursive; font-size: 3.5rem; margin: 10px 0; }
+        .hero h2 { font-family: 'Cinzel', serif; font-size: 1rem; letter-spacing: 4px; }
+
+        /* Icon Gunungan dari Folder icon/ */
+        .gunungan {
+            width: 100px;
+            margin-bottom: 15px;
+            z-index: 2;
+            position: relative;
+        }
+
+        /* Card Information */
+        .info-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(5px);
+            border: 1.5px solid var(--jawa-gold);
+            padding: 25px 20px;
+            border-radius: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 400px;
+            z-index: 2;
+            position: relative;
+        }
+
+        .name-big { font-family: 'Great Vibes', cursive; font-size: 2.5rem; color: var(--jawa-gold); margin: 5px 0; }
+        h3 { font-family: 'Cinzel', serif; color: var(--jawa-red); font-size: 1.1rem; }
+        .parent-text { font-size: 0.8rem; color: #555; }
+
+        /* Gallery */
         .gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
             gap: 10px;
             width: 100%;
-            max-width: 400px;
+            max-width: 350px;
+            z-index: 2;
         }
         .gallery-grid img {
             width: 100%;
-            height: 150px;
+            height: 120px;
             object-fit: cover;
             border-radius: 10px;
             border: 2px solid var(--jawa-gold);
         }
 
         /* Map */
-        iframe { width: 100%; height: 200px; border-radius: 15px; border: 2px solid var(--jawa-gold); }
+        #map-frame-container iframe {
+            width: 100%; height: 180px;
+            border-radius: 15px; border: 1px solid var(--jawa-gold);
+        }
 
-        /* Navigation Bar Modern */
+        /* Navigasi Bawah */
         .nav-bottom {
             position: fixed;
             bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--jawa-dark);
-            padding: 12px 25px;
-            border-radius: 40px;
+            padding: 10px 20px;
+            border-radius: 30px;
             display: flex;
-            gap: 25px;
-            box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+            gap: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.4);
             z-index: 1000;
             border: 1px solid var(--jawa-gold);
         }
-        .nav-item { color: var(--jawa-gold); text-decoration: none; font-size: 1.1rem; opacity: 0.6; transition: 0.3s; }
+        .nav-item { color: var(--jawa-gold); text-decoration: none; font-size: 1.2rem; opacity: 0.5; transition: 0.3s; }
         .nav-item.active { opacity: 1; transform: scale(1.2); }
-
-        /* Responsive Fixes */
-        @media (max-width: 380px) {
-            .hero h1 { font-size: 2.8rem; }
-            .name-big { font-size: 2.2rem; }
-            .info-card { padding: 20px 15px; }
-        }
 
         /* Loader */
         .loader {
-            position: fixed;
-            inset: 0;
+            position: fixed; inset: 0;
             background: var(--jawa-dark);
             z-index: 9999;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: var(--jawa-gold);
-            font-family: 'Great Vibes';
-            font-size: 2rem;
+            display: flex; justify-content: center; align-items: center;
+            color: var(--jawa-gold); font-family: 'Great Vibes'; font-size: 2rem;
+        }
+
+        /* Animations */
+        @keyframes floating {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .float { animation: floating 3s ease-in-out infinite; }
+
+        @media (max-width: 400px) {
+            .hero h1 { font-size: 2.8rem; }
+            .name-big { font-size: 2rem; }
+            .info-card { padding: 20px 15px; }
         }
     </style>
 </head>
@@ -164,64 +170,66 @@
     <main id="content" class="snap-container" style="display:none">
         
         <section class="hero" id="home">
-            <div data-aos="zoom-in">
-                <h2 id="title"></h2>
-                <h1 id="couple-name-hero"></h1>
-                <p id="hero-date" style="letter-spacing: 2px;"></p>
-                <div style="margin-top: 20px; font-size: 0.8rem; opacity: 0.8;">Scroll ke bawah <br> <i class="fas fa-chevron-down"></i></div>
+            <div data-aos="fade-up">
+                <h2 id="title">THE WEDDING OF</h2>
+                <h1 id="couple-name-hero" class="float"></h1>
+                <p id="hero-date"></p>
+                <div style="margin-top: 30px; font-size: 0.7rem; letter-spacing: 2px;">
+                    SWIPE UP <br> <i class="fas fa-chevron-up"></i>
+                </div>
             </div>
         </section>
 
         <section id="quote-sec">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Wayang_Kulit_Gunungan.svg/1200px-Wayang_Kulit_Gunungan.svg.png" class="gunungan" alt="Gunungan">
-            <div class="info-card" data-aos="fade-up">
-                <p id="quote" style="font-style: italic; font-size: 0.9rem; line-height: 1.8;"></p>
+            <img src="icon/gunungan.png" class="gunungan" alt="Gunungan">
+            <div class="info-card" data-aos="zoom-in">
+                <p id="quote" style="font-style: italic; font-size: 0.85rem; line-height: 1.7;"></p>
             </div>
         </section>
 
         <section id="mempelai">
-            <div class="info-card" data-aos="fade-right">
+            <div class="info-card" data-aos="fade-up">
                 <h3>Mempelai Pria</h3>
                 <h2 class="name-big" id="groom-name"></h2>
-                <p class="parent-text">Putra dari <br><b id="groom-parents"></b></p>
+                <p class="parent-text">Putra dari <b id="groom-parents"></b></p>
                 
-                <div style="margin: 15px 0; color: var(--jawa-gold); font-size: 1.5rem;">&</div>
+                <div style="margin: 10px 0; color: var(--jawa-gold); font-family: 'Great Vibes'; font-size: 1.5rem;">&</div>
                 
                 <h3>Mempelai Wanita</h3>
                 <h2 class="name-big" id="bride-name"></h2>
-                <p class="parent-text">Putri dari <br><b id="bride-parents"></b></p>
+                <p class="parent-text">Putri dari <b id="bride-parents"></b></p>
             </div>
         </section>
 
         <section id="acara">
-            <div class="info-card" data-aos="fade-left">
-                <div style="margin-bottom: 30px;">
+            <div class="info-card" data-aos="flip-left">
+                <div style="margin-bottom: 20px;">
                     <h3><i class="fas fa-ring"></i> Akad Nikah</h3>
-                    <p id="akad-date" style="font-weight: bold; margin-bottom: 0;"></p>
-                    <p id="akad-time"></p>
+                    <p id="akad-date" style="font-weight: 600; margin: 5px 0 0;"></p>
+                    <p id="akad-time" style="font-size: 0.9rem;"></p>
                 </div>
-                <hr style="border: 0; border-top: 1px solid #ddd; margin: 20px 0;">
+                <hr style="border: 0; border-top: 1px solid var(--jawa-gold); opacity: 0.3; margin: 15px 0;">
                 <div>
-                    <h3><i class="fas fa-glass-cheers"></i> Resepsi</h3>
-                    <p id="resepsi-date" style="font-weight: bold; margin-bottom: 0;"></p>
-                    <p id="resepsi-time"></p>
+                    <h3><i class="fas fa-calendar-check"></i> Resepsi</h3>
+                    <p id="resepsi-date" style="font-weight: 600; margin: 5px 0 0;"></p>
+                    <p id="resepsi-time" style="font-size: 0.9rem;"></p>
                 </div>
             </div>
         </section>
 
         <section id="lokasi">
-            <div class="info-card" data-aos="zoom-in">
-                <h3><i class="fas fa-map-marker-alt"></i> Lokasi</h3>
-                <p id="event-location" style="font-size: 0.9rem; margin-bottom: 15px;"></p>
+            <div class="info-card" data-aos="fade-up">
+                <h3><i class="fas fa-map-marker-alt"></i> Lokasi Acara</h3>
+                <p id="event-location" style="font-size: 0.85rem; margin-bottom: 15px;"></p>
                 <div id="map-frame-container"></div>
-                <a id="whatsapp-btn" target="_blank" style="display:inline-block; margin-top: 20px; background: #25d366; color: white; padding: 10px 20px; border-radius: 30px; text-decoration: none; font-size: 0.8rem;">
-                    <i class="fab fa-whatsapp"></i> Konfirmasi Kehadiran
+                <a id="whatsapp-btn" target="_blank" style="display:inline-block; margin-top: 20px; background: #25d366; color: white; padding: 10px 25px; border-radius: 30px; text-decoration: none; font-size: 0.8rem; font-weight: 600;">
+                    <i class="fab fa-whatsapp"></i> KONFIRMASI KEHADIRAN
                 </a>
             </div>
         </section>
 
         <section id="gallery">
-            <h3 style="margin-bottom: 20px;">Galeri Bahagia</h3>
+            <h3 style="margin-bottom: 20px; color: var(--jawa-gold);">Galeri Bahagia</h3>
             <div id="gallery-grid" class="gallery-grid"></div>
         </section>
 
@@ -236,6 +244,75 @@
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js"></script>
+    <script>
+        const IMAGE_BASE = "https://xl4as.github.io/invit/images/";
+        const loader = document.getElementById("loader");
+        const content = document.getElementById("content");
+        const id = new URLSearchParams(location.search).get("id");
+
+        if(!id) {
+            loader.innerHTML = "ID Undangan Tidak Ada";
+        } else {
+            fetch(`https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`, {cache: "no-store"})
+            .then(r => r.json())
+            .then(data => {
+                // Mapping Data
+                document.getElementById("title").textContent = data.title;
+                document.getElementById("couple-name-hero").textContent = `${data.groom.name} & ${data.bride.name}`;
+                document.getElementById("hero-date").textContent = formatDate(data.akad.date);
+                document.getElementById("groom-name").textContent = data.groom.name;
+                document.getElementById("groom-parents").textContent = data.groom.parent;
+                document.getElementById("bride-name").textContent = data.bride.name;
+                document.getElementById("bride-parents").textContent = data.bride.parent;
+                document.getElementById("quote").textContent = data.quote;
+                document.getElementById("akad-date").textContent = formatDate(data.akad.date);
+                document.getElementById("akad-time").textContent = data.akad.time;
+                document.getElementById("resepsi-date").textContent = formatDate(data.resepsi.date);
+                document.getElementById("resepsi-time").textContent = data.resepsi.time;
+                document.getElementById("event-location").textContent = data.location;
+                
+                if(data.maps) {
+                    document.getElementById("map-frame-container").innerHTML = `<iframe src="${data.maps}" loading="lazy"></iframe>`;
+                }
+
+                const gallery = document.getElementById("gallery-grid");
+                (data.gallery || []).forEach(name => {
+                    const img = document.createElement("img");
+                    img.src = IMAGE_BASE + name;
+                    img.setAttribute('data-aos', 'zoom-in');
+                    gallery.appendChild(img);
+                });
+
+                document.getElementById("whatsapp-btn").href = `https://wa.me/${data.phone}?text=Saya konfirmasi kehadiran untuk ${data.groom.name} %26 ${data.bride.name}`;
+
+                // Reveal Content
+                loader.style.display = "none";
+                content.style.display = "block";
+                AOS.init({ duration: 1000, once: false });
+            })
+            .catch(() => loader.innerHTML = "Undangan Tidak Ditemukan");
+        }
+
+        function formatDate(dateStr) {
+            if(!dateStr) return "";
+            return new Date(dateStr + "T00:00:00").toLocaleDateString("id-ID", {
+                weekday: "long", day: "numeric", month: "long", year: "numeric"
+            });
+        }
+
+        // Auto Active Nav on Scroll
+        content.addEventListener("scroll", () => {
+            const sections = document.querySelectorAll("section");
+            const navItems = document.querySelectorAll(".nav-item");
+            let current = "";
+            sections.forEach(s => {
+                if (content.scrollTop >= s.offsetTop - 100) current = s.getAttribute("id");
+            });
+            navItems.forEach(item => {
+                item.classList.remove("active");
+                if (item.getAttribute("href").includes(current)) item.classList.add("active");
+            });
+        });
+    </script>
 </body>
 </html>
