@@ -33,7 +33,7 @@ body {
 
 .title-serif {
     font-family: 'Dancing Script', cursive;
-    font-size: 2.5rem;
+    font-size: 2.8rem;
     color: var(--primary);
     margin-bottom: 30px;
 }
@@ -92,38 +92,54 @@ body {
     position: relative;
     z-index: 1;
     min-height: 100vh;
-    opacity: 0; /* Dikontrol via JS saat buka undangan */
 }
 
-/* --- GALLERY SYSTEM --- */
-.gallery-grid {
-    display: grid; 
-    /* Desktop: 3-4 kolom, Mobile: 2 kolom */
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 15px; 
+/* --- GALLERY SLIDER (Momen Bahagia) --- */
+.gallery-slider {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    gap: 15px;
     padding: 20px;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
 }
 
-.gallery-item { 
-    width: 100%; 
-    height: 250px;
-    border-radius: 12px; 
-    object-fit: cover; 
-    box-shadow: 0 4px 15px var(--shadow);
-    transition: transform 0.3s ease, filter 0.3s ease;
-    cursor: pointer;
+.gallery-slider::-webkit-scrollbar {
+    display: none; /* Chrome/Safari */
+}
+
+.slider-item {
+    flex: 0 0 80%; /* Lebar gambar di mobile */
+    scroll-snap-align: center;
+    height: 350px;
+    border-radius: 20px;
+    object-fit: cover;
+    box-shadow: 0 10px 20px var(--shadow);
+    transition: transform 0.3s ease;
+}
+
+.help-text {
+    font-size: 0.8rem;
+    color: #888;
+    margin-top: -10px;
+}
+
+/* --- LOKASI & MAP --- */
+.location-desc {
+    font-weight: bold;
+    padding: 0 20px;
+    line-height: 1.6;
+    margin-bottom: 20px;
+}
+
+.map-wrapper {
+    max-width: 900px;
+    margin: 0 auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 25px var(--shadow);
     background: #eee;
-    animation: fadeInUp 0.8s ease forwards;
-}
-
-.gallery-item:hover {
-    transform: scale(1.03);
-    filter: brightness(1.1);
-}
-
-@keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* --- COUNTDOWN --- */
@@ -143,8 +159,6 @@ body {
     width: 90px; 
     transition: transform 0.3s ease;
 }
-
-.time-box:hover { transform: translateY(-5px); }
 
 .time-box span {
     display: block;
@@ -178,8 +192,8 @@ body {
 
 .btn-open:hover, .btn-whatsapp:hover {
     transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5);
-    background: #b8952e;
+    box-shadow: 0 8px 25px rgba(212, 175, 55, 0.6);
+    filter: brightness(1.1);
 }
 
 /* --- RESPONSIVE OPTIMIZATION --- */
@@ -187,23 +201,20 @@ body {
     .names { font-size: 3rem; }
     .section { padding: 50px 15px; }
     
-    .gallery-grid {
-        grid-template-columns: repeat(2, 1fr); /* HP jadi 2 kolom */
-        gap: 10px;
-        padding: 10px;
+    .slider-item {
+        flex: 0 0 85%;
+        height: 300px;
     }
-    
-    .gallery-item { height: 180px; } /* Gambar lebih kecil di HP */
     
     .time-box {
-        width: 70px;
-        padding: 12px;
+        width: 75px;
+        padding: 15px;
     }
-    .time-box span { font-size: 1.3rem; }
+    .time-box span { font-size: 1.4rem; }
 }
 
-@media (max-width: 400px) {
-    .gallery-grid {
-        grid-template-columns: 1fr; /* HP layar sangat kecil jadi 1 kolom */
+@media (min-width: 769px) {
+    .slider-item {
+        flex: 0 0 30%; /* Tampilkan 3 gambar sekaligus di desktop */
     }
 }
