@@ -1,100 +1,101 @@
-/* =========================
-   DATABASE JSON UNDANGAN
-========================= */
-const DB_LINKS = {
-   anang: "https://raw.githubusercontent.com/XL4AS/invit/main/data/anang_invitation.json",
-   indri: "https://raw.githubusercontent.com/XL4AS/invit/main/data/indri_invitation.json",
-   iklas: "https://raw.githubusercontent.com/XL4AS/invit/main/data/iklas_invitation.json"
-};
+/* =============================
+   KONFIGURASI
+============================= */
+const IMAGE_BASE =
+  "https://xl4as.github.io/invit/images/";
 
-/* =========================
-   AMBIL ID DARI URL
-========================= */
-const params = new URLSearchParams(window.location.search);
-const id = params.get("id");
-
+/* =============================
+   AMBIL ID URL
+============================= */
 const loader  = document.getElementById("loader");
 const content = document.getElementById("content");
 
-if (!id) {
+const id = new URLSearchParams(location.search).get("id");
+
+if(!id){
   loader.innerHTML = "ID undangan tidak ada di URL";
-  throw new Error("ID kosong");
+  throw new Error("Missing ID");
 }
 
-if (!DB_LINKS[id]) {
-  loader.innerHTML = "ID undangan tidak ditemukan";
-  throw new Error("ID tidak terdaftar");
-}
-
-/* =========================
+/* =============================
    LOAD JSON
-========================= */
-fetch(DB_LINKS[id], { cache: "no-store" })
-  .then(res => {
-    if (!res.ok) throw new Error("File JSON tidak ditemukan");
-    return res.json();
+============================= */
+const DATA_URL =
+  `https://raw.githubusercontent.com/XL4AS/invit/main/data/${id}_invitation.json`;
+
+fetch(DATA_URL,{cache:"no-store"})
+  .then(r=>{
+    if(!r.ok) throw new Error("JSON tidak ditemukan");
+    return r.json();
   })
   .then(renderData)
-  .catch(err => {
+  .catch(err=>{
     console.error(err);
-    loader.innerHTML = "Gagal memuat data undangan";
+    loader.innerHTML = `Data undangan <b>${id}</b> tidak ditemukan`;
   });
 
-/* =========================
-   RENDER DATA
-========================= */
-function renderData(data) {
+/* =============================
+   RENDER DATA SESUAI JSON BARU
+============================= */
+function renderData(data){
 
-  // Nama pasangan
+  document.getElementById("title").textContent = data.title || "";
+
   document.getElementById("couple-name").textContent =
-    `${data.groom} & ${data.bride}`;
+    `${data.groom.name} & ${data.bride.name}`;
 
-  // Tanggal (AMAN FORMAT)
-  document.getElementById("event-date").textContent =
-    new Date(data.date + "T00:00:00").toLocaleDateString("id-ID", {
-      weekday: "long",
-      day: "numeric",
-      month: "long",
-      year: "numeric"
-    });
+  document.getElementById("quote").textContent =
+    data.quote || "";
 
-  // Lokasi
+  document.getElementById("akad-date").textContent =
+    formatDate(data.akad.date);
+
+  document.getElementById("akad-time").textContent =
+    data.akad.time;
+
+  document.getElementById("resepsi-date").textContent =
+    formatDate(data.resepsi.date);
+
+  document.getElementById("resepsi-time").textContent =
+    data.resepsi.time;
+
   document.getElementById("event-location").textContent =
     data.location || "";
 
-  // MAP (WAJIB EMBED)
-  const mapBox = document.getElementById("map-frame-container");
-  if (data.maps && data.maps.includes("output=embed")) {
-    mapBox.innerHTML = `
-      <iframe
-        src="${data.maps}"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade">
-      </iframe>`;
-  } else {
-    mapBox.innerHTML = "<p>Peta tidak tersedia</p>";
-  }
+  /* MAP */
+  document.getElementById("map-frame-container").innerHTML =
+    data.maps && data.maps.includes("embed")
+    ? `<iframe src="${data.maps}" loading="lazy"></iframe>`
+    : "<p>Peta tidak tersedia</p>";
 
-  // GALERI (AMAN JIKA KOSONG)
+  /* GALERI (NAMA FILE SAJA) */
   const gallery = document.getElementById("gallery-slider");
   gallery.innerHTML = "";
 
-  if (Array.isArray(data.gallery)) {
-    data.gallery.forEach(src => {
-      const img = document.createElement("img");
-      img.src = src;
-      img.loading = "lazy";
-      img.onerror = () => img.remove(); // hapus jika error
-      gallery.appendChild(img);
-    });
-  }
+  (data.gallery || []).forEach(name=>{
+    const img = new Image();
+    img.src = IMAGE_BASE + name;
+    img.loading = "lazy";
+    img.onerror = ()=>img.remove();
+    gallery.appendChild(img);
+  });
 
-  // WHATSAPP
+  /* WHATSAPP */
   document.getElementById("whatsapp-btn").href =
     `https://wa.me/${data.phone}?text=Saya%20akan%20hadir`;
 
-  // TAMPILKAN KONTEN
-  loader.style.display  = "none";
-  content.style.display = "block";
+  loader.style.display="none";
+  content.style.display="block";
 }
 
+/* =============================
+   FORMAT TANGGAL
+============================= */
+function formatDate(date){
+  return new Date(date+"T00:00:00").toLocaleDateString("id-ID",{
+    weekday:"long",
+    day:"numeric",
+    month:"long",
+    year:"numeric"
+  });
+}
