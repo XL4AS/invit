@@ -1,27 +1,163 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="UTF-8">
-  <title>Undangan Pernikahan</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Undangan Pernikahan</title>
+
+<style>
+:root{
+  --gold:#d4af37;
+  --dark:#222;
+  --soft:#fafafa;
+}
+
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+}
+
+body{
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(180deg,#fff,#f7f4ec);
+  color:var(--dark);
+  text-align:center;
+}
+
+/* LOADER */
+.loader{
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:18px;
+  color:var(--gold);
+  letter-spacing:1px;
+}
+
+/* MAIN CONTENT */
+main{
+  max-width:720px;
+  margin:auto;
+  padding:20px;
+}
+
+/* HERO */
+.hero{
+  padding:50px 20px 30px;
+}
+
+.hero h1{
+  font-size:36px;
+  color:var(--gold);
+  margin-bottom:10px;
+}
+
+.hero p{
+  font-size:16px;
+  opacity:.8;
+}
+
+/* SECTION */
+.section{
+  background:#fff;
+  border-radius:16px;
+  padding:25px;
+  margin:20px 0;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+
+/* MAP */
+#map-frame-container iframe{
+  width:100%;
+  height:280px;
+  border:none;
+  border-radius:12px;
+  margin-top:15px;
+}
+
+/* GALLERY */
+.gallery-slider{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:12px;
+  margin-top:15px;
+}
+
+.gallery-slider img{
+  width:100%;
+  border-radius:12px;
+  object-fit:cover;
+  transition:.3s;
+}
+
+.gallery-slider img:hover{
+  transform:scale(1.05);
+}
+
+/* BUTTON */
+#whatsapp-btn{
+  display:inline-block;
+  margin:25px 0 40px;
+  padding:14px 26px;
+  background:#25d366;
+  color:#fff;
+  font-weight:600;
+  text-decoration:none;
+  border-radius:30px;
+  box-shadow:0 6px 15px rgba(37,211,102,.4);
+  transition:.3s;
+}
+
+#whatsapp-btn:hover{
+  transform:translateY(-2px);
+  box-shadow:0 10px 25px rgba(37,211,102,.6);
+}
+
+/* FOOTER */
+.footer{
+  font-size:12px;
+  opacity:.6;
+  margin-bottom:15px;
+}
+</style>
 </head>
+
 <body>
 
+<!-- LOADER -->
 <div id="loader" class="loader">
-  <p>Memuat undangan...</p>
+  Memuat undangan...
 </div>
 
+<!-- CONTENT -->
 <main id="content" style="display:none">
-  <h1 id="couple-name"></h1>
-  <p id="event-date"></p>
 
-  <p id="event-location"></p>
-  <div id="map-frame-container"></div>
+  <section class="hero">
+    <h1 id="couple-name"></h1>
+    <p id="event-date"></p>
+  </section>
 
-  <div id="gallery-slider"></div>
+  <section class="section">
+    <h3>Lokasi Acara</h3>
+    <p id="event-location"></p>
+    <div id="map-frame-container"></div>
+  </section>
 
-  <a id="whatsapp-btn" target="_blank">Konfirmasi Kehadiran</a>
+  <section class="section">
+    <h3>Galeri</h3>
+    <div id="gallery-slider" class="gallery-slider"></div>
+  </section>
+
+  <a id="whatsapp-btn" target="_blank">
+    Konfirmasi Kehadiran
+  </a>
+
+  <div class="footer">
+    Terima kasih atas doa & kehadiran Anda
+  </div>
+
 </main>
 
 <script src="script.js"></script>
