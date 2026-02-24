@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Undangan Pernikahan</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="loader" class="overlay">
+        <div class="spinner"></div>
+        <p>Menyiapkan Kebahagiaan...</p>
+    </div>
+
+    <div id="error-screen" class="overlay hidden">
+        <p>Maaf, undangan tidak ditemukan atau link salah.</p>
+    </div>
+
+    <section id="cover" class="hero">
+        <div class="content">
+            <h2 id="txt-title">The Wedding Of</h2>
+            <h1 id="txt-names">Groom & Bride</h1>
+            <button onclick="openInvitation()">Buka Undangan</button>
+        </div>
+    </section>
+
+    <main id="main-content" class="hidden">
+        <section class="details">
+            <h2 id="wedding-date-text">12 Desember 2026</h2>
+            <div id="countdown" class="timer"></div>
+            
+            <div class="bio">
+                <h3 id="groom-name">Ahmad</h3>
+                <span>&</span>
+                <h3 id="bride-name">Siti</h3>
+            </div>
+
+            <div class="location">
+                <h4>Lokasi Acara</h4>
+                <p id="location-name">Gedung Serbaguna</p>
+                <a id="maps-link" href="#" target="_blank" class="btn">Buka Google Maps</a>
+            </div>
+
+            <div class="gallery" id="gallery-container">
+                </div>
+
+            <div class="rsvp">
+                <a id="wa-link" href="#" target="_blank" class="btn-wa">Konfirmasi Kehadiran (WhatsApp)</a>
+            </div>
+        </section>
+    </main>
+
+    <audio id="bg-music" loop>
+        <source src="https://www.bensound.com/bensound-music/bensound-love.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        // Mapping ID ke Link Direct Google Drive (Ganti dengan ID file Anda)
+        const driveMapping = {
+            "andi": "https://drive.google.com/uc?export=download&id=FILE_ID_JSON_ANDI",
+            "budi": "https://drive.google.com/uc?export=download&id=FILE_ID_JSON_BUDI"
+        };
+
+        async function init() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            const jsonUrl = driveMapping[id];
+
+            if (!id || !jsonUrl) {
+                showError();
+                return;
+            }
+
+            try {
+                const response = await fetch(jsonUrl);
+                if (!response.ok) throw new Error();
+                const data = await response.json();
+                renderData(data);
+            } catch (err) {
+                showError();
+            }
+        }
+
+        function renderData(data) {
+            document.getElementById('txt-names').innerText = `${data.groom} & ${data.bride}`;
+            document.getElementById('groom-name').innerText = data.groom;
+            document.getElementById('bride-name').innerText = data.bride;
+            document.getElementById('wedding-date-text').innerText = data.date;
+            document.getElementById('location-name').innerText = data.location;
+            document.getElementById('maps-link').href = data.maps;
+            document.getElementById('wa-link').href = `https://wa.me/${data.phone || ''}?text=Halo, saya akan hadir!`;
+
+            const gallery = document.getElementById('gallery-container');
+            data.gallery.forEach(imgUrl => {
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                gallery.appendChild(img);
+            });
+
+            startCountdown(data.date);
+            document.getElementById('loader').classList.add('hidden');
+        }
+
+        function openInvitation() {
+            document.getElementById('cover').classList.add('fade-out');
+            document.getElementById('main-content').classList.remove('hidden');
+            document.getElementById('bg-music').play();
+        }
+
+        function showError() {
+            document.getElementById('loader').classList.add('hidden');
+            document.getElementById('error-screen').classList.remove('hidden');
+        }
+
+        function startCountdown(date) {
+            // Logika sederhana countdown (Tinggal diisi)
+        }
+
+        window.onload = init;
+    </script>
+</body>
+</html>
