@@ -3,44 +3,30 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Admin - Generator JSON Undangan</title>
+<title>Admin Generator JSON Undangan</title>
 
 <style>
 body{
-  font-family:Segoe UI,Tahoma,sans-serif;
+  font-family:'Segoe UI',sans-serif;
   background:linear-gradient(135deg,#f7f3e8,#fff);
-  padding:20px
+  padding:20px;
 }
 .container{
-  max-width:620px;
+  max-width:600px;
   margin:auto;
   background:#fff;
   padding:30px;
   border-radius:14px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08)
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
 }
-h2{
-  text-align:center;
-  color:#d4af37;
-  border-bottom:2px solid #f3f3f3;
-  padding-bottom:10px
-}
-label{display:block;margin-top:15px;font-weight:bold;font-size:14px}
+h2{text-align:center;color:#d4af37}
+label{font-weight:bold;margin-top:15px;display:block}
 input,textarea{
   width:100%;
   padding:10px;
   margin-top:6px;
   border-radius:6px;
   border:1px solid #ddd;
-  font-size:14px
-}
-textarea{resize:vertical;height:80px}
-.help{
-  font-size:11px;
-  margin-top:5px;
-  background:#fffde7;
-  padding:6px;
-  border-left:4px solid #ffd600
 }
 button{
   margin-top:25px;
@@ -52,9 +38,8 @@ button{
   font-size:16px;
   border-radius:8px;
   font-weight:bold;
-  cursor:pointer
+  cursor:pointer;
 }
-button:hover{background:#b8952e}
 #preview{
   display:none;
   margin-top:20px;
@@ -64,19 +49,19 @@ button:hover{background:#b8952e}
   border-radius:6px;
   font-family:monospace;
   font-size:12px;
-  white-space:pre-wrap
+  white-space:pre-wrap;
 }
 .note{
-  margin-top:15px;
-  text-align:center;
+  margin-top:10px;
   font-size:12px;
+  color:#e53935;
   font-weight:bold;
-  color:#e53935
+  text-align:center;
 }
 </style>
 </head>
-<body>
 
+<body>
 <div class="container">
 <h2>JSON Generator Undangan</h2>
 
@@ -89,76 +74,60 @@ button:hover{background:#b8952e}
 <label>Tanggal Acara</label>
 <input id="d" type="date">
 
-<label>Nomor WhatsApp RSVP</label>
-<input id="p" placeholder="628123456789">
-<div class="help">Gunakan 62 tanpa + dan spasi</div>
+<label>No WhatsApp</label>
+<input id="p" placeholder="628xxxxxxxxxx">
 
-<label>Alamat Lokasi (teks)</label>
+<label>Alamat Lokasi</label>
 <textarea id="l"></textarea>
 
 <label>Link Google Maps</label>
-<input id="m" placeholder="https://maps.app.goo.gl/...">
+<input id="m" placeholder="https://maps.google.com/...">
 
-<label>ID Foto Google Drive (pisahkan koma)</label>
-<input id="pics" placeholder="1Abc..., 2Def...">
-<div class="help">
-• SHARE → Anyone with link → Viewer<br>
-• Hanya ID FILE, bukan URL
+<label>Nama File Foto (pisahkan koma)</label>
+<input id="pics" placeholder="foto1.jpg, foto2.jpg">
+<div class="note">
+Upload foto ke folder <b>/images</b> di GitHub
 </div>
 
 <button onclick="generate()">Download JSON</button>
-
-<div class="note">Upload JSON ini ke GitHub → gunakan link RAW</div>
 <pre id="preview"></pre>
 </div>
 
 <script>
-function mapEmbed(url){
-  if(!url) return "";
-  if(url.includes("embed")) return url;
-  return "https://www.google.com/maps?q="+encodeURIComponent(url)+"&output=embed";
-}
-
-function driveURL(id){
-  return "https://drive.google.com/uc?export=view&id="+id;
-}
+const BASE_IMG =
+  "https://xl4as.github.io/invit/images/";
 
 function generate(){
-  const groom=g.value.trim();
-  const bride=b.value.trim();
-  const date=d.value;
+  const gallery = pics.value
+    ? pics.value.split(",").map(f =>
+        BASE_IMG + f.trim()
+      )
+    : [];
 
-  if(!groom||!bride||!date){
-    alert("Nama & tanggal wajib diisi");
-    return;
-  }
-
-  const gallery=pics.value
-    .split(",")
-    .map(x=>x.trim())
-    .filter(x=>x.length>5)
-    .map(id=>driveURL(id));
-
-  const data={
-    groom,
-    bride,
-    date,
-    phone:p.value.trim(),
-    location:l.value.trim(),
-    maps:mapEmbed(m.value.trim()),
+  const data = {
+    groom: g.value.trim(),
+    bride: b.value.trim(),
+    date: d.value,
+    phone: p.value.trim(),
+    location: l.value.trim(),
+    maps: m.value.trim(),
     gallery
   };
 
   preview.style.display="block";
-  preview.textContent=JSON.stringify(data,null,2);
+  preview.textContent = JSON.stringify(data,null,2);
 
-  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const blob = new Blob(
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
+  );
+
   const a=document.createElement("a");
   a.href=URL.createObjectURL(blob);
-  a.download=groom.toLowerCase().replace(/\s+/g,"_")+"_invitation.json";
+  a.download =
+    `${data.groom.toLowerCase()}_invitation.json`;
   a.click();
 }
 </script>
-
 </body>
 </html>
