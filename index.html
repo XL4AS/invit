@@ -29,13 +29,11 @@
             overflow-x: hidden;
         }
 
-        /* Kunci scroll saat cover aktif */
         body.no-scroll { 
             overflow: hidden; 
             height: 100vh;
         }
 
-        /* Loader - Diperbaiki agar tidak menghalangi klik */
         .loader {
             position: fixed;
             inset: 0;
@@ -44,11 +42,9 @@
             justify-content: center;
             align-items: center;
             z-index: 10001;
-            pointer-events: none; /* Klik menembus loader jika terjadi delay */
             transition: opacity 0.5s;
         }
 
-        /* Cover Overlay - Dioptimalkan untuk HP */
         .cover-overlay {
             position: fixed;
             inset: 0;
@@ -62,7 +58,6 @@
             align-items: center;
             color: white;
             transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s;
-            touch-action: manipulation;
         }
 
         .cover-content { text-align: center; padding: 20px; width: 100%; }
@@ -91,12 +86,8 @@
             cursor: pointer;
             box-shadow: 0 5px 20px rgba(0,0,0,0.3);
             transition: 0.3s;
-            z-index: 10002;
-            position: relative;
-            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Hero Section */
         .hero {
             height: 100vh;
             display: flex;
@@ -113,7 +104,6 @@
         .card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             padding: 60px 20px;
             border-radius: 50px 50px 0 0;
             box-shadow: 0 -15px 35px rgba(0,0,0,0.05);
@@ -133,6 +123,15 @@
             margin-bottom: 25px;
         }
 
+        .couple-name-display {
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 1.6rem;
+            line-height: 1.2;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
         .countdown-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
         .count-item { background: var(--gold); color: white; padding: 10px; border-radius: 10px; min-width: 60px; }
         .count-item span { font-weight: bold; font-size: 1.2rem; }
@@ -140,7 +139,6 @@
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         .gallery-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 15px; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-        /* Floating Controls */
         .nav-bottom {
             position: fixed;
             bottom: 20px;
@@ -152,9 +150,8 @@
             display: flex;
             gap: 25px;
             z-index: 1000;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
         }
-        .nav-item { color: #888; font-size: 1.2rem; text-decoration: none; transition: 0.3s; }
+        .nav-item { color: #888; font-size: 1.2rem; text-decoration: none; }
         .nav-item.active { color: var(--gold); }
 
         .music-control {
@@ -171,13 +168,15 @@
             color: white;
             cursor: pointer;
             z-index: 1001;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
         }
 
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
         .floating { animation: float 4s ease-in-out infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
+        
         .btn-wa { background: #25d366; color: white; padding: 14px 25px; border-radius: 30px; text-decoration: none; display: inline-block; font-weight: 600; margin-top: 10px; }
         iframe { width: 100%; height: 250px; border-radius: 20px; border: none; }
+        
+        #quote { white-space: pre-line; }
     </style>
 </head>
 <body class="no-scroll">
@@ -230,10 +229,10 @@
 
             <section class="section" id="couple" data-aos="fade-up">
                 <div class="event-box">
-                    <h3 id="groom-name" style="font-family: 'Cinzel'; color: var(--gold); font-size: 1.5rem; margin-bottom: 5px;"></h3>
+                    <h3 id="groom-name" class="couple-name-display"></h3>
                     <p style="font-size: 0.9rem;">Putra dari <br><b id="groom-parents"></b></p>
-                    <h2 style="font-family: 'Great Vibes'; font-size: 2rem; color: var(--gold); margin: 15px 0;">dan</h2>
-                    <h3 id="bride-name" style="font-family: 'Cinzel'; color: var(--gold); font-size: 1.5rem; margin-bottom: 5px;"></h3>
+                    <h2 style="font-family: 'Great Vibes'; font-size: 2.5rem; color: var(--gold); margin: 20px 0;">dan</h2>
+                    <h3 id="bride-name" class="couple-name-display"></h3>
                     <p style="font-size: 0.9rem;">Putri dari <br><b id="bride-parents"></b></p>
                 </div>
             </section>
