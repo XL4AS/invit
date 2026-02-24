@@ -12,15 +12,15 @@ body{
   padding:20px;
 }
 .container{
-  max-width:600px;
+  max-width:700px;
   margin:auto;
   background:#fff;
   padding:30px;
-  border-radius:14px;
+  border-radius:16px;
   box-shadow:0 10px 25px rgba(0,0,0,.08);
 }
 h2{text-align:center;color:#d4af37}
-label{font-weight:bold;margin-top:15px;display:block}
+label{font-weight:600;margin-top:15px;display:block}
 input,textarea{
   width:100%;
   padding:10px;
@@ -28,6 +28,7 @@ input,textarea{
   border-radius:6px;
   border:1px solid #ddd;
 }
+textarea{min-height:70px}
 button{
   margin-top:25px;
   width:100%;
@@ -58,6 +59,7 @@ button{
   font-weight:bold;
   text-align:center;
 }
+hr{margin:25px 0}
 </style>
 </head>
 
@@ -65,30 +67,58 @@ button{
 <div class="container">
 <h2>JSON Generator Undangan</h2>
 
-<label>Nama Pria</label>
-<input id="g" placeholder="Anang">
+<label>Judul Undangan</label>
+<input id="title" placeholder="The Wedding of Anang & Indri">
 
-<label>Nama Wanita</label>
-<input id="b" placeholder="Indri">
+<hr>
 
-<label>Tanggal Acara</label>
-<input id="d" type="date">
+<label>Nama Mempelai Pria</label>
+<input id="g">
+
+<label>Putra Dari</label>
+<input id="g_parent" placeholder="Bapak & Ibu">
+
+<label>Nama Mempelai Wanita</label>
+<input id="b">
+
+<label>Putri Dari</label>
+<input id="b_parent" placeholder="Bapak & Ibu">
+
+<hr>
+
+<label>Tanggal Akad</label>
+<input id="akad_date" type="date">
+
+<label>Jam Akad</label>
+<input id="akad_time" placeholder="08.00 WIB">
+
+<label>Tanggal Resepsi</label>
+<input id="res_date" type="date">
+
+<label>Jam Resepsi</label>
+<input id="res_time" placeholder="10.00 - Selesai">
+
+<hr>
+
+<label>Alamat Acara</label>
+<textarea id="location"></textarea>
+
+<label>Google Maps (EMBED)</label>
+<input id="maps">
 
 <label>No WhatsApp</label>
-<input id="p" placeholder="628xxxxxxxxxx">
+<input id="phone" placeholder="628xxxxxxxxxx">
 
-<label>Alamat Lokasi</label>
-<textarea id="l" placeholder="Gesikan"></textarea>
+<hr>
 
-<label>Link Google Maps (EMBED)</label>
-<input id="m" placeholder="https://www.google.com/maps/embed?...">
+<label>Quotes / Doa</label>
+<textarea id="quote" placeholder="Dan di antara tanda-tanda kekuasaan-Nya..."></textarea>
 
 <label>Nama File Foto (pisahkan koma)</label>
-<input id="pics" placeholder="foto1.jpg, foto2.jpg, foto3.jpg">
-
+<input id="pics" placeholder="foto1.jpg, foto2.jpg">
 <div class="note">
-⚠ Upload foto ke folder <b>/images</b> di GitHub<br>
-JSON hanya menyimpan <b>nama file</b>
+Upload foto ke folder <b>/images</b> di GitHub<br>
+JSON hanya berisi <b>nama file</b>
 </div>
 
 <button onclick="generate()">Download JSON</button>
@@ -99,34 +129,52 @@ JSON hanya menyimpan <b>nama file</b>
 function generate(){
 
   const gallery = pics.value
-    ? pics.value
-        .split(",")
-        .map(f => f.trim())
-        .filter(f => f.length)
+    ? pics.value.split(",").map(f=>f.trim()).filter(Boolean)
     : [];
 
   const data = {
-    groom: g.value.trim(),
-    bride: b.value.trim(),
-    date: d.value,
-    phone: p.value.trim(),
-    location: l.value.trim(),
-    maps: m.value.trim(),
+    title: title.value.trim(),
+
+    groom: {
+      name: g.value.trim(),
+      parent: g_parent.value.trim()
+    },
+
+    bride: {
+      name: b.value.trim(),
+      parent: b_parent.value.trim()
+    },
+
+    akad: {
+      date: akad_date.value,
+      time: akad_time.value.trim()
+    },
+
+    resepsi: {
+      date: res_date.value,
+      time: res_time.value.trim()
+    },
+
+    location: location.value.trim(),
+    maps: maps.value.trim(),
+    phone: phone.value.trim(),
+    quote: quote.value.trim(),
+
     gallery: gallery
   };
 
-  preview.style.display = "block";
-  preview.textContent = JSON.stringify(data, null, 2);
+  preview.style.display="block";
+  preview.textContent = JSON.stringify(data,null,2);
 
   const blob = new Blob(
-    [JSON.stringify(data, null, 2)],
-    { type: "application/json" }
+    [JSON.stringify(data,null,2)],
+    {type:"application/json"}
   );
 
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
   a.download =
-    `${data.groom.toLowerCase() || "undangan"}_invitation.json`;
+    `${(g.value||"undangan").toLowerCase()}_invitation.json`;
   a.click();
 }
 </script>
