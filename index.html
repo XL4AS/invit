@@ -21,8 +21,7 @@
         * { box-sizing: border-box; scroll-behavior: smooth; }
         
         html, body {
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
             font-family: 'Poppins', sans-serif;
             background: #f4f1ea;
             color: var(--dark-jawa);
@@ -95,6 +94,15 @@
 
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         .gallery-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 15px; border: 3px solid white; }
+
+        /* Style Baru Untuk Fitur Ucapan */
+        .wish-container { text-align: left; max-height: 400px; overflow-y: auto; padding: 10px; margin-top: 20px; background: #fdfcf9; border-radius: 15px; }
+        .wish-item { background: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--gold); }
+        .wish-item strong { color: var(--dark-jawa); font-size: 0.9rem; }
+        .wish-item p { margin: 5px 0 0; font-size: 0.85rem; color: #555; line-height: 1.4; }
+        
+        .form-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--soft-gold); font-family: 'Poppins', sans-serif; }
+        .btn-send { background: var(--gold); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; }
 
         .nav-bottom {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -191,7 +199,7 @@
                 </div>
             </section>
 
-            <section class="section" data-aos="fade-up">
+            <section class="section" id="location" data-aos="fade-up">
                 <h3 style="font-size: 1.1rem;"><i class="fas fa-map-marker-alt"></i> Lokasi Acara</h3>
                 <p id="event-location" style="margin-bottom: 15px; font-size: 0.9rem;"></p>
                 <div id="map-frame-container"></div>
@@ -205,6 +213,21 @@
                 <h3 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-images"></i> Galeri Momen</h3>
                 <div id="gallery-grid" class="gallery-grid"></div>
             </section>
+
+            <section class="section" id="wishes" data-aos="fade-up">
+                <div class="event-box">
+                    <h3 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-envelope"></i> Kartu Ucapan</h3>
+                    <form id="wish-form">
+                        <input type="text" id="wish-name" class="form-input" placeholder="Nama Anda" required>
+                        <textarea id="wish-message" class="form-input" style="height: 100px;" placeholder="Tulis ucapan & doa terbaik..." required></textarea>
+                        <button type="submit" id="btn-kirim" class="btn-send">Kirim Ucapan</button>
+                    </form>
+
+                    <div id="wish-display" class="wish-container">
+                        <p style="text-align: center; font-size: 0.8rem; color: #888;">Memuat ucapan...</p>
+                    </div>
+                </div>
+            </section>
         </div>
 
         <nav class="nav-bottom">
@@ -216,6 +239,6 @@
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js"></script>
+    <script src="script.js?v=1.2"></script>
 </body>
 </html>
