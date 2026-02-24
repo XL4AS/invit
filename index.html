@@ -18,8 +18,7 @@
         <div class="content">
             <h3 id="guest-label">Kepada Yth. Bapak/Ibu/Saudara/i</h3>
             <h1 class="names"><span id="groom-name">...</span> & <span id="bride-name">...</span></h1>
-            <p class="invite-text">Kami mengundang Anda untuk merayakan hari bahagia kami pada:</p>
-            <div id="cover-date" style="font-weight: bold; margin-bottom: 20px;"></div>
+            <p class="invite-text">Kami mengundang Anda untuk merayakan hari bahagia kami</p>
             <button class="btn-open" onclick="openInvitation()">
                 <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24" style="vertical-align: middle; margin-right: 5px;">
                     <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
@@ -29,7 +28,7 @@
         </div>
     </section>
 
-    <main id="main-content" style="display:none; opacity: 0; transition: opacity 1s ease-in;">
+    <main id="main-content" style="display:none; opacity: 0;">
         
         <section class="section">
             <h2 class="title-serif">Menuju Hari Bahagia</h2>
@@ -42,22 +41,25 @@
 
         <section class="section">
             <h2 class="title-serif">Momen Bahagia</h2>
-            <div id="gallery" class="gallery-grid">
+            <div id="gallery-slider" class="gallery-slider">
                 </div>
+            <p class="help-text">« Geser untuk melihat foto »</p>
         </section>
 
         <section class="section">
             <h2 class="title-serif">Lokasi Acara</h2>
-            <p id="location-text" style="padding: 0 20px; line-height: 1.6;">...</p>
-            <div id="map-container" style="margin-top: 20px;">
+            <p id="location-text" class="location-desc">...</p>
+            
+            <div id="map-frame-container" class="map-wrapper">
                 </div>
-            <br><br>
+
+            <br>
             <a id="rsvp-btn" href="#" target="_blank" class="btn-whatsapp">
                 Konfirmasi Kehadiran (WhatsApp)
             </a>
         </section>
 
-        <footer style="padding: 40px 0; font-size: 12px; color: #888;">
+        <footer style="padding: 40px 0; font-size: 12px; color: #888; background: #fff;">
             <p>&copy; 2026 Wedding Invitation - Created with Love</p>
         </footer>
     </main>
