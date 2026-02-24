@@ -59,20 +59,20 @@ function renderData(data) {
             <a href="${data.maps}" target="_blank" class="btn-whatsapp" style="display:inline-block; margin-top:10px; background:#25d366;">Buka Google Maps</a>`;
     }
     
-    // Galeri Foto
-    const galleryContainer = document.getElementById('gallery');
-    galleryContainer.innerHTML = ""; // Bersihkan placeholder
-    if (data.gallery && data.gallery.length > 0) {
-        data.gallery.forEach(imgUrl => {
-            // Bersihkan link Drive agar menjadi link download langsung
-            const cleanUrl = imgUrl.replace("file/d/", "uc?export=download&id=").split('/view')[0].split('?')[0];
-            const img = document.createElement('img');
-            img.src = cleanUrl;
-            img.loading = "lazy";
-            img.onerror = function() { this.style.display='none'; };
-            galleryContainer.appendChild(img);
-        });
-    }
+// Galeri Foto
+const galleryContainer = document.getElementById('gallery');
+galleryContainer.innerHTML = ""; 
+if (data.gallery && data.gallery.length > 0) {
+    data.gallery.forEach(imgUrl => {
+        const img = document.createElement('img');
+        // Gunakan URL apa adanya karena generator sudah memformatnya dengan benar
+        img.src = imgUrl; 
+        img.loading = "lazy";
+        img.classList.add('gallery-item'); // Tambahkan class untuk styling
+        img.onerror = function() { this.style.display='none'; };
+        galleryContainer.appendChild(img);
+    });
+}
 
     // RSVP Link
     const rsvpBtn = document.getElementById('rsvp-btn');
@@ -140,4 +140,5 @@ function startCountdown(dateStr) {
 }
 
 window.onload = init;
+
 
