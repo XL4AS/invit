@@ -9,7 +9,7 @@ const cover = document.getElementById("cover");
 const urlParams = new URLSearchParams(window.location.search);
 const id = urlParams.get("id");
 const to = urlParams.get("to") || "Tamu Undangan";
-const isAdmin = urlParams.get("admin") === "123"; // Kode rahasia Admin
+const isAdmin = urlParams.get("admin") === "123";
 
 document.getElementById("guest-name").textContent = to;
 
@@ -58,7 +58,6 @@ document.addEventListener("DOMContentLoaded", function() {
             const btn = document.getElementById('btn-kirim');
             const name = document.getElementById('wish-name').value;
             const message = document.getElementById('wish-message').value;
-
             btn.disabled = true;
             btn.innerText = "Mengirim...";
 
@@ -84,7 +83,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 function renderData(data) {
     document.getElementById("cover-couple-name").textContent = data.title;
-    document.getElementById("couple-name").textContent = data.title;
+    document.getElementById("couple-name-hero").textContent = data.title;
     document.title = data.title;
 
     document.getElementById("groom-name").textContent = data.groom.name;
@@ -92,7 +91,6 @@ function renderData(data) {
     document.getElementById("groom-parents").textContent = data.groom.parent;
     document.getElementById("bride-parents").textContent = data.bride.parent;
     
-    // Nama untuk bagian penutup/terima kasih
     if(document.getElementById("closing-names")) {
         document.getElementById("closing-names").textContent = data.title;
     }
@@ -110,6 +108,7 @@ function renderData(data) {
         `<iframe src="${data.maps}" loading="lazy" allowfullscreen></iframe>`;
     }
 
+    // GALLERY
     const gallery = document.getElementById("gallery-grid");
     if(gallery) {
         gallery.innerHTML = "";
@@ -120,6 +119,12 @@ function renderData(data) {
             img.setAttribute('data-aos-delay', (index * 100).toString());
             gallery.appendChild(img);
         });
+    }
+
+    // QRIS LOGIC
+    if(data.qris) {
+        document.getElementById("gifts").style.display = "block";
+        document.getElementById("qris-container").innerHTML = `<img src="${IMAGE_BASE}${data.qris}" alt="QRIS Gift">`;
     }
 
     const waText = encodeURIComponent(`Halo, saya ingin konfirmasi kehadiran di pernikahan ${data.groom.name} & ${data.bride.name}.`);
@@ -140,23 +145,16 @@ function loadWishes() {
             return;
         }
         display.innerHTML = '';
-        
         const reversedData = [...data].reverse();
         reversedData.forEach((item, index) => {
             const actualRowIndex = data.length - index; 
             const div = document.createElement('div');
             div.className = 'wish-item';
-            
             const deleteBtn = isAdmin ? `
                 <button onclick="deleteWish(${actualRowIndex})" style="position:absolute; top:10px; right:10px; background:#fff0f0; border:1px solid #ffcccc; color:#ff4d4d; cursor:pointer; font-size:0.6rem; padding:2px 5px; border-radius:4px;">
                     <i class="fas fa-trash"></i> Hapus
                 </button>` : '';
-
-            div.innerHTML = `
-                <strong>${item.nama}</strong>
-                <p>${item.ucapan}</p>
-                ${deleteBtn}
-            `;
+            div.innerHTML = `<strong>${item.nama}</strong><p>${item.ucapan}</p>${deleteBtn}`;
             display.appendChild(div);
         });
     })
@@ -167,12 +165,7 @@ function loadWishes() {
 
 function deleteWish(rowId) {
     if (confirm("Hapus ucapan ini?")) {
-        fetch(`${SCRIPT_URL}?del=${rowId}`)
-        .then(res => res.text())
-        .then(() => {
-            loadWishes(); 
-        })
-        .catch(err => alert("Gagal menghapus"));
+        fetch(`${SCRIPT_URL}?del=${rowId}`).then(() => { loadWishes(); }).catch(err => alert("Gagal menghapus"));
     }
 }
 
