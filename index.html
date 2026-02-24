@@ -95,14 +95,16 @@
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
         .gallery-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 15px; border: 3px solid white; }
 
-        /* Style Baru Untuk Fitur Ucapan */
-        .wish-container { text-align: left; max-height: 400px; overflow-y: auto; padding: 10px; margin-top: 20px; background: #fdfcf9; border-radius: 15px; }
-        .wish-item { background: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--gold); }
-        .wish-item strong { color: var(--dark-jawa); font-size: 0.9rem; }
+        /* Style Fitur Ucapan */
+        .wish-container { text-align: left; max-height: 400px; overflow-y: auto; padding: 10px; margin-top: 20px; background: #fdfcf9; border-radius: 15px; border: 1px solid #eee; }
+        .wish-item { background: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--gold); position: relative; }
+        .wish-item strong { color: var(--dark-jawa); font-size: 0.9rem; display: block; }
         .wish-item p { margin: 5px 0 0; font-size: 0.85rem; color: #555; line-height: 1.4; }
         
-        .form-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--soft-gold); font-family: 'Poppins', sans-serif; }
-        .btn-send { background: var(--gold); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; }
+        .form-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--soft-gold); font-family: 'Poppins', sans-serif; outline: none; }
+        .form-input:focus { border-color: var(--gold); }
+        .btn-send { background: var(--gold); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .btn-send:disabled { background: #ccc; }
 
         .nav-bottom {
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
@@ -219,7 +221,7 @@
                     <h3 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-envelope"></i> Kartu Ucapan</h3>
                     <form id="wish-form">
                         <input type="text" id="wish-name" class="form-input" placeholder="Nama Anda" required>
-                        <textarea id="wish-message" class="form-input" style="height: 100px;" placeholder="Tulis ucapan & doa terbaik..." required></textarea>
+                        <textarea id="wish-message" class="form-input" style="height: 100px;" placeholder="Tulis doa & harapan..." required></textarea>
                         <button type="submit" id="btn-kirim" class="btn-send">Kirim Ucapan</button>
                     </form>
 
@@ -239,6 +241,6 @@
     </main>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js?v=1.2"></script>
+    <script src="script.js?v=1.5"></script>
 </body>
 </html>
