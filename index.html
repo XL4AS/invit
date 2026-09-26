@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
     <title>Undangan Pernikahan</title>
-    
+
     <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Poppins:wght@300;400;600&family=Great+Vibes&display=swap" rel="stylesheet">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
     <style>
         :root {
             --gold: #b2945e;
@@ -18,245 +19,1325 @@
             --soft-gold: #e8dcc4;
         }
 
-        * { box-sizing: border-box; scroll-behavior: smooth; }
-        
-        html, body {
-            margin: 0; padding: 0;
+        * {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
             font-family: 'Poppins', sans-serif;
             background: #f4f1ea;
             color: var(--dark-jawa);
             overflow-x: hidden;
         }
 
-        body.no-scroll { overflow: hidden; height: 100vh; }
+        body.no-scroll {
+            overflow: hidden;
+            height: 100vh;
+        }
 
+        /* =========================
+           LOADER
+        ========================= */
         .loader {
-            position: fixed; inset: 0;
+            position: fixed;
+            inset: 0;
             background: var(--bg-paper);
-            display: flex; justify-content: center; align-items: center;
-            z-index: 10001; transition: opacity 0.5s;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10001;
+            transition: opacity 0.5s;
         }
 
+        /* =========================
+           COVER
+        ========================= */
         .cover-overlay {
-            position: fixed; inset: 0; z-index: 9999;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('background/main-bg.jpg.jpg');
-            background-size: cover; background-position: center;
-            display: flex; justify-content: center; align-items: center;
-            color: white; transition: transform 1s cubic-bezier(0.7, 0, 0.3, 1), opacity 1s;
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            background:
+                linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)),
+                url('background/main-bg.jpg.jpg');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            transition:
+                transform 1s cubic-bezier(0.7, 0, 0.3, 1),
+                opacity 1s;
         }
 
-        .cover-content { text-align: center; padding: 20px; width: 100%; }
-        .cover-content h1 { font-family: 'Great Vibes', cursive; font-size: clamp(3rem, 10vw, 4.5rem); margin: 15px 0; }
-        .cover-content h3 { font-family: 'Cinzel', serif; letter-spacing: 5px; font-size: 0.8rem; }
-        
+        .cover-content {
+            text-align: center;
+            padding: 20px;
+            width: 100%;
+        }
+
+        .cover-content h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(3rem, 10vw, 4.5rem);
+            margin: 15px 0;
+        }
+
+        .cover-content h3 {
+            font-family: 'Cinzel', serif;
+            letter-spacing: 5px;
+            font-size: 0.8rem;
+        }
+
         .to-guest {
-            background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px);
-            padding: 15px 25px; border-radius: 15px; margin: 25px auto;
-            border: 1px solid rgba(255,255,255,0.3); max-width: 300px;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(8px);
+            padding: 15px 25px;
+            border-radius: 15px;
+            margin: 25px auto;
+            border: 1px solid rgba(255,255,255,0.3);
+            max-width: 300px;
         }
 
         .btn-open {
-            background: var(--gold); color: white; border: none;
-            padding: 16px 40px; border-radius: 50px; font-weight: 600;
-            cursor: pointer; box-shadow: 0 5px 20px rgba(0,0,0,0.3);
+            background: var(--gold);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.3);
         }
 
+        /* =========================
+           HERO
+        ========================= */
         .hero {
-            height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; text-align: center;
-            background: linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)), url('background/hero-pattern.png');
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background:
+                linear-gradient(rgba(255,255,255,0.6), rgba(255,255,255,0.6)),
+                url('background/hero-pattern.png');
             padding: 20px;
         }
-        .hero h1 { font-family: 'Great Vibes', cursive; font-size: clamp(3rem, 10vw, 4.5rem); color: var(--gold); }
 
-        .card {
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
-            padding: 60px 20px; border-radius: 50px 50px 0 0;
-            box-shadow: 0 -15px 35px rgba(0,0,0,0.05); margin-top: -60px;
-            position: relative; z-index: 10;
+        .hero h1 {
+            font-family: 'Great Vibes', cursive;
+            font-size: clamp(3rem, 10vw, 4.5rem);
+            color: var(--gold);
         }
 
-        .section { padding: 40px 0; max-width: 600px; margin: 0 auto; text-align: center; }
+        /* =========================
+           CARD
+        ========================= */
+        .card {
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
+            padding: 60px 20px;
+            border-radius: 50px 50px 0 0;
+            box-shadow: 0 -15px 35px rgba(0,0,0,0.05);
+            margin-top: -60px;
+            position: relative;
+            z-index: 10;
+        }
+
+        .section {
+            padding: 40px 0;
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
 
         .event-box {
-            background: white; padding: 30px 20px; border-radius: 20px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.03); border: 1px solid var(--soft-gold); margin-bottom: 25px;
+            background: white;
+            padding: 30px 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.03);
+            border: 1px solid var(--soft-gold);
+            margin-bottom: 25px;
         }
 
         .couple-name-display {
-            font-family: 'Cinzel', serif; color: var(--gold);
-            font-size: 1.5rem; margin-bottom: 5px; font-weight: 700;
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            font-weight: 700;
         }
+
         .closing-names {
-            font-family: 'Cinzel', serif; color: var(--gold);
-            font-size: 1.5rem; margin-bottom: 5px; font-weight: 700;
+            font-family: 'Cinzel', serif;
+            color: var(--gold);
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            font-weight: 700;
         }
 
-        .countdown-container { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; }
-        .count-item { background: var(--gold); color: white; padding: 10px; border-radius: 10px; min-width: 60px; }
-        .count-item span { font-weight: bold; font-size: 1.2rem; }
+        /* =========================
+           COUNTDOWN
+        ========================= */
+        .countdown-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
 
-        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .gallery-grid img { width: 100%; height: 180px; object-fit: cover; border-radius: 15px; border: 3px solid white; }
+        .count-item {
+            background: var(--gold);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            min-width: 60px;
+        }
 
-        .wish-container { text-align: left; max-height: 400px; overflow-y: auto; padding: 10px; margin-top: 20px; background: #fdfcf9; border-radius: 15px; border: 1px solid #eee; }
-        .wish-item { background: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); border-left: 4px solid var(--gold); position: relative; }
-        .wish-item strong { color: var(--dark-jawa); font-size: 0.9rem; display: block; }
-        .wish-item p { margin: 5px 0 0; font-size: 0.85rem; color: #555; line-height: 1.4; }
-        
-        .form-input { width: 100%; padding: 12px; margin-bottom: 10px; border-radius: 10px; border: 1px solid var(--soft-gold); font-family: 'Poppins', sans-serif; outline: none; }
-        .btn-send { background: var(--gold); color: white; border: none; padding: 12px; width: 100%; border-radius: 10px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .count-item span {
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
 
-        /* Style Penutup/Terima Kasih */
-        .thank-you-section { padding: 60px 20px; background: #fffaf0; border-radius: 30px; margin: 40px 10px; }
-        .thank-you-text { font-family: 'Great Vibes', cursive; font-size: 2.5rem; color: var(--gold); margin-bottom: 10px; }
+        /* =========================
+           GALLERY
+        ========================= */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
 
+        .gallery-grid img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 15px;
+            border: 3px solid white;
+        }
+
+        /* =========================
+           WISH
+        ========================= */
+        .wish-container {
+            text-align: left;
+            max-height: 400px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-top: 20px;
+            background: #fdfcf9;
+            border-radius: 15px;
+            border: 1px solid #eee;
+        }
+
+        .wish-item {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            border-left: 4px solid var(--gold);
+            position: relative;
+        }
+
+        .wish-item strong {
+            color: var(--dark-jawa);
+            font-size: 0.9rem;
+            display: block;
+        }
+
+        .wish-item p {
+            margin: 5px 0 0;
+            font-size: 0.85rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            border: 1px solid var(--soft-gold);
+            font-family: 'Poppins', sans-serif;
+            outline: none;
+        }
+
+        .form-input:focus {
+            border-color: var(--gold);
+            box-shadow: 0 0 0 2px rgba(178,148,94,0.12);
+        }
+
+        .btn-send {
+            background: var(--gold);
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-send:hover {
+            opacity: 0.9;
+        }
+
+        /* =========================
+           PENUTUP
+        ========================= */
+        .thank-you-section {
+            padding: 60px 20px;
+            background: #fffaf0;
+            border-radius: 30px;
+            margin: 40px 10px;
+        }
+
+        .thank-you-text {
+            font-family: 'Great Vibes', cursive;
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 10px;
+        }
+
+        /* =========================
+           NAVIGASI
+        ========================= */
         .nav-bottom {
-            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
-            background: rgba(44, 36, 30, 0.95); padding: 12px 25px;
-            border-radius: 40px; display: flex; gap: 25px; z-index: 1000;
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(44,36,30,0.95);
+            padding: 12px 25px;
+            border-radius: 40px;
+            display: flex;
+            gap: 25px;
+            z-index: 1000;
         }
-        .nav-item { color: #888; font-size: 1.2rem; text-decoration: none; }
-        .nav-item.active { color: var(--gold); }
 
+        .nav-item {
+            color: #888;
+            font-size: 1.2rem;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            color: var(--gold);
+        }
+
+        /* =========================
+           MUSIC
+        ========================= */
         .music-control {
-            position: fixed; bottom: 85px; right: 20px; background: var(--gold);
-            width: 45px; height: 45px; border-radius: 50%; display: flex;
-            justify-content: center; align-items: center; color: white; cursor: pointer; z-index: 1001;
+            position: fixed;
+            bottom: 85px;
+            right: 20px;
+            background: var(--gold);
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: white;
+            cursor: pointer;
+            z-index: 1001;
         }
 
-        .floating { animation: float 4s ease-in-out infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0px); } 50% { transform: translateY(-10px); } }
-        .btn-wa { background: #25d366; color: white; padding: 14px 25px; border-radius: 30px; text-decoration: none; display: inline-block; font-weight: 600; margin-top: 10px; }
-        iframe { width: 100%; height: 250px; border-radius: 20px; border: none; }
+        /* =========================
+           BUTTON
+        ========================= */
+        .floating {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .btn-wa {
+            background: #25d366;
+            color: white;
+            padding: 14px 25px;
+            border-radius: 30px;
+            text-decoration: none;
+            display: inline-block;
+            font-weight: 600;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        iframe {
+            width: 100%;
+            height: 250px;
+            border-radius: 20px;
+            border: none;
+        }
+
+        /* =========================
+           MODAL KONFIRMASI
+        ========================= */
+        .modal-konfirmasi {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            z-index: 20000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: modalFade 0.25s ease;
+        }
+
+        .modal-konfirmasi.active {
+            display: flex;
+        }
+
+        @keyframes modalFade {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        .modal-box {
+            position: relative;
+            width: 100%;
+            max-width: 400px;
+            background: #fff;
+            padding: 30px 22px 25px;
+            border-radius: 25px;
+            box-shadow: 0 15px 50px rgba(0,0,0,0.3);
+            animation: modalUp 0.3s ease;
+        }
+
+        @keyframes modalUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-box h3 {
+            text-align: center;
+            color: var(--gold);
+            font-family: 'Cinzel', serif;
+            margin: 0 0 8px;
+        }
+
+        .modal-box p {
+            text-align: center;
+            font-size: 0.85rem;
+            color: #777;
+            margin: 0 0 25px;
+        }
+
+        .modal-box label {
+            display: block;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-align: left;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 8px;
+            right: 13px;
+            border: none;
+            background: transparent;
+            font-size: 30px;
+            color: #888;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .modal-close:hover {
+            color: var(--dark-jawa);
+        }
+
+        .btn-konfirmasi-submit {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 12px;
+            background: var(--gold);
+            color: white;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 5px;
+        }
+
+        .btn-konfirmasi-submit:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+
+        .status-konfirmasi {
+            display: none;
+            text-align: center;
+            margin-top: 15px;
+            font-size: 0.85rem;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .status-konfirmasi.success {
+            display: block;
+            background: #edf8ef;
+            color: #287a35;
+        }
+
+        .status-konfirmasi.error {
+            display: block;
+            background: #fff0f0;
+            color: #b02a37;
+        }
+
+        @media (max-width: 400px) {
+            .nav-bottom {
+                gap: 20px;
+                padding: 11px 20px;
+            }
+
+            .modal-box {
+                padding: 28px 18px 22px;
+            }
+        }
     </style>
 </head>
+
 <body class="no-scroll">
 
+    <!-- =========================
+         AUDIO
+    ========================== -->
     <audio id="weddingAudio" loop preload="auto">
         <source src="music/lagu.mp3" type="audio/mpeg">
     </audio>
 
+
+    <!-- =========================
+         LOADER
+    ========================== -->
     <div id="loader" class="loader">
         <div style="text-align: center;">
             <img src="icon/gunungan.png" width="60" class="floating">
-            <h2 style="font-family: 'Great Vibes'; color: var(--gold); font-size: 1.5rem;">Memuat Undangan...</h2>
+
+            <h2 style="
+                font-family: 'Great Vibes';
+                color: var(--gold);
+                font-size: 1.5rem;
+            ">
+                Memuat Undangan...
+            </h2>
         </div>
     </div>
 
+
+    <!-- =========================
+         COVER
+    ========================== -->
     <div id="cover" class="cover-overlay">
+
         <div class="cover-content" data-aos="fade-up">
-            <img src="icon/gunungan.png" class="gunungan-hero floating" width="70">
+
+            <img
+                src="icon/gunungan.png"
+                class="gunungan-hero floating"
+                width="70"
+            >
+
             <h3>WEDDING INVITATION</h3>
-            <h1 id="cover-couple-name">Mempelai</h1>
+
+            <h1 id="cover-couple-name">
+                Mempelai
+            </h1>
+
             <div class="to-guest">
-                <p style="margin: 0; font-size: 0.8rem;">Kepada Yth. Bapak/Ibu/Saudara/i:</p>
-                <h2 id="guest-name" style="margin: 5px 0 0; font-size: 1.2rem;">Tamu Undangan</h2>
+
+                <p style="
+                    margin: 0;
+                    font-size: 0.8rem;
+                ">
+                    Kepada Yth. Bapak/Ibu/Saudara/i:
+                </p>
+
+                <h2
+                    id="guest-name"
+                    style="
+                        margin: 5px 0 0;
+                        font-size: 1.2rem;
+                    "
+                >
+                    Tamu Undangan
+                </h2>
+
             </div>
-            <button class="btn-open" id="btnOpen">
-                <i class="fas fa-envelope-open-text"></i> Buka Undangan
+
+            <button
+                class="btn-open"
+                id="btnOpen"
+            >
+                <i class="fas fa-envelope-open-text"></i>
+                Buka Undangan
             </button>
+
         </div>
+
     </div>
 
-    <div id="music-control" class="music-control" onclick="toggleMusic()" style="display: none;">
-        <i id="music-icon" class="fas fa-compact-disc fa-spin"></i>
+
+    <!-- =========================
+         MUSIC CONTROL
+    ========================== -->
+    <div
+        id="music-control"
+        class="music-control"
+        onclick="toggleMusic()"
+        style="display: none;"
+    >
+        <i
+            id="music-icon"
+            class="fas fa-compact-disc fa-spin"
+        ></i>
     </div>
 
+
+    <!-- =========================
+         MAIN CONTENT
+    ========================== -->
     <main id="content" style="display:none">
+
+        <!-- HERO -->
         <section class="hero" id="home">
-            <div data-aos="zoom-out" data-aos-duration="1500">
-                <img src="icon/gunungan.png" class="gunungan-hero floating" width="80">
-                <h2 style="font-size: 0.8rem; letter-spacing: 3px;">THE WEDDING OF</h2>
+
+            <div
+                data-aos="zoom-out"
+                data-aos-duration="1500"
+            >
+
+                <img
+                    src="icon/gunungan.png"
+                    class="gunungan-hero floating"
+                    width="80"
+                >
+
+                <h2 style="
+                    font-size: 0.8rem;
+                    letter-spacing: 3px;
+                ">
+                    THE WEDDING OF
+                </h2>
+
                 <h1 id="couple-name"></h1>
-                <p id="wedding-date-hero" style="font-weight: 600; letter-spacing: 2px; font-size: 0.9rem;"></p>
+
+                <p
+                    id="wedding-date-hero"
+                    style="
+                        font-weight: 600;
+                        letter-spacing: 2px;
+                        font-size: 0.9rem;
+                    "
+                ></p>
+
             </div>
+
         </section>
 
+
         <div class="card">
-            <section class="section" data-aos="fade-up">
-                <div id="quote" style="font-style: italic; font-size: 0.9rem; color: #666; line-height: 1.6;"></div>
+
+            <!-- QUOTE -->
+            <section
+                class="section"
+                data-aos="fade-up"
+            >
+
+                <div
+                    id="quote"
+                    style="
+                        font-style: italic;
+                        font-size: 0.9rem;
+                        color: #666;
+                        line-height: 1.6;
+                    "
+                ></div>
+
             </section>
 
-            <section class="section" id="couple" data-aos="fade-up">
+
+            <!-- COUPLE -->
+            <section
+                class="section"
+                id="couple"
+                data-aos="fade-up"
+            >
+
                 <div class="event-box">
-                    <h3 id="groom-name" class="couple-name-display"></h3>
-                    <p style="font-size: 0.9rem;">Putra dari <br><b id="groom-parents"></b></p>
-                    <h2 style="font-family: 'Great Vibes'; font-size: 2rem; color: var(--gold); margin: 15px 0;">dan</h2>
-                    <h3 id="bride-name" class="couple-name-display"></h3>
-                    <p style="font-size: 0.9rem;">Putri dari <br><b id="bride-parents"></b></p>
-                </div>
-            </section>
 
-            <section class="section" id="event" data-aos="fade-up">
-                <div id="timer" class="countdown-container"></div>
-                <div class="event-box">
-                    <h3 style="font-size: 1.1rem;"><i class="fas fa-ring"></i> Akad Nikah</h3>
-                    <p id="akad-date" style="font-size: 0.9rem;"></p>
-                    <p id="akad-time" style="font-weight: 600;"></p>
-                </div>
-                <div class="event-box">
-                    <h3 style="font-size: 1.1rem;"><i class="fas fa-glass-cheers"></i> Resepsi</h3>
-                    <p id="resepsi-date" style="font-size: 0.9rem;"></p>
-                    <p id="resepsi-time" style="font-weight: 600;"></p>
-                </div>
-            </section>
+                    <h3
+                        id="groom-name"
+                        class="couple-name-display"
+                    ></h3>
 
-            <section class="section" id="location" data-aos="fade-up">
-                <h3 style="font-size: 1.1rem;"><i class="fas fa-map-marker-alt"></i> Lokasi Acara</h3>
-                <p id="event-location" style="margin-bottom: 15px; font-size: 0.9rem;"></p>
-                <div id="map-frame-container"></div>
-                <br>
-                <a id="whatsapp-btn" target="_blank" class="btn-wa">Konfirmasi Kehadiran</a>
-            </section>
-
-            <section class="section" id="gallery" data-aos="fade-up">
-                <h3 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-images"></i> Galeri Momen</h3>
-                <div id="gallery-grid" class="gallery-grid"></div>
-            </section>
-
-            <section class="section" id="wishes" data-aos="fade-up">
-                <div class="event-box">
-                    <h3 style="font-size: 1.1rem; margin-bottom: 20px;"><i class="fas fa-envelope"></i> Kartu Ucapan</h3>
-                    <form id="wish-form">
-                        <input type="text" id="wish-name" class="form-input" placeholder="Nama Anda" required>
-                        <textarea id="wish-message" class="form-input" style="height: 100px;" placeholder="Tulis doa & harapan..." required></textarea>
-                        <button type="submit" id="btn-kirim" class="btn-send">Kirim Ucapan</button>
-                    </form>
-                    <div id="wish-display" class="wish-container"></div>
-                </div>
-            </section>
-
-            <section class="section" data-aos="fade-up">
-                <div class="thank-you-section">
-                    <h2 class="thank-you-text">Terima Kasih</h2>
-                    <p style="font-size: 0.9rem; color: #666; line-height: 1.6; padding: 0 20px;">
-                        Merupakan suatu kebahagiaan dan kehormatan bagi kami, apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan doa restu kepada kami.
+                    <p style="font-size: 0.9rem;">
+                        Putra dari
+                        <br>
+                        <b id="groom-parents"></b>
                     </p>
-                    <div style="margin-top: 30px;">
-                        <p style="margin-bottom: 5px; font-size: 0.8rem;">Kami yang berbahagia,</p>
-                        <h1 id="closing-names"></h1>
-                    </div>
+
+                    <h2 style="
+                        font-family: 'Great Vibes';
+                        font-size: 2rem;
+                        color: var(--gold);
+                        margin: 15px 0;
+                    ">
+                        dan
+                    </h2>
+
+                    <h3
+                        id="bride-name"
+                        class="couple-name-display"
+                    ></h3>
+
+                    <p style="font-size: 0.9rem;">
+                        Putri dari
+                        <br>
+                        <b id="bride-parents"></b>
+                    </p>
+
                 </div>
+
+            </section>
+
+
+            <!-- EVENT -->
+            <section
+                class="section"
+                id="event"
+                data-aos="fade-up"
+            >
+
+                <div
+                    id="timer"
+                    class="countdown-container"
+                ></div>
+
+                <div class="event-box">
+
+                    <h3 style="font-size: 1.1rem;">
+                        <i class="fas fa-ring"></i>
+                        Akad Nikah
+                    </h3>
+
+                    <p
+                        id="akad-date"
+                        style="font-size: 0.9rem;"
+                    ></p>
+
+                    <p
+                        id="akad-time"
+                        style="font-weight: 600;"
+                    ></p>
+
+                </div>
+
+
+                <div class="event-box">
+
+                    <h3 style="font-size: 1.1rem;">
+                        <i class="fas fa-glass-cheers"></i>
+                        Resepsi
+                    </h3>
+
+                    <p
+                        id="resepsi-date"
+                        style="font-size: 0.9rem;"
+                    ></p>
+
+                    <p
+                        id="resepsi-time"
+                        style="font-weight: 600;"
+                    ></p>
+
+                </div>
+
+            </section>
+
+
+            <!-- LOCATION + CONFIRMATION -->
+            <section
+                class="section"
+                id="location"
+                data-aos="fade-up"
+            >
+
+                <h3 style="font-size: 1.1rem;">
+                    <i class="fas fa-map-marker-alt"></i>
+                    Lokasi Acara
+                </h3>
+
+                <p
+                    id="event-location"
+                    style="
+                        margin-bottom: 15px;
+                        font-size: 0.9rem;
+                    "
+                ></p>
+
+                <div id="map-frame-container"></div>
+
+                <br>
+
+                <!-- TOMBOL KONFIRMASI -->
+                <button
+                    id="btn-konfirmasi"
+                    type="button"
+                    class="btn-wa"
+                >
+                    <i class="fas fa-check-circle"></i>
+                    Konfirmasi Kehadiran
+                </button>
+
+            </section>
+
+
+            <!-- GALLERY -->
+            <section
+                class="section"
+                id="gallery"
+                data-aos="fade-up"
+            >
+
+                <h3 style="
+                    font-size: 1.1rem;
+                    margin-bottom: 20px;
+                ">
+                    <i class="fas fa-images"></i>
+                    Galeri Momen
+                </h3>
+
+                <div
+                    id="gallery-grid"
+                    class="gallery-grid"
+                ></div>
+
+            </section>
+
+
+            <!-- WISHES -->
+            <section
+                class="section"
+                id="wishes"
+                data-aos="fade-up"
+            >
+
+                <div class="event-box">
+
+                    <h3 style="
+                        font-size: 1.1rem;
+                        margin-bottom: 20px;
+                    ">
+                        <i class="fas fa-envelope"></i>
+                        Kartu Ucapan
+                    </h3>
+
+                    <form id="wish-form">
+
+                        <input
+                            type="text"
+                            id="wish-name"
+                            class="form-input"
+                            placeholder="Nama Anda"
+                            required
+                        >
+
+                        <textarea
+                            id="wish-message"
+                            class="form-input"
+                            style="height: 100px;"
+                            placeholder="Tulis doa & harapan..."
+                            required
+                        ></textarea>
+
+                        <button
+                            type="submit"
+                            id="btn-kirim"
+                            class="btn-send"
+                        >
+                            Kirim Ucapan
+                        </button>
+
+                    </form>
+
+                    <div
+                        id="wish-display"
+                        class="wish-container"
+                    ></div>
+
+                </div>
+
+            </section>
+
+
+            <!-- THANK YOU -->
+            <section
+                class="section"
+                data-aos="fade-up"
+            >
+
+                <div class="thank-you-section">
+
+                    <h2 class="thank-you-text">
+                        Terima Kasih
+                    </h2>
+
+                    <p style="
+                        font-size: 0.9rem;
+                        color: #666;
+                        line-height: 1.6;
+                        padding: 0 20px;
+                    ">
+                        Merupakan suatu kebahagiaan dan kehormatan bagi kami,
+                        apabila Bapak/Ibu/Saudara/i berkenan hadir dan memberikan
+                        doa restu kepada kami.
+                    </p>
+
+                    <div style="margin-top: 30px;">
+
+                        <p style="
+                            margin-bottom: 5px;
+                            font-size: 0.8rem;
+                        ">
+                            Kami yang berbahagia,
+                        </p>
+
+                        <h1 id="closing-names"></h1>
+
+                    </div>
+
+                </div>
+
             </section>
 
         </div>
 
+
+        <!-- NAVIGATION -->
         <nav class="nav-bottom">
-            <a href="#home" class="nav-item active"><i class="fas fa-home"></i></a>
-            <a href="#couple" class="nav-item"><i class="fas fa-heart"></i></a>
-            <a href="#event" class="nav-item"><i class="fas fa-calendar-alt"></i></a>
-            <a href="#gallery" class="nav-item"><i class="fas fa-images"></i></a>
+
+            <a
+                href="#home"
+                class="nav-item active"
+            >
+                <i class="fas fa-home"></i>
+            </a>
+
+            <a
+                href="#couple"
+                class="nav-item"
+            >
+                <i class="fas fa-heart"></i>
+            </a>
+
+            <a
+                href="#event"
+                class="nav-item"
+            >
+                <i class="fas fa-calendar-alt"></i>
+            </a>
+
+            <a
+                href="#gallery"
+                class="nav-item"
+            >
+                <i class="fas fa-images"></i>
+            </a>
+
         </nav>
+
     </main>
 
+
+    <!-- =================================================
+         MODAL KONFIRMASI KEHADIRAN
+    ================================================== -->
+    <div
+        id="modalKonfirmasi"
+        class="modal-konfirmasi"
+    >
+
+        <div class="modal-box">
+
+            <button
+                type="button"
+                class="modal-close"
+                id="closeModal"
+                aria-label="Tutup"
+            >
+                &times;
+            </button>
+
+            <h3>
+                Konfirmasi Kehadiran
+            </h3>
+
+            <p>
+                Silakan isi nama dan perkiraan jam kehadiran Anda.
+            </p>
+
+
+            <label for="namaKehadiran">
+                Nama
+            </label>
+
+            <input
+                type="text"
+                id="namaKehadiran"
+                class="form-input"
+                placeholder="Masukkan nama Anda"
+                autocomplete="name"
+            >
+
+
+            <label for="jamKehadiran">
+                Jam Kehadiran
+            </label>
+
+            <input
+                type="time"
+                id="jamKehadiran"
+                class="form-input"
+            >
+
+
+            <button
+                type="button"
+                id="btnKirimKehadiran"
+                class="btn-konfirmasi-submit"
+            >
+                <i class="fas fa-paper-plane"></i>
+                Kirim Konfirmasi
+            </button>
+
+
+            <div
+                id="statusKonfirmasi"
+                class="status-konfirmasi"
+            ></div>
+
+        </div>
+
+    </div>
+
+
+    <!-- AOS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script src="script.js?v=1.6"></script>
+
+    <!-- SCRIPT UTAMA -->
+    <script src="script.js?v=1.7"></script>
+
+
+    <!-- =================================================
+         KONFIRMASI KEHADIRAN
+    ================================================== -->
+    <script>
+
+        /*
+         * GANTI URL DI BAWAH INI
+         * dengan URL Web App Google Apps Script Anda.
+         *
+         * Contoh:
+         * https://script.google.com/macros/s/XXXXXXXX/exec
+         */
+        const GOOGLE_SCRIPT_URL =
+            "GANTI_DENGAN_URL_WEB_APP_ANDA";
+
+
+        const btnKonfirmasi =
+            document.getElementById("btn-konfirmasi");
+
+        const modalKonfirmasi =
+            document.getElementById("modalKonfirmasi");
+
+        const closeModal =
+            document.getElementById("closeModal");
+
+        const btnKirimKehadiran =
+            document.getElementById("btnKirimKehadiran");
+
+        const namaKehadiran =
+            document.getElementById("namaKehadiran");
+
+        const jamKehadiran =
+            document.getElementById("jamKehadiran");
+
+        const statusKonfirmasi =
+            document.getElementById("statusKonfirmasi");
+
+
+        /*
+         * BUKA MODAL
+         */
+        btnKonfirmasi.addEventListener("click", function () {
+
+            modalKonfirmasi.classList.add("active");
+
+            setTimeout(function () {
+                namaKehadiran.focus();
+            }, 200);
+
+        });
+
+
+        /*
+         * TUTUP MODAL
+         */
+        closeModal.addEventListener("click", function () {
+
+            modalKonfirmasi.classList.remove("active");
+
+        });
+
+
+        /*
+         * KLIK DI LUAR MODAL
+         */
+        modalKonfirmasi.addEventListener("click", function (event) {
+
+            if (event.target === modalKonfirmasi) {
+
+                modalKonfirmasi.classList.remove("active");
+
+            }
+
+        });
+
+
+        /*
+         * TOMBOL ESC UNTUK MENUTUP MODAL
+         */
+        document.addEventListener("keydown", function (event) {
+
+            if (event.key === "Escape") {
+
+                modalKonfirmasi.classList.remove("active");
+
+            }
+
+        });
+
+
+        /*
+         * KIRIM DATA KE GOOGLE SHEETS
+         */
+        btnKirimKehadiran.addEventListener("click", async function () {
+
+            const nama =
+                namaKehadiran.value.trim();
+
+            const jam =
+                jamKehadiran.value;
+
+
+            /*
+             * VALIDASI NAMA
+             */
+            if (!nama) {
+
+                tampilkanStatus(
+                    "Silakan masukkan nama Anda.",
+                    "error"
+                );
+
+                namaKehadiran.focus();
+
+                return;
+            }
+
+
+            /*
+             * VALIDASI JAM
+             */
+            if (!jam) {
+
+                tampilkanStatus(
+                    "Silakan pilih jam kehadiran.",
+                    "error"
+                );
+
+                jamKehadiran.focus();
+
+                return;
+            }
+
+
+            /*
+             * CEK URL GOOGLE SCRIPT
+             */
+            if (
+                GOOGLE_SCRIPT_URL ===
+                "GANTI_DENGAN_URL_WEB_APP_ANDA"
+            ) {
+
+                tampilkanStatus(
+                    "URL Google Apps Script belum dipasang.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            /*
+             * UBAH TOMBOL MENJADI LOADING
+             */
+            btnKirimKehadiran.disabled = true;
+
+            btnKirimKehadiran.innerHTML =
+                '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
+
+
+            try {
+
+                /*
+                 * DATA YANG DIKIRIM
+                 */
+                const data = {
+
+                    nama: nama,
+
+                    jam: jam
+
+                };
+
+
+                /*
+                 * KIRIM KE GOOGLE APPS SCRIPT
+                 *
+                 * mode no-cors digunakan agar
+                 * Google Apps Script dapat menerima
+                 * request dari GitHub Pages.
+                 */
+                await fetch(
+                    GOOGLE_SCRIPT_URL,
+                    {
+                        method: "POST",
+
+                        mode: "no-cors",
+
+                        headers: {
+                            "Content-Type":
+                                "text/plain;charset=utf-8"
+                        },
+
+                        body: JSON.stringify(data)
+                    }
+                );
+
+
+                /*
+                 * Karena no-cors tidak memungkinkan
+                 * browser membaca response Google,
+                 * kita anggap request berhasil
+                 * apabila fetch tidak menghasilkan error.
+                 */
+                tampilkanStatus(
+                    "Konfirmasi berhasil dikirim. Terima kasih!",
+                    "success"
+                );
+
+
+                /*
+                 * Bersihkan input
+                 */
+                namaKehadiran.value = "";
+                jamKehadiran.value = "";
+
+
+                /*
+                 * Tutup modal setelah beberapa detik
+                 */
+                setTimeout(function () {
+
+                    modalKonfirmasi.classList.remove("active");
+
+                    statusKonfirmasi.className =
+                        "status-konfirmasi";
+
+                    statusKonfirmasi.textContent = "";
+
+                }, 1800);
+
+
+            } catch (error) {
+
+                console.error(
+                    "Gagal mengirim:",
+                    error
+                );
+
+                tampilkanStatus(
+                    "Konfirmasi gagal dikirim. Silakan coba lagi.",
+                    "error"
+                );
+
+            }
+
+
+            /*
+             * Kembalikan tombol
+             */
+            btnKirimKehadiran.disabled = false;
+
+            btnKirimKehadiran.innerHTML =
+                '<i class="fas fa-paper-plane"></i> Kirim Konfirmasi';
+
+        });
+
+
+        /*
+         * FUNGSI STATUS
+         */
+        function tampilkanStatus(
+            pesan,
+            tipe
+        ) {
+
+            statusKonfirmasi.textContent =
+                pesan;
+
+            statusKonfirmasi.className =
+                "status-konfirmasi " + tipe;
+
+        }
+
+    </script>
+
 </body>
 </html>
-
-
-
-
-
-
